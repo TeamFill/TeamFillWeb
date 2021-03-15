@@ -1,10 +1,29 @@
 import React from "react";
-import { Typography, Form, Input, Button, Divider, DatePicker, Select, InputNumber } from "antd";
+import {
+  Typography,
+  Form,
+  Input,
+  Button,
+  Divider,
+  DatePicker,
+  Select,
+  InputNumber,
+} from "antd";
 
 const { Title } = Typography;
 const { Option } = Select;
 
 export default function Profile() {
+  const children = ["Basketball", "Soccer", "Hockey", "Volleyball"];
+  const options = [];
+  for (let i = 0; i < children.length; i++) {
+    options.push(
+      <Option value={children[i]} key={i}>
+        {children[i]}
+      </Option>
+    );
+  }
+
   const onFinish = (values) => {
     console.log("Success:", values);
   };
@@ -16,11 +35,7 @@ export default function Profile() {
   return (
     <div>
       <Title>My Profile</Title>
-      <Form
-        name="basic"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-      >
+      <Form name="basic" onFinish={onFinish} onFinishFailed={onFinishFailed}>
         <Form.Item
           label="Full Name"
           name="fullname"
@@ -44,7 +59,7 @@ export default function Profile() {
             },
           ]}
         >
-          <DatePicker/>
+          <DatePicker />
         </Form.Item>
 
         <Form.Item
@@ -75,7 +90,7 @@ export default function Profile() {
             },
           ]}
         >
-          <InputNumber min={1} max={50}/>
+          <InputNumber min={1} max={50} />
         </Form.Item>
 
         <Form.Item
@@ -88,7 +103,9 @@ export default function Profile() {
             },
           ]}
         >
-          <InputNumber min={1} max={5}/>
+          <Select mode="multiple" allowClear placeholder="Please select">
+            {options}
+          </Select>
         </Form.Item>
 
         <Form.Item>
