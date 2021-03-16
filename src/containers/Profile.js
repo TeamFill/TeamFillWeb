@@ -8,6 +8,9 @@ import {
   DatePicker,
   Select,
   InputNumber,
+  Row,
+  Col,
+  Space,
 } from "antd";
 
 const { Title } = Typography;
@@ -34,86 +37,119 @@ export default function Profile() {
 
   return (
     <div>
-      <Title>My Profile</Title>
-      <Form name="basic" onFinish={onFinish} onFinishFailed={onFinishFailed}>
-        <Form.Item
-          label="Full Name"
-          name="fullname"
-          rules={[
-            {
-              required: true,
-              message: "Please input your full name!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+      <Row style={{ marginTop: 70, width: "100%" }}>
+        <Col flex="30px" />
+        <Col flex="auto">
+          <Title level={2}>My Profile</Title>
+          <Form
+            name="basic"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+          >
+            <Form.Item
+              label="Full Name"
+              name="fullname"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your full name!",
+                },
+              ]}
+            >
+              <Input style={styles.form} />
+            </Form.Item>
 
-        <Form.Item
-          label="Birthdate"
-          name="birthdate"
-          rules={[
-            {
-              required: true,
-              message: "Please input your birthdate!",
-            },
-          ]}
-        >
-          <DatePicker />
-        </Form.Item>
+            <Form.Item
+              label="Birthdate"
+              name="birthdate"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your birthdate!",
+                },
+              ]}
+            >
+              <DatePicker style={styles.form} />
+            </Form.Item>
 
-        <Form.Item
-          label="Gender"
-          name="gender"
-          rules={[
-            {
-              required: true,
-              message: "Please input your gender!",
-            },
-          ]}
-        >
-          <Select placeholder="Gender">
-            <Option value="male">Male</Option>
-            <Option value="female">Female</Option>
-          </Select>
-        </Form.Item>
+            <Form.Item
+              label="Gender"
+              name="gender"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your gender!",
+                },
+              ]}
+            >
+              <Select size="large" placeholder="Gender">
+                <Option value="male">Male</Option>
+                <Option value="female">Female</Option>
+              </Select>
+            </Form.Item>
 
-        <Divider />
+            <Divider />
 
-        <Form.Item
-          label="Search Radius"
-          name="radius"
-          rules={[
-            {
-              required: true,
-              message: "Please input your search radius!",
-            },
-          ]}
-        >
-          <InputNumber min={1} max={50} />
-        </Form.Item>
+            <Form.Item
+              label="Search Radius"
+              name="radius"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your search radius!",
+                },
+              ]}
+            >
+              <InputNumber style={styles.form} min={1} max={50} />
+            </Form.Item>
 
-        <Form.Item
-          label="Preferences"
-          name="preferences"
-          rules={[
-            {
-              required: true,
-              message: "Please input your preferences!",
-            },
-          ]}
-        >
-          <Select mode="multiple" allowClear placeholder="Please select">
-            {options}
-          </Select>
-        </Form.Item>
+            <Form.Item
+              label="Preferences"
+              name="preferences"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your preferences!",
+                },
+              ]}
+            >
+              <Select
+                style={styles.form}
+                mode="multiple"
+                allowClear
+                placeholder="Please select"
+              >
+                {options}
+              </Select>
+            </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+            <Form.Item>
+              <Button
+                style={{
+                  width: "100%",
+                  height: 50,
+                  borderRadius: 15,
+                  borderColor: "#ff5252",
+                  backgroundColor: "#ff5252",
+                }}
+                type="primary"
+                htmlType="submit"
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        </Col>
+        <Col flex="30px" />
+      </Row>
     </div>
   );
 }
+
+const styles = {
+  form: {
+    width: "100%",
+    height: 50,
+    borderRadius: 15,
+  },
+};

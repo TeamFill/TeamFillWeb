@@ -4,6 +4,10 @@
   text-align: center;
 }
 
+.ant-select-selection {
+  height: 500px;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
