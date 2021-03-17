@@ -1,0 +1,61 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [43.26603, -79.91704]
+            },
+            "properties": {
+              "id": 1,
+              "name": "Kajoban's Basketball Game",
+              "date": "Friday, March 19th",
+              "time": "9:30 p.m.",
+              "address": "Ron Joyce Statium"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [43.25912, -79.91255]
+            },
+            "properties": {
+              "id": 2,
+              "name": "Pranav's Soccer Game",
+              "date": "Friday, March 26th",
+              "time": "9:30 p.m.",
+              "address": "Dalewood Recreation Centre"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [43.26516, -79.91574]
+            },
+            "properties": {
+              "id": 3,
+              "name": "Nino's Volleyball Game",
+              "date": "Friday, April 2nd",
+              "time": "9:30 p.m.",
+              "address": "David Braley Athletic Centre"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [43.26127, -79.91217]
+            },
+            "properties": {
+              "id": 4,
+              "name": "Karim's Soccer Game",
+              "date": "Monday, April 5th",
+              "time": "9:30 p.m.",
+              "address": "66 Dalewood Crescent"
+            }
+        }
+    ]
+}
