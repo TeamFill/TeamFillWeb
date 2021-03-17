@@ -6,13 +6,15 @@ import HomepageMap from "./containers/HomepageMap";
 import { AuthProvider } from "./auth/Auth";
 import PrivateRoute from "./auth/PrivateRoute";
 
+require("dotenv").config();
+
 function App() {
   return (
     // <AuthProvider>
     <Router>
       <div>
         <Route exact path="/" component={Profile} />
-        <Route exact path="/login" component={Login} />
+        {/**<Route exact path="/login" component={Login} />**/}
         <Route exact path="/homepage" component={HomepageMap} />
       </div>
     </Router>
