@@ -15,6 +15,7 @@ function App() {
         <div>
           <PrivateRoute exact path="/" component={Profile} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/homepage" component={HomepageMap} />
         </div>
       </Router>
     </AuthProvider>
