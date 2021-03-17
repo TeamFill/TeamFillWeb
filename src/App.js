@@ -7,14 +7,14 @@ import PrivateRoute from "./auth/PrivateRoute";
 
 function App() {
   return (
-    // <AuthProvider>
-    <Router>
-      <div>
-        <Route exact path="/" component={Profile} />
-        <Route exact path="/login" component={Login} />
-      </div>
-    </Router>
-    // </AuthProvider>
+    <AuthProvider>
+      <Router>
+        <div>
+          <PrivateRoute exact path="/" component={Profile} />
+          <Route exact path="/login" component={Login} />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
