@@ -10,15 +10,14 @@ require("dotenv").config();
 
 function App() {
   return (
-    // <AuthProvider>
-    <Router>
-      <div>
-        <Route exact path="/" component={Profile} />
-        {/**<Route exact path="/login" component={Login} />**/}
-        <Route exact path="/homepage" component={HomepageMap} />
-      </div>
-    </Router>
-    // </AuthProvider>
+    <AuthProvider>
+      <Router>
+        <div>
+          <PrivateRoute exact path="/" component={Profile} />
+          <Route exact path="/login" component={Login} />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
