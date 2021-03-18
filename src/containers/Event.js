@@ -4,18 +4,18 @@ import {
   Form,
   Input,
   Button,
-  Divider,
   DatePicker,
   Select,
-  InputNumber,
   Row,
   Col,
+  TimePicker,
 } from "antd";
 
 const { Title } = Typography;
 const { Option } = Select;
+const { TextArea } = Input;
 
-export default function Profile() {
+export default function Event() {
   const children = ["Basketball", "Soccer", "Hockey", "Volleyball"];
   const options = [];
   for (let i = 0; i < children.length; i++) {
@@ -39,19 +39,19 @@ export default function Profile() {
       <Row style={{ marginTop: 70, width: "100%" }}>
         <Col flex="30px" />
         <Col flex="auto">
-          <Title level={2}>My Profile</Title>
+          <Title level={2}>Create New Event</Title>
           <Form
             name="basic"
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
             <Form.Item
-              label="Full Name"
-              name="fullname"
+              label="Event Name"
+              name="eventname"
               rules={[
                 {
                   required: true,
-                  message: "Please input your full name!",
+                  message: "Please input the event name!",
                 },
               ]}
             >
@@ -59,12 +59,43 @@ export default function Profile() {
             </Form.Item>
 
             <Form.Item
-              label="Birthdate"
-              name="birthdate"
+              label="Event Description"
+              name="eventdescription"
               rules={[
                 {
                   required: true,
-                  message: "Please input your birthdate!",
+                  message: "Please input the description!",
+                },
+              ]}
+            >
+              <TextArea style={styles.form} />
+            </Form.Item>
+
+            <Form.Item
+              label="Event Type"
+              name="eventtype"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the event type!",
+                },
+              ]}
+            >
+              <Select size="large" placeholder="Event Type">
+                <Option value="basketball">Basketball</Option>
+                <Option value="soccer">Soccer</Option>
+                <Option value="hockey">Hockey</Option>
+                <Option value="volleyball">Volleyball</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              label="Event Date"
+              name="eventdate"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the event date!",
                 },
               ]}
             >
@@ -72,54 +103,16 @@ export default function Profile() {
             </Form.Item>
 
             <Form.Item
-              label="Gender"
-              name="gender"
+              label="Event Time"
+              name="eventtime"
               rules={[
                 {
                   required: true,
-                  message: "Please input your gender!",
+                  message: "Please input the event time!",
                 },
               ]}
             >
-              <Select size="large" placeholder="Gender">
-                <Option value="male">Male</Option>
-                <Option value="female">Female</Option>
-              </Select>
-            </Form.Item>
-
-            <Divider />
-
-            <Form.Item
-              label="Search Radius"
-              name="radius"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your search radius!",
-                },
-              ]}
-            >
-              <InputNumber style={styles.form} min={1} max={50} />
-            </Form.Item>
-
-            <Form.Item
-              label="Preferences"
-              name="preferences"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your preferences!",
-                },
-              ]}
-            >
-              <Select
-                style={styles.form}
-                mode="multiple"
-                allowClear
-                placeholder="Please select"
-              >
-                {options}
-              </Select>
+              <TimePicker style={styles.form} />
             </Form.Item>
 
             <Form.Item>

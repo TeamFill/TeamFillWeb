@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import Login from "./containers/Login";
+import Event from "./containers/Event";
 import Profile from "./containers/Profile";
 import HomepageMap from "./containers/HomepageMap";
 import { AuthProvider } from "./auth/Auth";
@@ -13,9 +14,10 @@ function App() {
     <AuthProvider>
       <Router>
         <div>
-          <PrivateRoute exact path="/" component={Profile} />
+          <PrivateRoute exact path="/" component={HomepageMap} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/homepage" component={HomepageMap} />
+          <Route exact path="/profile" component={Profile} />
+          <Route exact path="/event" component={Event} />
         </div>
       </Router>
     </AuthProvider>
