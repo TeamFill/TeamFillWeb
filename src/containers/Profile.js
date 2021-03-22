@@ -11,6 +11,7 @@ import {
   Row,
   Col,
 } from "antd";
+import Navbar from "../components/Navbar";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -36,7 +37,7 @@ export default function Profile() {
 
   return (
     <div>
-      <Row style={{ marginTop: 70, width: "100%" }}>
+      <Row style={{ marginTop: 40, width: "100%" }}>
         <Col flex="30px" />
         <Col flex="auto">
           <Title level={2}>My Profile</Title>
@@ -141,6 +142,7 @@ export default function Profile() {
         </Col>
         <Col flex="30px" />
       </Row>
+      <Navbar />
     </div>
   );
 }
