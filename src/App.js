@@ -4,6 +4,7 @@ import Login from "./containers/Login";
 import Event from "./containers/Event";
 import Profile from "./containers/Profile";
 import HomepageMap from "./containers/HomepageMap";
+import MyEvents from "./containers/MyEvents";
 import { AuthProvider } from "./auth/Auth";
 import PrivateRoute from "./auth/PrivateRoute";
 
@@ -18,6 +19,7 @@ function App() {
           <Route exact path="/login" component={Login} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/event" component={Event} />
+          <Route exact path="/myevents" component={MyEvents} />
         </div>
       </Router>
     </AuthProvider>
