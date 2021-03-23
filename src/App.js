@@ -7,6 +7,7 @@ import HomepageMap from "./containers/HomepageMap";
 import MyEvents from "./containers/MyEvents";
 import { AuthProvider } from "./auth/Auth";
 import PrivateRoute from "./auth/PrivateRoute";
+import EventInfo from "./containers/EventInfo";
 
 require("dotenv").config();
 
@@ -20,6 +21,7 @@ function App() {
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/event" component={Event} />
           <Route exact path="/myevents" component={MyEvents} />
+          <Route exact path="/eventinfo" component={EventInfo} />
         </div>
       </Router>
     </AuthProvider>

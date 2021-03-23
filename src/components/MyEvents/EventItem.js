@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { NavLink } from 'react-router-dom';
+
 import basketball from "../../assets/SportIcons/basketball.png"
 import soccer from "../../assets/SportIcons/soccer.png"
 import football from "../../assets/SportIcons/football.png"
@@ -8,10 +10,8 @@ import editPen from "../../assets/editPen.png"
 
 import {
     Row,
-    Col,
-    Button
+    Col
 } from "antd";
-  
 
 export default class EventItem extends Component {
     getImage = (sport) => {
@@ -35,7 +35,7 @@ export default class EventItem extends Component {
         return (
             <Row style={styles.rectange}>
                 <Col style={styles.columnIcon}>
-                    <img src={this.getImage(this.props.sport)} alt="mypi"/>
+                    <img style={{ width: "30px", height: "30px"}} src={this.getImage(this.props.sport)} alt="sportIcon"/>
                 </Col>
                 
                 <Col style={styles.columnMiddle}>
@@ -43,7 +43,16 @@ export default class EventItem extends Component {
                     {this.props.time}
                 </Col>
                 <Col style={styles.columnPen}>
-                    <img src={editPen} alt="mypi"/>
+                    <NavLink to={{
+                        pathname:"/eventinfo",
+                        aboutProps:{
+                            title: this.props.event,
+                            time: this.props.time,
+                            ball: this.props.sport
+                        }             
+                    }} exact >
+                        <img src={editPen} alt="edit"/>
+                    </NavLink>
                 </Col>
                 
             </Row>
@@ -54,15 +63,13 @@ export default class EventItem extends Component {
 
 const styles = {
     rectange: {
-        position: "static",
         width: "100%",
         height: "91px",
         background: "#FFFFFF",
         border : "1px solid #C4C4C4",
         boxSizing: "border-box",
         borderRadius: "15px",
-        marginTop: 20,
-        float: "left"
+        marginTop: 20
     },
     columnIcon : {
         float: "left",
