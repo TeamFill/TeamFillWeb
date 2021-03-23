@@ -5,6 +5,7 @@ import {
   Col
 } from "antd";
 import EventItem from '../components/MyEvents/EventItem'
+import * as eventData from '../data/test-myevents-data.json'
 
 const { Title } = Typography;
 
@@ -13,43 +14,7 @@ export default class MyEvent extends Component {
     admin: 0,
     attendingStyle : styles.Clicked,
     createdStyle : styles.unClicked,
-    events: [
-      {
-        id: "123",
-        eventname: "Event Name 1",
-        sport: "basketball",
-        time: "9:41 AM",
-        admin: 0
-      },
-      {
-        id: "456",
-        eventname: "Event Name 2",
-        sport: "football",
-        time: "9:41 AM",
-        admin: 0
-      },
-      {
-        id: "789",
-        eventname: "Admin Event 1",
-        sport: "hockey",
-        time: "9:41 AM",
-        admin: 1
-      },
-      {
-        id: "910",
-        eventname: "Event Name 4",
-        sport: "volleyball",
-        time: "9:41 AM",
-        admin: 0
-      },
-      {
-        id: "012",
-        eventname: "Admin Event 5",
-        sport: "soccer",
-        time: "9:41 AM",
-        admin: 1
-      },
-    ]
+    events: eventData.events
   };
 
   handleadmin = (e, admin) => {
