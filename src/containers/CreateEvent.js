@@ -11,11 +11,13 @@ import {
   TimePicker,
 } from "antd";
 
+import Navbar from "../components/Navbar";
+
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
-export default function Event() {
+export default function CreateEvent() {
   const children = ["Basketball", "Soccer", "Hockey", "Volleyball"];
   const options = [];
   for (let i = 0; i < children.length; i++) {
@@ -36,7 +38,7 @@ export default function Event() {
 
   return (
     <div>
-      <Row style={{ marginTop: 70, width: "100%" }}>
+      <Row style={{ marginTop: 40, width: "100%" }}>
         <Col flex="30px" />
         <Col flex="auto">
           <Title level={2}>Create New Event</Title>
@@ -134,6 +136,7 @@ export default function Event() {
         </Col>
         <Col flex="30px" />
       </Row>
+      <Navbar />
     </div>
   );
 }
