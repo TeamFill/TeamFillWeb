@@ -6,6 +6,7 @@ import {
 } from "antd";
 import EventItem from '../components/MyEvents/EventItem'
 import * as eventData from '../data/test-myevents-data.json'
+import Navbar from "../components/Navbar"
 
 const { Title } = Typography;
 
@@ -55,6 +56,7 @@ export default class MyEvent extends Component {
           </Col>
           <Col flex="30px" />
         </Row>
+        <Navbar />
       </div>
     );
   }

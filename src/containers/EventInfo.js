@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import Navbar from "../components/Navbar"
 
 import basketball from "../assets/SportIcons/basketball.png"
 import soccer from "../assets/SportIcons/soccer.png"
@@ -103,6 +104,7 @@ export default class EventInfo extends Component {
           </Col>
           <Col flex="30px" />
         </Row>
+        <Navbar />
       </div>
     );
   }
