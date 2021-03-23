@@ -15,31 +15,36 @@ export default class MyEvent extends Component {
     createdStyle : styles.unClicked,
     events: [
       {
+        id: "123",
         eventname: "Event Name 1",
         sport: "basketball",
         time: "9:41 AM",
         admin: 0
       },
       {
+        id: "456",
         eventname: "Event Name 2",
         sport: "football",
         time: "9:41 AM",
         admin: 0
       },
       {
-        eventname: "Admin for Event Name 3",
+        id: "789",
+        eventname: "Admin Event 1",
         sport: "hockey",
         time: "9:41 AM",
         admin: 1
       },
       {
+        id: "910",
         eventname: "Event Name 4",
         sport: "volleyball",
         time: "9:41 AM",
         admin: 0
       },
       {
-        eventname: "Admin for Event Name 5",
+        id: "012",
+        eventname: "Admin Event 5",
         sport: "soccer",
         time: "9:41 AM",
         admin: 1
@@ -74,7 +79,8 @@ export default class MyEvent extends Component {
             </Title>
             { toShow.map(event =>
               <Row>
-                <EventItem 
+                <EventItem
+                  key={event.id}
                   event={event.eventname}
                   time={event.time}
                   sport={event.sport}
