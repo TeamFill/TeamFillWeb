@@ -10,7 +10,7 @@ import editPen from "../../assets/editPen.png";
 
 import { Row, Col } from "antd";
 
-export default class EventItem extends Component {
+export default class Message extends Component {
 
   editOption = (admin) => {
     if (admin) {
@@ -37,50 +37,31 @@ export default class EventItem extends Component {
 
   render() {
     return (
-      <NavLink style={styles.rectange}
-        to={{
-          pathname: "/eventinfo",
-          aboutProps: {
-            title: this.props.event,
-            time: this.props.time,
-            ball: this.props.sport,
-            returnTo: "/myevents",
-          },
-        }}
-        exact
-      >
-        <Row style={{marginTop:20}}>
+    //   <NavLink style={styles.rectange}
+    //     to={{
+    //       pathname: "/eventinfo",
+    //       aboutProps: {
+    //         title: this.props.event,
+    //         time: this.props.time,
+    //         ball: this.props.sport,
+    //         returnTo: "/myevents",
+    //       },
+    //     }}
+    //     exact
+    //   >
+        <Row style={styles.rectange}>
           <Col style={styles.columnIcon}>
-            <img
-              style={{ width: "30px", height: "30px" }}
-              src={this.getImage(this.props.sport)}
-              alt="sportIcon"
-            />
           </Col>
 
           <Col style={styles.columnMiddle}>
-            {this.props.event} <br />
-            {this.props.time}
+            test
           </Col>
 
           <Col style={styles.columnPen}>
-            <NavLink
-              to={{
-                pathname: "/editevent",
-                aboutProps: {
-                  title: this.props.event,
-                  time: this.props.time,
-                  ball: this.props.sport,
-                  returnTo: "/myevents",
-                },
-              }}
-              exact
-            >
-              {this.editOption(this.props.admin)}
-            </NavLink>
+
           </Col>
         </Row>
-      </NavLink>
+    //   </NavLink>
     );
   }
 }
