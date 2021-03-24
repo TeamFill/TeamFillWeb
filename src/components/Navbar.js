@@ -40,10 +40,10 @@ export default function Navbar() {
       className={classes.root}
     >
       <BottomNavigationAction
-        value="/events"
+        value="/myevents"
         icon={<ListAltIcon className={classes.icon} />}
         component={Link}
-        to="/events"
+        to="/myevents"
         label="."
       />
       <BottomNavigationAction
