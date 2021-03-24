@@ -9,7 +9,7 @@
             },
             "properties": {
               "id": 1,
-              "name": "Kajoban's Basketball Game",
+              "name": "Basketball Game",
               "date": "Friday, March 19th",
               "time": "9:30 p.m.",
               "address": "Ron Joyce Statium"
@@ -23,7 +23,7 @@
             },
             "properties": {
               "id": 2,
-              "name": "Pranav's Soccer Game",
+              "name": "Soccer Game",
               "date": "Friday, March 26th",
               "time": "9:30 p.m.",
               "address": "Dalewood Recreation Centre"
@@ -37,7 +37,7 @@
             },
             "properties": {
               "id": 3,
-              "name": "Nino's Volleyball Game",
+              "name": "Volleyball Game",
               "date": "Friday, April 2nd",
               "time": "9:30 p.m.",
               "address": "David Braley Athletic Centre"
@@ -51,7 +51,7 @@
             },
             "properties": {
               "id": 4,
-              "name": "Karim's Soccer Game",
+              "name": "Soccer Game",
               "date": "Monday, April 5th",
               "time": "9:30 p.m.",
               "address": "66 Dalewood Crescent"
