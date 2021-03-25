@@ -1,4 +1,5 @@
-import React from "react";
+import React, { Component } from 'react';
+import { NavLink } from "react-router-dom";
 import {
   Typography,
   Form,
@@ -16,135 +17,130 @@ import Navbar from "../components/Navbar";
 const { Title } = Typography;
 const { Option } = Select;
 
-export default function Profile() {
-  const children = ["Basketball", "Soccer", "Hockey", "Volleyball"];
-  const options = [];
-  for (let i = 0; i < children.length; i++) {
-    options.push(
-      <Option value={children[i]} key={i}>
-        {children[i]}
-      </Option>
-    );
+export default class Profile extends Component {
+  state= {
+    name: "Lebron James",
+    birthdate: "30/12/1984",
+    gender: "male",
+    rep: 50,
+    radius: 30,
+    preferences: ["Basketball", "Soccer"]
   }
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-
-  return (
-    <div>
-      <Row style={{ marginTop: 40, width: "100%" }}>
-        <Col flex="30px" />
-        <Col flex="auto">
-          <Title level={2}>My Profile</Title>
-          <Form
-            name="basic"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <Form.Item
-              label="Full Name"
-              name="fullname"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your full name!",
-                },
-              ]}
+  render() {
+    return (
+      <div>
+        <Row style={{ marginTop: 40, width: "100%", height: "100%" }}>
+          <Col flex="30px" />
+          <Col flex="auto">
+            <Title level={2}>My Profile</Title>
+            <Form
+              name="basic"
             >
-              <Input style={styles.form} />
-            </Form.Item>
-
-            <Form.Item
-              label="Birthdate"
-              name="birthdate"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your birthdate!",
-                },
-              ]}
-            >
-              <DatePicker style={styles.form} />
-            </Form.Item>
-
-            <Form.Item
-              label="Gender"
-              name="gender"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your gender!",
-                },
-              ]}
-            >
-              <Select size="large" placeholder="Gender">
-                <Option value="male">Male</Option>
-                <Option value="female">Female</Option>
-              </Select>
-            </Form.Item>
-
-            <Divider />
-
-            <Form.Item
-              label="Search Radius"
-              name="radius"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your search radius!",
-                },
-              ]}
-            >
-              <InputNumber style={styles.form} min={1} max={50} />
-            </Form.Item>
-
-            <Form.Item
-              label="Preferences"
-              name="preferences"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your preferences!",
-                },
-              ]}
-            >
-              <Select
-                style={styles.form}
-                mode="multiple"
-                allowClear
-                placeholder="Please select"
+              <Form.Item
+                label="Full Name"
+                name="fullname"
               >
-                {options}
-              </Select>
-            </Form.Item>
+                <Title level={4}>{this.state.name}</Title>
+              </Form.Item>
 
-            <Form.Item>
-              <Button
-                style={{
-                  width: "100%",
-                  height: 50,
-                  borderRadius: 15,
-                  borderColor: "#ff5252",
-                  backgroundColor: "#ff5252",
-                }}
-                type="primary"
-                htmlType="submit"
+              <Form.Item
+                label="Birthdate"
+                name="birthdate"
               >
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
-        </Col>
-        <Col flex="30px" />
-      </Row>
-      <Navbar />
-    </div>
-  );
+                <Title level={4}>{this.state.birthdate}</Title>
+              </Form.Item>
+
+              <Form.Item
+                label="Gender"
+                name="gender"
+              >
+                <Title level={4}>{this.state.gender}</Title>
+              </Form.Item>
+
+              <Form.Item
+                label="Reputation"
+                name="reputation"
+              >
+                <Title level={4}>{this.state.rep}</Title>
+              </Form.Item>
+
+              <Divider />
+
+              <Form.Item
+                label="Search Radius"
+                name="radius"
+              >
+                <Title level={4}>{this.state.radius + " km"}</Title>
+              </Form.Item>
+
+              <Form.Item
+                label="Preferences"
+                name="preferences"
+              >
+                <Title level={4}>{this.state.preferences.join(", ")}</Title>
+              </Form.Item>
+
+              <Form.Item>
+                <NavLink
+                  to={{
+                    pathname: "/editprofile",
+                    aboutProps: {
+                      name: this.state.name,
+                      birthdate: this.state.birthdate,
+                      gender: this.state.gender,
+                      radius: this.state.radius,
+                      preferences: this.state.preferences,
+                      returnTo: "/profile",
+                    },
+                  }}
+                  exact
+                >
+                  <Button
+                    style={{
+                      width: "100%",
+                      height: 50,
+                      borderRadius: 15,
+                      borderColor: "#ff5252",
+                      backgroundColor: "#ff5252",
+                    }}
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    Edit Profile
+                  </Button>
+                </NavLink>
+              </Form.Item>
+
+              <Divider />
+
+              <Form.Item>
+                <Button
+                  shape="round"
+                  style={{
+                    width: "100%",
+                    height: 50,
+                    borderRadius: 15,
+                    borderColor: "#ff5252",
+                    backgroundColor: "#ff5252",
+                  }}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Sign Out
+                </Button>
+              </Form.Item>
+
+              <Divider />
+              <Divider />
+            </Form>
+          </Col>
+          <Col flex="30px" />
+        </Row>
+        <Navbar />
+      </div>
+    );
+  }
 }
 
 const styles = {

@@ -49,12 +49,13 @@ export default class Message extends Component {
     //     }}
     //     exact
     //   >
-        <Row style={styles.rectange}>
+        <Row style={{marginTop:20}}>
           <Col style={styles.columnIcon}>
+              test
           </Col>
 
           <Col style={styles.columnMiddle}>
-            test
+            
           </Col>
 
           <Col style={styles.columnPen}>

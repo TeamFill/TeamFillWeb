@@ -4,12 +4,14 @@ import Login from "./containers/Login";
 import CreateEvent from "./containers/CreateEvent";
 import EditEvent from "./containers/EditEvent";
 import Profile from "./containers/Profile";
+import EditProfile from "./containers/EditProfile";
 import HomepageMap from "./containers/HomepageMap";
 import MyEvents from "./containers/MyEvents";
 import { AuthProvider } from "./auth/Auth";
 import PrivateRoute from "./auth/PrivateRoute";
 import EventInfo from "./containers/EventInfo";
 import Inbox from "./containers/Inbox";
+import Onboarding from "./containers/Onboarding";
 
 require("dotenv").config();
 
@@ -20,7 +22,9 @@ function App() {
         <div>
           <PrivateRoute exact path="/home" component={HomepageMap} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/onboarding" component={Onboarding} />
           <Route exact path="/profile" component={Profile} />
+          <Route exact path="/editprofile" component={EditProfile} />
           <Route exact path="/myevents" component={MyEvents} />
           <Route exact path="/eventinfo" component={EventInfo} />
           <Route exact path="/create" component={CreateEvent} />
