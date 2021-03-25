@@ -144,7 +144,6 @@ export default class Profile extends Component {
                 <Select
                     defaultValue={this.props.location.aboutProps.preferences}
                     style={styles.form}
-                    style={{ width: '100%' }}
                     mode="multiple"
                     allowClear
                     placeholder="Please select"

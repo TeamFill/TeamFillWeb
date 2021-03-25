@@ -3,19 +3,14 @@ import { NavLink } from "react-router-dom";
 import {
   Typography,
   Form,
-  Input,
   Button,
   Divider,
-  DatePicker,
-  Select,
-  InputNumber,
   Row,
   Col,
 } from "antd";
 import Navbar from "../components/Navbar";
 
 const { Title } = Typography;
-const { Option } = Select;
 
 export default class Profile extends Component {
   state= {
@@ -142,11 +137,3 @@ export default class Profile extends Component {
     );
   }
 }
-
-const styles = {
-  form: {
-    width: "100%",
-    height: 50,
-    borderRadius: 15,
-  },
-};

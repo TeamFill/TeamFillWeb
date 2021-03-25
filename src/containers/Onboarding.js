@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { NavLink } from "react-router-dom";
 import {
   Typography,
   Form,
@@ -13,9 +12,6 @@ import {
   Col,
 } from "antd";
 import Navbar from "../components/Navbar";
-import returnIcon from "../assets/return.png";
-import moment from 'moment';
-const dateFormat = 'DD/MM/YYYY';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -131,7 +127,6 @@ export default class Onboarding extends Component {
                 >
                 <Select
                     style={styles.form}
-                    style={{ width: '100%' }}
                     mode="multiple"
                     allowClear
                     placeholder="Please select"

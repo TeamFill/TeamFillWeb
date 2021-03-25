@@ -111,7 +111,6 @@ export default class EventInfo extends Component {
                       height: "33.33px",
                       marginLeft: "20px",
                       marginTop: "10px",
-                      marginTop: "10px",
                     }}
                     src={pinIcon}
                     alt="pin"

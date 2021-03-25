@@ -2,20 +2,29 @@ import React, { Component } from 'react';
 import {
   Typography,
   Row,
-  Col
+  Col,
 } from "antd";
 import Message from '../components/Inbox/Message.js'
-import * as eventData from '../data/test-myevents-data.json'
+import Request from '../components/Inbox/Request.js'
 import Navbar from "../components/Navbar"
 
 const { Title } = Typography;
+
+const styles = {
+  unClicked: {
+    color: "Black",
+    fontWeight: 100,
+  },
+  Clicked: {
+    color: "Black",
+  }
+};
 
 export default class Inbox extends Component {
   state ={
     inbox: 0,
     attendingStyle : styles.Clicked,
-    createdStyle : styles.unClicked,
-    events: eventData.events
+    createdStyle : styles.unClicked
   };
 
 
@@ -44,11 +53,19 @@ export default class Inbox extends Component {
               <a style={this.state.attendingStyle} onClick={e => this.handleadmin(e, 'msg')}> Messages</a> | 
               <a style={this.state.createdStyle} onClick={e => this.handleadmin(e,'')}> Notifications</a>
             </Title>
-          </Col>
-          <Row>
-            <Message />
-          </Row>
-          
+            <Row>
+              <Message />
+            </Row>
+            <Row>
+              <Request />
+            </Row>
+            <Row>
+              <Request />
+            </Row>
+            <Row>
+              <Request />
+            </Row>
+          </Col>         
           <Col flex="30px" />
         </Row>
         <Navbar />
@@ -56,13 +73,3 @@ export default class Inbox extends Component {
     );
   }
 }
-
-const styles = {
-  unClicked: {
-    color: "Black",
-    fontWeight: 100,
-  },
-  Clicked: {
-    color: "Black",
-  }
-};

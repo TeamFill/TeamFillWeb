@@ -1,81 +1,56 @@
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
 
-import basketball from "../../assets/SportIcons/basketball.png";
-import soccer from "../../assets/SportIcons/soccer.png";
-import football from "../../assets/SportIcons/football.png";
-import hockey from "../../assets/SportIcons/hockey.png";
-import volleyball from "../../assets/SportIcons/volleyball.png";
-import editPen from "../../assets/editPen.png";
+import person from "../../assets/person.svg";
 
 import { Row, Col } from "antd";
 
-export default class Message extends Component {
-
-  editOption = (admin) => {
-    if (admin) {
-      return <img src={editPen} alt="edit" />
+export default class Request extends Component {
+    state= {
+        title: "Event 1",
+        msg: "Hey Hey Hey",
+        time: "9:41 AM"
     }
-  }
-
-  getImage = (sport) => {
-    switch (sport) {
-      case "basketball":
-        return basketball;
-      case "soccer":
-        return soccer;
-      case "football":
-        return football;
-      case "hockey":
-        return hockey;
-      case "volleyball":
-        return volleyball;
-      default:
-        return;
-    }
-  };
 
   render() {
     return (
-    //   <NavLink style={styles.rectange}
-    //     to={{
-    //       pathname: "/eventinfo",
-    //       aboutProps: {
-    //         title: this.props.event,
-    //         time: this.props.time,
-    //         ball: this.props.sport,
-    //         returnTo: "/myevents",
-    //       },
-    //     }}
-    //     exact
-    //   >
-        <Row style={{marginTop:20}}>
+
+        <Row style={styles.rectange}>
           <Col style={styles.columnIcon}>
-              test
+            <img
+              src={person}
+              alt="person"
+            />
           </Col>
 
           <Col style={styles.columnMiddle}>
-            
-          </Col>
+            <Row style={{position: "absolute", top: 0, height: "100%"}}>
+              Test
+              <Col style={styles.topLeft}>
+                {this.state.title}
+              </Col>
+              <Col style={styles.topRight}>
+                {this.state.time}
+              </Col>
+            </Row>
 
-          <Col style={styles.columnPen}>
-
+            <Row style={{position: "absolute", bottom: 0, height: "100%"}}>
+              {this.state.msg}
+            </Row>
           </Col>
         </Row>
-    //   </NavLink>
     );
   }
 }
 
 const styles = {
   rectange: {
-    width: "100%",
+    width: "315px",
     height: "91px",
     background: "#FFFFFF",
-    border: "1px solid #C4C4C4",
+    borderTop: "1px solid #C4C4C4",
     boxSizing: "border-box",
-    borderRadius: "15px",
-    marginTop: 20,
+    marginTop: 5,
+    marginBottom: -10
   },
   columnIcon: {
     float: "left",
@@ -86,19 +61,15 @@ const styles = {
     alignItems: "center" /* align vertical */,
   },
   columnMiddle: {
-    width: "50%",
-    padding: "auto",
-    display: "flex",
+    position: "relative",
+    width: "75%",
+    height: "100%",
+    // minHeight: "90px",
+    // padding: "auto",
+    // display: "flex",
     // justifyContent: "center", /* align horizontal */
-    alignItems: "center" /* align vertical */,
-    color: "black"
-  },
-  columnPen: {
-    float: "right",
-    width: "25%",
-    padding: "auto",
-    display: "flex",
-    justifyContent: "center" /* align horizontal */,
-    alignItems: "center" /* align vertical */,
-  },
+    // alignItems: "center" /* align vertical */,
+    // color: "black",
+    // background: "yellow"
+  }
 };

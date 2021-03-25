@@ -10,6 +10,16 @@ import Navbar from "../components/Navbar"
 
 const { Title } = Typography;
 
+const styles = {
+  unClicked: {
+    color: "Black",
+    fontWeight: 100,
+  },
+  Clicked: {
+    color: "Black",
+  }
+};
+
 export default class MyEvent extends Component {
   state ={
     admin: 0,
@@ -70,13 +80,3 @@ export default class MyEvent extends Component {
     );
   }
 }
-
-const styles = {
-  unClicked: {
-    color: "Black",
-    fontWeight: 100,
-  },
-  Clicked: {
-    color: "Black",
-  }
-};

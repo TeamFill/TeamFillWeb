@@ -8,7 +8,7 @@ import { Typography, Button, Row, Col, Image } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import logo from "../assets/logo.png";
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
 const Login = ({ history }) => {
   const handleLogin = useCallback(
