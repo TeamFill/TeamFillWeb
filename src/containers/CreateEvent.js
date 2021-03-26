@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { LocationSearchInput } from "../components/Location.js";
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import {
   Typography,
   Form,
@@ -10,14 +12,42 @@ import {
   Col,
   TimePicker,
 } from "antd";
-
+import firebase from "firebase";
 import Navbar from "../components/Navbar";
+import moment from "moment";
+const dateFormat = "MM/DD/YYYY";
 
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
-export default function CreateEvent() {
+export default function CreateEvent(props) {
+///Some Component
+
+const [address, setAddress] = useState("");
+
+const clearAddress = () => {
+  // Clear with this.props.form.setFieldsValue();
+};
+
+const handleAddressChange = (address) => {
+  // Do something with address
+};
+
+const handleAddressSelect = (address, placeID) => {
+  geocodeByAddress(address)
+    .then(async (results) => {
+      // Do something with results[0]
+      return getLatLng(results[0]);
+    })
+    .then((latLng) => {
+      // Do something with latLng
+    })
+    .catch((error) => {
+      console.error("Error", error);
+    });
+};
+
   const children = ["Basketball", "Soccer", "Hockey", "Volleyball"];
   const options = [];
   for (let i = 0; i < children.length; i++) {
@@ -143,6 +173,17 @@ export default function CreateEvent() {
               ]}
             >
               <TimePicker style={styles.form} />
+            </Form.Item>
+
+
+            <Form.Item>
+              <span>Address</span>
+                <LocationSearchInput
+                  address={address}
+                  clearAddress={clearAddress}
+                  onChange={handleAddressChange}
+                  onAddressSelect={handleAddressSelect}
+                />
             </Form.Item>
 
             <Form.Item>
