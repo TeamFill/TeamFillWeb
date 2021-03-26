@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { LocationSearchInput } from "../components/Location.js";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import { FormComponentProps } from "antd/lib/form/Form";
 import {
   Typography,
   Form,
@@ -24,14 +25,14 @@ const { TextArea } = Input;
 export default function CreateEvent(props) {
 ///Some Component
 
-const [address, setAddress] = useState("");
+const [address, setAddress] = useState("")
 
 const clearAddress = () => {
   // Clear with this.props.form.setFieldsValue();
 };
 
 const handleAddressChange = (address) => {
-  // Do something with address
+  setAddress(address);
 };
 
 const handleAddressSelect = (address, placeID) => {
@@ -59,6 +60,7 @@ const handleAddressSelect = (address, placeID) => {
   }
 
   const onFinish = (values) => {
+    console.log(address)
     console.log("Success:", values);
     const reformattedBirthdate = moment(
       values.birthdate,
@@ -72,12 +74,12 @@ const handleAddressSelect = (address, placeID) => {
           .collection("events")
           .doc(user.uid)
           .set({
-            fullname: values.fullname,
-            birthdate: reformattedBirthdate,
-            gender: values.gender,
-            preferences: values.preferences,
-            radius: values.radius,
-            rep: 0,
+            // fullname: values.fullname,
+            // birthdate: reformattedBirthdate,
+            // gender: values.gender,
+            // preferences: values.preferences,
+            // radius: values.radius,
+            // rep: 0,
           })
           .then(() => {
             console.log("Document successfully written!");
@@ -93,6 +95,8 @@ const handleAddressSelect = (address, placeID) => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+  
+  const { getFieldDecorator } = props.form;
 
   return (
     <div>
@@ -176,14 +180,27 @@ const handleAddressSelect = (address, placeID) => {
             </Form.Item>
 
 
-            <Form.Item>
-              <span>Address</span>
+            <Form.Item
+              label="Address"
+              name="address"
+              style={{ width: "315px" }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the event address!",
+                },
+              ]}>
+                {getFieldDecorator("addressInput", {
+                initialValue: "",
+                rules: [{ required: false }]
+              })(
                 <LocationSearchInput
-                  address={address}
-                  clearAddress={clearAddress}
-                  onChange={handleAddressChange}
-                  onAddressSelect={handleAddressSelect}
+                  address={this.state.address}
+                  clearAddress={this.clearAddress}
+                  onChange={this.handleAddressChange}
+                  onAddressSelect={this.handleAddressSelect}
                 />
+              )}
             </Form.Item>
 
             <Form.Item>
