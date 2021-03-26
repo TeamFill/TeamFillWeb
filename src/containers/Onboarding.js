@@ -11,8 +11,8 @@ import {
   Row,
   Col,
 } from "antd";
-import Navbar from "../components/Navbar";
 import firebase from "firebase";
+import { Redirect } from "react-router";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -55,6 +55,7 @@ export default class Onboarding extends Component {
         // No user is signed in.
       }
     });
+    this.props.history.push("/home");
   };
 
   onFinishFailed = (errorInfo) => {
