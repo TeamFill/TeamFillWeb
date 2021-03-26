@@ -30,7 +30,29 @@ const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
 
   if (currentUser) {
-    return <Redirect to="/" />;
+    let temp = false;
+    temp = firebase
+      .firestore()
+      .collection("users")
+      .doc(currentUser.uid)
+      .get()
+      .then((docSnapshot) => {
+        console.log(docSnapshot);
+        if (!docSnapshot.exists) {
+          return true;
+        }
+        console.log("doc");
+        return false;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    console.log(temp);
+    if (temp) {
+      return <Redirect to="/onboarding" />;
+    } else {
+      return <Redirect to="/home" />;
+    }
   }
 
   return (
