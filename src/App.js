@@ -12,6 +12,7 @@ import PrivateRoute from "./auth/PrivateRoute";
 import EventInfo from "./containers/EventInfo";
 import Inbox from "./containers/Inbox";
 import Onboarding from "./containers/Onboarding";
+import Chat from './containers/Chat';
 
 require("dotenv").config();
 
@@ -30,6 +31,8 @@ function App() {
           <Route exact path="/create" component={CreateEvent} />
           <Route exact path="/editevent" component={EditEvent} />
           <Route exact path="/inbox" component={Inbox} />
+          {/* Ninos Yomo */}
+          <Route exact path="/chat" component={Chat} />
         </div>
       </Router>
     </AuthProvider>
