@@ -12,10 +12,12 @@ import {
   Col,
 } from "antd";
 import firebase from "firebase";
-import { Redirect } from "react-router";
+import moment from "moment";
 
 const { Title } = Typography;
 const { Option } = Select;
+
+const dateFormat = "MM/DD/YYYY";
 
 export default class Onboarding extends Component {
   SportOpt = () => {
@@ -33,7 +35,12 @@ export default class Onboarding extends Component {
 
   onFinish = (values) => {
     console.log("Success:", values);
+    const reformattedBirthdate = moment(
+      values.birthdate,
+      dateFormat
+    ).toString();
     firebase.auth().onAuthStateChanged(function (user) {
+      console.log(values);
       if (user) {
         firebase
           .firestore()
@@ -41,9 +48,11 @@ export default class Onboarding extends Component {
           .doc(user.uid)
           .set({
             fullname: values.fullname,
+            birthdate: reformattedBirthdate,
             gender: values.gender,
             preferences: values.preferences,
             radius: values.radius,
+            rep: 0,
           })
           .then(() => {
             console.log("Document successfully written!");
@@ -51,8 +60,6 @@ export default class Onboarding extends Component {
           .catch((error) => {
             console.error("Error writing document: ", error);
           });
-      } else {
-        // No user is signed in.
       }
     });
     this.props.history.push("/home");
@@ -63,7 +70,6 @@ export default class Onboarding extends Component {
   };
 
   render() {
-    console.log("onboarding11");
     return (
       <div>
         <Row style={{ marginTop: 40, width: "100%" }}>
