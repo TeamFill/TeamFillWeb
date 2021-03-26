@@ -30,6 +30,34 @@ export default function CreateEvent() {
 
   const onFinish = (values) => {
     console.log("Success:", values);
+    const reformattedBirthdate = moment(
+      values.birthdate,
+      dateFormat
+    ).toString();
+    firebase.auth().onAuthStateChanged(function (user) {
+      console.log(values);
+      if (user) {
+        firebase
+          .firestore()
+          .collection("events")
+          .doc(user.uid)
+          .set({
+            fullname: values.fullname,
+            birthdate: reformattedBirthdate,
+            gender: values.gender,
+            preferences: values.preferences,
+            radius: values.radius,
+            rep: 0,
+          })
+          .then(() => {
+            console.log("Document successfully written!");
+          })
+          .catch((error) => {
+            console.error("Error writing document: ", error);
+          });
+      }
+    });
+    this.props.history.push("/home");
   };
 
   const onFinishFailed = (errorInfo) => {

@@ -54,7 +54,7 @@ export default class Profile extends Component {
                 </Form.Item>
 
                 <Form.Item label="Birthdate" name="birthdate">
-                  <Title level={4}>{this.state.birthdate}</Title>
+                  <Title level={4}>{this.state.birthdate.split(" ").slice(1, 4).join(" ")}</Title>
                 </Form.Item>
 
                 <Form.Item label="Gender" name="gender">

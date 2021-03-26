@@ -12,6 +12,7 @@ import {
   Row,
   Col,
 } from "antd";
+import firebase from "firebase";
 import Navbar from "../components/Navbar";
 import returnIcon from "../assets/return.png";
 import moment from "moment";
@@ -36,6 +37,33 @@ export default class Profile extends Component {
 
   onFinish = (values) => {
     console.log("Success:", values);
+    const reformattedBirthdate = moment(
+      values.birthdate,
+      dateFormat
+    ).toString();
+    firebase.auth().onAuthStateChanged(function (user) {
+      console.log(values);
+      if (user) {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .update({
+            fullname: values.fullname,
+            birthdate: reformattedBirthdate,
+            gender: values.gender,
+            preferences: values.preferences,
+            radius: values.radius
+          })
+          .then(() => {
+            console.log("Document successfully written!");
+          })
+          .catch((error) => {
+            console.error("Error writing document: ", error);
+          });
+      }
+    });
+    this.props.history.push("/profile");
   };
 
   onFinishFailed = (errorInfo) => {
@@ -59,6 +87,13 @@ export default class Profile extends Component {
               Edit My Profile
             </Title>
             <Form
+            initialValues={
+                {fullname: this.props.location.aboutProps.name,
+                birthdate: moment(this.props.location.aboutProps.birthdate),
+                gender: this.props.location.aboutProps.gender,
+                radius: this.props.location.aboutProps.radius,
+                preferences: this.props.location.aboutProps.preferences
+              }}
               name="basic"
               onFinish={this.onFinish}
               onFinishFailed={this.onFinishFailed}
@@ -66,35 +101,22 @@ export default class Profile extends Component {
               <Form.Item
                 label="Full Name"
                 name="fullname"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your full name!",
-                  },
-                ]}
               >
                 <Input
                   style={styles.form}
-                  defaultValue={this.props.location.aboutProps.name}
+                  // defaultValue={this.props.location.aboutProps.name}
                 />
               </Form.Item>
 
               <Form.Item
                 label="Birthdate"
                 name="birthdate"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your birthdate!",
-                  },
-                ]}
               >
                 <DatePicker
                   style={styles.form}
-                  defaultValue={moment(
-                    this.props.location.aboutProps.birthdate,
-                    dateFormat
-                  )}
+                  // defaultValue={moment(
+                  //   this.props.location.aboutProps.birthdate
+                  // )}
                   format={dateFormat}
                 />
               </Form.Item>
@@ -102,17 +124,11 @@ export default class Profile extends Component {
               <Form.Item
                 label="Gender"
                 name="gender"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your gender!",
-                  },
-                ]}
               >
                 <Select
                   size="large"
                   placeholder="Gender"
-                  defaultValue={this.props.location.aboutProps.gender}
+                  // defaultValue={this.props.location.aboutProps.gender}
                 >
                   <Option value="male">Male</Option>
                   <Option value="female">Female</Option>
@@ -124,16 +140,10 @@ export default class Profile extends Component {
               <Form.Item
                 label="Search Radius"
                 name="radius"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your search radius!",
-                  },
-                ]}
               >
                 <InputNumber
                   style={styles.form}
-                  defaultValue={this.props.location.aboutProps.radius}
+                  // defaultValue={this.props.location.aboutProps.radius}
                   min={1}
                   max={50}
                   formatter={(value) => `${value} km`}
@@ -145,15 +155,9 @@ export default class Profile extends Component {
                 label="Preferences"
                 name="preferences"
                 style={{ width: "315px" }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your preferences!",
-                  },
-                ]}
               >
                 <Select
-                  defaultValue={this.props.location.aboutProps.preferences}
+                  // defaultValue={this.props.location.aboutProps.preferences}
                   style={styles.form}
                   mode="multiple"
                   allowClear
