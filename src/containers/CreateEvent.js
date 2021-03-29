@@ -15,45 +15,47 @@ import {
   Col,
   TimePicker,
 } from "antd";
+
 import firebase from "firebase";
 import Navbar from "../components/Navbar";
 import moment from "moment";
+
+const options = {
+  provider: "openstreetmap",
+};
+
 const dateFormat = "MM/DD/YYYY";
-
-
 
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
-
-
 export default function CreateEvent(props) {
-///Some Component
+  ///Some Component
 
-const [address, setAddress] = useState("")
+  const [address, setAddress] = useState("");
 
-const clearAddress = () => {
-  // Clear with this.props.form.setFieldsValue();
-};
+  const clearAddress = () => {
+    // Clear with this.props.form.setFieldsValue();
+  };
 
-const handleAddressChange = (address) => {
-  setAddress(address);
-};
+  const handleAddressChange = (address) => {
+    setAddress(address);
+  };
 
-const handleAddressSelect = (address, placeID) => {
-  geocodeByAddress(address)
-    .then(async (results) => {
-      // Do something with results[0]
-      return getLatLng(results[0]);
-    })
-    .then((latLng) => {
-      // Do something with latLng
-    })
-    .catch((error) => {
-      console.error("Error", error);
-    });
-};
+  const handleAddressSelect = (address, placeID) => {
+    geocodeByAddress(address)
+      .then(async (results) => {
+        // Do something with results[0]
+        return getLatLng(results[0]);
+      })
+      .then((latLng) => {
+        // Do something with latLng
+      })
+      .catch((error) => {
+        console.error("Error", error);
+      });
+  };
 
   const children = ["Basketball", "Soccer", "Hockey", "Volleyball"];
   const options = [];
@@ -65,36 +67,29 @@ const handleAddressSelect = (address, placeID) => {
     );
   }
 
-
   const guidGenerator = () => {
-    var S4 = function() {
-       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    var S4 = function () {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     };
-    return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
-  }
+    return S4() + S4() + S4() + S4() + S4() + S4() + S4() + S4();
+  };
 
   const { currentUser } = useContext(AuthContext);
 
-  const onFinish = (values) => {
-    console.log(address)
+  const onFinish = async (values) => {
+    console.log(address);
     console.log("Success:", values);
-    const reformattedDate = moment(
-      values.eventdate,
-      dateFormat
-    ).toString();
+    const reformattedDate = moment(values.date, dateFormat).toString();
 
-    const reformattedTime = moment(
-      values.eventtime, 
-      'HH:mm:ss'
-    ).toString()
+    const reformattedTime = moment(values.time, "HH:mm:ss").toString();
     // firebase.auth().onAuthStateChanged(function (user) {
-      
+
     // });
 
     console.log(values);
 
     const eventid = guidGenerator();
-    async function idExists () {
+    async function idExists() {
       try {
         return await fb
           .firestore()
@@ -103,7 +98,7 @@ const handleAddressSelect = (address, placeID) => {
           .get()
           .then((docSnapshot) => {
             if (docSnapshot.exists) {
-              console.log("Event Exists!!")
+              console.log("Event Exists!!");
               eventid = guidGenerator();
               return true;
             } else {
@@ -117,38 +112,35 @@ const handleAddressSelect = (address, placeID) => {
       } catch (err) {
         console.log(err);
       }
-    } 
-    
-    // while(idExists()){
-    //   console.log("generating new event id!!");
-    // }
+    }
 
     firebase
-    .firestore()
-    .collection("events")
-    .doc(eventid)
-    .set({
-      eventname: values.eventname,
-      eventdescription: values.eventdescription,
-      eventtype: values.eventtype,
-      eventdate: reformattedDate,
-      eventtime: reformattedTime,
-      eventadmin: currentUser.uid,
-      // eventattendees: ""
-    })
-    .then(() => {
-      console.log("Document successfully written!");
-    })
-    .catch((error) => {
-      console.error("Error writing document: ", error);
-    });
-    this.props.history.push("/home");    
+      .firestore()
+      .collection("events")
+      .doc(eventid)
+      .set({
+        name: values.name,
+        description: values.description,
+        type: values.type,
+        date: reformattedDate,
+        time: reformattedTime,
+        admin: currentUser.uid,
+        // coordinates: [res[0].latitude, res[0].longitude],
+        // address: values.address,
+      })
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });
+    this.props.history.push("/home");
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  
+
   // const { getFieldDecorator } = props.form;
 
   return (
@@ -164,7 +156,7 @@ const handleAddressSelect = (address, placeID) => {
           >
             <Form.Item
               label="Event Name"
-              name="eventname"
+              name="name"
               rules={[
                 {
                   required: true,
@@ -177,7 +169,7 @@ const handleAddressSelect = (address, placeID) => {
 
             <Form.Item
               label="Event Description"
-              name="eventdescription"
+              name="description"
               rules={[
                 {
                   required: true,
@@ -208,7 +200,7 @@ const handleAddressSelect = (address, placeID) => {
 
             <Form.Item
               label="Event Date"
-              name="eventdate"
+              name="date"
               rules={[
                 {
                   required: true,
@@ -221,7 +213,7 @@ const handleAddressSelect = (address, placeID) => {
 
             <Form.Item
               label="Event Time"
-              name="eventtime"
+              name="time"
               rules={[
                 {
                   required: true,
@@ -232,6 +224,18 @@ const handleAddressSelect = (address, placeID) => {
               <TimePicker style={styles.form} />
             </Form.Item>
 
+            <Form.Item
+              label="Event Location"
+              name="address"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the event address!",
+                },
+              ]}
+            >
+              <Input style={styles.form} />
+            </Form.Item>
 
             {/* <Form.Item
               label="Address"
@@ -275,6 +279,9 @@ const handleAddressSelect = (address, placeID) => {
         </Col>
         <Col flex="30px" />
       </Row>
+      <br />
+      <br />
+      <br />
       <Navbar />
     </div>
   );
