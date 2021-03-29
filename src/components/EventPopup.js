@@ -1,29 +1,45 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Typography, Button } from "antd";
 import { NavLink } from "react-router-dom";
+import firebase from "firebase";
+import { AuthContext } from "../auth/Auth";
 
 const { Text, Paragraph } = Typography;
 
 export default function EventPopup(props) {
-  const handleClick = () => alert("nice click");
+
+  const { currentUser } = useContext(AuthContext);
+  const handleClick = () => {
+    firebase
+      .firestore()
+      .collection("events")
+      .doc(props.id)
+      .update({
+        attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "pending"})
+      })
+  };
+
   return (
     <NavLink
       to={{
         pathname: "/eventinfo",
         aboutProps: {
-          title: props.event.properties.name,
-          time: props.event.properties.time,
-          ball: "soccer",
+          title: props.event.name,
+          time: props.event.time,
+          ball: props.event.type,
+          description: props.event.description,
+          attendees: props.event.attendees,
+          date: props.event.date,
           returnTo: "/home",
         },
       }}
       exact
     >
       <Paragraph>
-        <Text strong>{props.event.properties.name}</Text>
+        <Text strong>{props.event.name}</Text>
       </Paragraph>
       <Paragraph>
-        {props.event.properties.date} at {props.event.properties.time}
+        {props.event.date} at {props.event.time}
       </Paragraph>
       <Button
         style={{

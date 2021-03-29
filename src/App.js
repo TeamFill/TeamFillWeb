@@ -21,15 +21,16 @@ function App() {
       <Router>
         <div>
           <PrivateRoute exact path="/home" component={HomepageMap} />
+          <PrivateRoute exact path="/onboarding" component={Onboarding} />
+          <PrivateRoute exact path="/profile" component={Profile} />
+          <PrivateRoute exact path="/editprofile" component={EditProfile} />
+          <PrivateRoute exact path="/myevents" component={MyEvents} />
+          <PrivateRoute exact path="/eventinfo" component={EventInfo} />
+          <PrivateRoute exact path="/create" component={CreateEvent} />
+          <PrivateRoute exact path="/editevent" component={EditEvent} />
+          <PrivateRoute exact path="/inbox" component={Inbox} />
+          <PrivateRoute exact path="/" component={HomepageMap} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/onboarding" component={Onboarding} />
-          <Route exact path="/profile" component={Profile} />
-          <Route exact path="/editprofile" component={EditProfile} />
-          <Route exact path="/myevents" component={MyEvents} />
-          <Route exact path="/eventinfo" component={EventInfo} />
-          <Route exact path="/create" component={CreateEvent} />
-          <Route exact path="/editevent" component={EditEvent} />
-          <Route exact path="/inbox" component={Inbox} />
         </div>
       </Router>
     </AuthProvider>
