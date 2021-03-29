@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Typography, Row, Col } from "antd";
+import firebase from "firebase";
 import Message from "../components/Inbox/Message.js";
 import Request from "../components/Inbox/Request.js";
 import Navbar from "../components/Navbar";
@@ -19,9 +20,16 @@ const styles = {
 export default class Inbox extends Component {
   state = {
     inbox: 0,
+    events: [],
+    penduserdata: [],
     attendingStyle: styles.Clicked,
     createdStyle: styles.unClicked,
   };
+
+  componentDidMount() {
+    const currentUser = firebase.auth().currentUser;
+    this.getPendingReq(currentUser.uid);
+  }
 
   handleadmin = (e, inbox) => {
     if (inbox === "msg") {
@@ -38,6 +46,36 @@ export default class Inbox extends Component {
       console.log("Created");
     }
   };
+
+  getPendingReq = async (uid) => {
+    let events= [];
+    const eventsRef = firebase.firestore().collection("events");
+    const snapshot = await eventsRef.where("admin", "==", uid)
+      .get();
+    if (snapshot.empty) {
+      console.log("No matching documents.");
+      return;
+    }
+    snapshot.forEach((doc) => {
+      events.push({id: doc.id, data: doc.data()})
+      // console.log(doc.id, "=>", doc.data());
+    });
+    // console.log(events);
+    let penduserdata = []
+    for (let i = 0; i < events.length; i++) {
+      for (let attendee = 0; attendee < events[i].data.attendees.length; attendee++) {
+        if(events[i].data.attendees[attendee].status === "pending") {
+          firebase.firestore().collection('users').doc(events[i].data.attendees[attendee].id)
+            .get().then((doc) => { 
+              penduserdata.push({ eventid:  events[i].id, 
+                                  attendee: events[i].data.attendees[attendee].id,  
+                                  userdata: doc.data()})} );
+        }
+      }    
+    }
+    this.setState({penduserdata: penduserdata});
+    console.log(penduserdata);
+  }
 
   render() {
     // const toShow = this.state.events.filter(event => event.admin === this.state.admin);
@@ -63,15 +101,6 @@ export default class Inbox extends Component {
                 Notifications
               </a>
             </Title>
-            <Row>
-              <Message />
-            </Row>
-            <Row>
-              <Request />
-            </Row>
-            <Row>
-              <Request />
-            </Row>
             <Row>
               <Request />
             </Row>

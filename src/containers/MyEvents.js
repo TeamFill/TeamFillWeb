@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { AuthContext } from "../auth/Auth";
-import fb from "../firebase.js";
+import firebase from "firebase";
 import { Typography, Row, Col } from "antd";
 import EventItem from "../components/MyEvents/EventItem";
 import * as eventData from "../data/test-myevents-data.json";
@@ -51,7 +51,7 @@ export default class MyEvent extends Component {
   };
 
   getEventsCreated = async (uid) => {
-    const eventsRef = fb.firestore().collection("events");
+    const eventsRef = firebase.firestore().collection("events");
     const snapshot = await eventsRef.where("admin", "==", uid).get();
     if (snapshot.empty) {
       console.log("No matching documents.");
@@ -64,7 +64,7 @@ export default class MyEvent extends Component {
   };
 
   getEventsAttending = async (uid) => {
-    const eventsRef = fb.firestore().collection("events");
+    const eventsRef = firebase.firestore().collection("events");
     const snapshot = await eventsRef
       .where("attendees", "array-contains", {
         uid: uid,
@@ -81,10 +81,10 @@ export default class MyEvent extends Component {
   };
 
   render() {
-    // const currentUser = fb.auth().currentUser;
+    // const currentUser = firebase.auth().currentUser;
     // this.getEventsCreated(currentUser.uid);
 
-    const currentUser = fb.auth().currentUser;
+    const currentUser = firebase.auth().currentUser;
     this.getEventsAttending(currentUser.uid);
 
     const toShow = this.state.events.filter(
