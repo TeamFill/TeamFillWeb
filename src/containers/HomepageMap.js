@@ -30,10 +30,9 @@ export default function HomepageMap() {
       .collection("events")
       .get()
       .then((snapshot) => {
-        setEventInfo(snapshot.docs.map((doc) => doc.data()));
+        setEventInfo(snapshot.docs.map((doc) => ({id: doc.id, data:doc.data()})  ));
       });
     setLoading(false);
-    console.log(eventInfo);
   }, []);
   return (
     !loading && (
@@ -42,12 +41,12 @@ export default function HomepageMap() {
           <TileLayer url={MapboxURL} />
           {eventInfo.map((event) => (
             <Marker
-              // key={event.properties.id}
-              position={[event.coordinates["x"], event.coordinates["y"]]}
+              key={event.id}
+              position={[event.data.coordinates["x"], event.data.coordinates["y"]]}
               icon={icon}
             >
               <StyledPopup>
-                <EventPopup event={event} />
+                <EventPopup event={event.data} id={event.id} />
               </StyledPopup>
             </Marker>
           ))}

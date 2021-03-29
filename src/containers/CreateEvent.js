@@ -3,7 +3,7 @@ import { LocationSearchInput } from "../components/Location.js";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import { FormComponentProps } from "antd/lib/form/Form";
 import { AuthContext } from "../auth/Auth";
-import fb from "../firebase.js";
+import firebase from "firebase";
 import {
   Typography,
   Form,
@@ -16,7 +16,7 @@ import {
   TimePicker,
 } from "antd";
 
-import firebase from "firebase";
+
 import Navbar from "../components/Navbar";
 import moment from "moment";
 
@@ -82,16 +82,12 @@ export default function CreateEvent(props) {
     const reformattedDate = moment(values.date, dateFormat).toString();
 
     const reformattedTime = moment(values.time, "HH:mm:ss").toString();
-    // firebase.auth().onAuthStateChanged(function (user) {
-
-    // });
 
     console.log(values);
-
     const eventid = guidGenerator();
     async function idExists() {
       try {
-        return await fb
+        return await firebase
           .firestore()
           .collection("events")
           .doc(eventid)
@@ -140,8 +136,6 @@ export default function CreateEvent(props) {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
-  // const { getFieldDecorator } = props.form;
 
   return (
     <div>

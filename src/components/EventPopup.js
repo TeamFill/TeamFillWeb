@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Typography, Button } from "antd";
 import { NavLink } from "react-router-dom";
+import firebase from "firebase";
+import { AuthContext } from "../auth/Auth";
 
 const { Text, Paragraph } = Typography;
 
 export default function EventPopup(props) {
-  const handleClick = () => alert("nice click");
+
+  const { currentUser } = useContext(AuthContext);
+  const handleClick = () => {
+    firebase
+      .firestore()
+      .collection("events")
+      .doc(props.id)
+      .update({
+        attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "pending"})
+      })
+  };
+
   return (
     <NavLink
       to={{
