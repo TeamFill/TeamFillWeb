@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { AuthContext } from "../auth/Auth";
+import fb from "../firebase.js";
 import {
   Typography,
   Row,
@@ -50,7 +52,24 @@ export default class MyEvent extends Component {
     }
   }
 
+  getEventsCreated = async (uid) => {  
+    const eventsRef = fb.firestore().collection('events');
+    const snapshot = await eventsRef.where('eventadmin', '==', uid).get();
+    if (snapshot.empty) {
+      console.log('No matching documents.');
+      return;
+    }  
+  
+    snapshot.forEach(doc => {
+      console.log(doc.id, '=>', doc.data());
+    });
+  }
+
+
   render() {
+    const currentUser = fb.auth().currentUser;
+    this.getEventsCreated(currentUser.uid);
+  
     const toShow = this.state.events.filter(event => event.admin === this.state.admin);
     return (
       <div>

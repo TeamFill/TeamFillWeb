@@ -71,7 +71,7 @@ export default class Profile extends Component {
                   <Title level={4}>{this.state.radius + " km"}</Title>
                 </Form.Item>
 
-                <Form.Item label="Preferences" name="preferences">
+                <Form.Item label="Preferences" name="preferences" style={{ width: "315px" }}>
                   <Title level={4}>{this.state.preferences.join(", ")}</Title>
                 </Form.Item>
 

@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { LocationSearchInput } from "../components/Location.js";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import { FormComponentProps } from "antd/lib/form/Form";
+import { AuthContext } from "../auth/Auth";
+import fb from "../firebase.js";
 import {
   Typography,
   Form,
@@ -18,9 +20,13 @@ import Navbar from "../components/Navbar";
 import moment from "moment";
 const dateFormat = "MM/DD/YYYY";
 
+
+
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
+
+
 
 export default function CreateEvent(props) {
 ///Some Component
@@ -59,44 +65,91 @@ const handleAddressSelect = (address, placeID) => {
     );
   }
 
+
+  const guidGenerator = () => {
+    var S4 = function() {
+       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    };
+    return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
+  }
+
+  const { currentUser } = useContext(AuthContext);
+
   const onFinish = (values) => {
     console.log(address)
     console.log("Success:", values);
-    const reformattedBirthdate = moment(
-      values.birthdate,
+    const reformattedDate = moment(
+      values.eventdate,
       dateFormat
     ).toString();
-    firebase.auth().onAuthStateChanged(function (user) {
-      console.log(values);
-      if (user) {
-        firebase
+
+    const reformattedTime = moment(
+      values.eventtime, 
+      'HH:mm:ss'
+    ).toString()
+    // firebase.auth().onAuthStateChanged(function (user) {
+      
+    // });
+
+    console.log(values);
+
+    const eventid = guidGenerator();
+    async function idExists () {
+      try {
+        return await fb
           .firestore()
           .collection("events")
-          .doc(user.uid)
-          .set({
-            // fullname: values.fullname,
-            // birthdate: reformattedBirthdate,
-            // gender: values.gender,
-            // preferences: values.preferences,
-            // radius: values.radius,
-            // rep: 0,
-          })
-          .then(() => {
-            console.log("Document successfully written!");
+          .doc(eventid)
+          .get()
+          .then((docSnapshot) => {
+            if (docSnapshot.exists) {
+              console.log("Event Exists!!")
+              eventid = guidGenerator();
+              return true;
+            } else {
+              console.log("No Event!!");
+              return false;
+            }
           })
           .catch((error) => {
-            console.error("Error writing document: ", error);
+            console.log(error);
           });
+      } catch (err) {
+        console.log(err);
       }
+    } 
+    
+    // while(idExists()){
+    //   console.log("generating new event id!!");
+    // }
+
+    firebase
+    .firestore()
+    .collection("events")
+    .doc(eventid)
+    .set({
+      eventname: values.eventname,
+      eventdescription: values.eventdescription,
+      eventtype: values.eventtype,
+      eventdate: reformattedDate,
+      eventtime: reformattedTime,
+      eventadmin: currentUser.uid,
+      // eventattendees: ""
+    })
+    .then(() => {
+      console.log("Document successfully written!");
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
     });
-    this.props.history.push("/home");
+    this.props.history.push("/home");    
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
   
-  const { getFieldDecorator } = props.form;
+  // const { getFieldDecorator } = props.form;
 
   return (
     <div>
@@ -180,7 +233,7 @@ const handleAddressSelect = (address, placeID) => {
             </Form.Item>
 
 
-            <Form.Item
+            {/* <Form.Item
               label="Address"
               name="address"
               style={{ width: "315px" }}
@@ -201,7 +254,7 @@ const handleAddressSelect = (address, placeID) => {
                   onAddressSelect={this.handleAddressSelect}
                 />
               )}
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item>
               <Button

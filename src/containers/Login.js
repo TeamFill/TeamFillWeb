@@ -39,8 +39,11 @@ const Login = ({ history }) => {
           .get()
           .then((docSnapshot) => {
             if (docSnapshot.exists) {
+              console.log("User Exists!!")
+              console.log(docSnapshot)
               return false; //go to home
             } else {
+              console.log("No user!!");
               return true; //go to onboarding
             }
           })
@@ -51,8 +54,10 @@ const Login = ({ history }) => {
         console.log(err);
       }
     }
+    console.log(getOnboarding());
     if (getOnboarding()) {
       return <Redirect to="/onboarding" />;
+      // return <Redirect to="/profile" />;
     } else {
       return <Redirect to="/home" />;
     }
