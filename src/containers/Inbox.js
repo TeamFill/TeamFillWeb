@@ -48,36 +48,47 @@ export default class Inbox extends Component {
   };
 
   getPendingReq = async (uid) => {
-    let events= [];
+    let events = [];
     const eventsRef = firebase.firestore().collection("events");
-    const snapshot = await eventsRef.where("admin", "==", uid)
-      .get();
+    const snapshot = await eventsRef.where("admin", "==", uid).get();
     if (snapshot.empty) {
       console.log("No matching documents.");
       return;
     }
     snapshot.forEach((doc) => {
-      events.push({id: doc.id, data: doc.data()})
+      events.push({ id: doc.id, data: doc.data() });
       // console.log(doc.id, "=>", doc.data());
     });
     // console.log(events);
-    let penduserdata = []
+    let penduserdata = [];
     for (let i = 0; i < events.length; i++) {
-      for (let attendee = 0; attendee < events[i].data.attendees.length; attendee++) {
-        if(events[i].data.attendees[attendee].status === "pending") {
-          firebase.firestore().collection('users').doc(events[i].data.attendees[attendee].id)
-            .get().then((doc) => { 
-              penduserdata.push({ eventid:  events[i].id, 
-                                  attendee: events[i].data.attendees[attendee].id,  
-                                  userdata: doc.data()})} );
+      for (
+        let attendee = 0;
+        attendee < events[i].data.attendees.length;
+        attendee++
+      ) {
+        if (events[i].data.attendees[attendee].status === "pending") {
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(events[i].data.attendees[attendee].id)
+            .get()
+            .then((doc) => {
+              penduserdata.push({
+                eventid: events[i].id,
+                eventdata: events[i].data,
+                attendee: events[i].data.attendees[attendee].id,
+                userdata: doc.data(),
+              });
+            });
         }
-      }    
+      }
     }
-    this.setState({penduserdata: penduserdata});
-    console.log(penduserdata);
-  }
+    this.setState({ penduserdata: penduserdata });
+  };
 
   render() {
+    console.log(this.state.penduserdata);
     // const toShow = this.state.events.filter(event => event.admin === this.state.admin);
     return (
       <div>
@@ -102,7 +113,8 @@ export default class Inbox extends Component {
               </a>
             </Title>
             <Row>
-              <Request />
+              {this.state.penduserdata &&
+                this.state.penduserdata.map((data) => <Request data={data} />)}
             </Row>
           </Col>
           <Col flex="30px" />
