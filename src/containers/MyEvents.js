@@ -23,8 +23,14 @@ export default class MyEvent extends Component {
     admin: 0,
     attendingStyle: styles.Clicked,
     createdStyle: styles.unClicked,
-    events: eventData.events,
+    events: [],
   };
+
+  componentDidMount = () => {
+    const currentUser = firebase.auth().currentUser;
+    this.getEventsCreated(currentUser.uid);
+    this.getEventsAttending(currentUser.uid);
+  }
 
   returnAsAdmin = () => {
     if (this.props.location.hasOwnProperty("aboutProps")) {
@@ -35,7 +41,7 @@ export default class MyEvent extends Component {
   };
 
   handleadmin = (e, admin) => {
-    if (admin === "admin") {
+    if (admin === 0) {
       //attending
       this.setState({ admin: 0 });
       this.setState({ attendingStyle: styles.Clicked });
@@ -51,6 +57,7 @@ export default class MyEvent extends Component {
   };
 
   getEventsCreated = async (uid) => {
+    const events = [];
     const eventsRef = firebase.firestore().collection("events");
     const snapshot = await eventsRef.where("admin", "==", uid).get();
     if (snapshot.empty) {
@@ -59,16 +66,19 @@ export default class MyEvent extends Component {
     }
 
     snapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
+      // console.log(doc.id, "=>", doc.data());
+      events.push({admin: 1, eventid: doc.id, data: doc.data()});
     });
+    this.setState({events: [...this.state.events, ...events]});
   };
 
   getEventsAttending = async (uid) => {
+    const events = [];
     const eventsRef = firebase.firestore().collection("events");
     const snapshot = await eventsRef
       .where("attendees", "array-contains", {
-        uid: uid,
-        status: "accepted",
+        id: uid,
+        status: "accepted"
       })
       .get();
     if (snapshot.empty) {
@@ -77,19 +87,16 @@ export default class MyEvent extends Component {
     }
     snapshot.forEach((doc) => {
       console.log(doc.id, "=>", doc.data());
+      events.push({admin: 0, eventid: doc.id, data: doc.data()});
     });
+    this.setState({events: [...this.state.events, ...events]});
   };
 
   render() {
-    // const currentUser = firebase.auth().currentUser;
-    // this.getEventsCreated(currentUser.uid);
-
-    const currentUser = firebase.auth().currentUser;
-    this.getEventsAttending(currentUser.uid);
-
     const toShow = this.state.events.filter(
       (event) => event.admin === this.state.admin
     );
+    console.log(toShow)
     return (
       <div>
         <Row style={{ marginTop: 70, width: "100%" }}>
@@ -98,7 +105,7 @@ export default class MyEvent extends Component {
             <Title level={2}>
               <a
                 style={this.state.attendingStyle}
-                onClick={(e) => this.handleadmin(e, "admin")}
+                onClick={(e) => this.handleadmin(e, 0)}
               >
                 {" "}
                 Attending
@@ -115,11 +122,19 @@ export default class MyEvent extends Component {
             {toShow.map((event) => (
               <Row>
                 <EventItem
-                  key={event.id}
-                  event={event.eventname}
-                  time={event.time}
-                  sport={event.sport}
-                  admin={event.admin}
+                  key={event.eventid}
+                  eventid={event.eventid}
+                  adminStatus={event.admin}
+
+                  name={event.data.name}
+                  admin={event.data.admin}
+                  attendees={event.data.attendees}
+                  date={event.data.date}
+                  description={event.data.description}
+                  time={event.data.time}
+                  type={event.data.type}
+                  // address={event.data.address}
+                  // coordinates={event.data.coordinates}
                 />
               </Row>
             ))}

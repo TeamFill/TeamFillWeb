@@ -18,8 +18,8 @@ export default class EventItem extends Component {
     }
   }
 
-  getImage = (sport) => {
-    switch (sport) {
+  getImage = (type) => {
+    switch (type) {
       case "basketball":
         return basketball;
       case "soccer":
@@ -41,9 +41,16 @@ export default class EventItem extends Component {
         to={{
           pathname: "/eventinfo",
           aboutProps: {
-            title: this.props.event,
+            eventid: this.props.eventid,
+            adminStatus: this.props.adminStatus,
+            name: this.props.name,
+            attendees: this.props.attendees,
+            date: this.props.date,
+            description: this.props.description,
             time: this.props.time,
-            ball: this.props.sport,
+            type: this.props.type,
+            // address: this.props.address,
+            // coordinates: this.props.coordinates,
             returnTo: "/myevents",
           },
         }}
@@ -53,14 +60,14 @@ export default class EventItem extends Component {
           <Col style={styles.columnIcon}>
             <img
               style={{ width: "30px", height: "30px" }}
-              src={this.getImage(this.props.sport)}
+              src={this.getImage(this.props.type)}
               alt="sportIcon"
             />
           </Col>
 
           <Col style={styles.columnMiddle}>
-            {this.props.event} <br />
-            {this.props.time}
+            {this.props.name} <br />
+            {this.props.date.split(" ").slice(1, 4).join(" ") + ' ' + this.props.time.split(" ")[4]}
           </Col>
 
           <Col style={styles.columnPen}>
@@ -68,15 +75,22 @@ export default class EventItem extends Component {
               to={{
                 pathname: "/editevent",
                 aboutProps: {
-                  title: this.props.event,
+                  eventid: this.props.eventid,
+                  adminStatus: this.props.adminStatus,
+                  name: this.props.name,
+                  attendees: this.props.attendees,
+                  date: this.props.date,
+                  description: this.props.description,
                   time: this.props.time,
-                  ball: this.props.sport,
+                  type: this.props.type,
+                  // address: this.props.address,
+                  // coordinates: this.props.coordinates,
                   returnTo: "/myevents",
                 },
               }}
               exact
             >
-              {this.editOption(this.props.admin)}
+              {this.editOption(this.props.adminStatus)}
             </NavLink>
           </Col>
         </Row>

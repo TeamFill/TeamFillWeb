@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import firebase from "firebase";
 
 import basketball from "../assets/SportIcons/basketball.png";
 import soccer from "../assets/SportIcons/soccer.png";
@@ -18,8 +19,12 @@ import { Typography, Row, Col } from "antd";
 const { Title } = Typography;
 
 export default class EventInfo extends Component {
-  getImage = (sport) => {
-    switch (sport) {
+  state = {
+    attendees : []
+  }
+
+  getImage = (type) => {
+    switch (type) {
       case "basketball":
         return basketball;
       case "soccer":
@@ -48,14 +53,14 @@ export default class EventInfo extends Component {
                   alt="return"
                 />
               </NavLink>
-              {this.props.location.aboutProps.title}
+              {this.props.location.aboutProps.name}
             </Title>
 
             <div style={styles.rectange}>
               <div style={styles.sportIcon}>
                 <img
                   style={{ width: "70px", height: "70px" }}
-                  src={this.getImage(this.props.location.aboutProps.ball)}
+                  src={this.getImage(this.props.location.aboutProps.type)}
                   alt="sportIcon"
                 />
               </div>
@@ -75,9 +80,7 @@ export default class EventInfo extends Component {
                 <Col style={{ width: "80%" }}>
                   <h4 style={{ marginLeft: "10px" }}>Description</h4>
                   <p style={styles.text}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+                    {this.props.location.aboutProps.description}
                   </p>
                 </Col>
               </Row>
@@ -96,9 +99,11 @@ export default class EventInfo extends Component {
                   />
                 </Col>
                 <Col style={{ width: "80%" }}>
-                  <h4 style={{ marginLeft: "10px" }}>Saturday at 9:41 AM</h4>
+                  <h4 style={{ marginLeft: "10px" }}>
+                    {this.props.location.aboutProps.date.split(' ')[0] + " at " +  this.props.location.aboutProps.time.split(" ")[4]}
+                  </h4>
                   <p style={{ marginLeft: "10px", marginTop: "-10px" }}>
-                    Jan 27th, 2021
+                    {this.props.location.aboutProps.date.split(" ").slice(1, 4).join(" ")}
                   </p>
                 </Col>
               </Row>

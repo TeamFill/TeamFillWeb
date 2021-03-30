@@ -130,7 +130,7 @@ export default function CreateEvent(props) {
       .catch((error) => {
         console.error("Error writing document: ", error);
       });
-    this.props.history.push("/home");
+    // this.props.history.push("/home");
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -176,7 +176,7 @@ export default function CreateEvent(props) {
 
             <Form.Item
               label="Event Type"
-              name="eventtype"
+              name="type"
               rules={[
                 {
                   required: true,
@@ -218,7 +218,7 @@ export default function CreateEvent(props) {
               <TimePicker style={styles.form} />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               label="Event Location"
               name="address"
               rules={[
@@ -229,7 +229,7 @@ export default function CreateEvent(props) {
               ]}
             >
               <Input style={styles.form} />
-            </Form.Item>
+            </Form.Item> */}
 
             {/* <Form.Item
               label="Address"
