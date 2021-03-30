@@ -30,7 +30,9 @@ export default function HomepageMap() {
       .collection("events")
       .get()
       .then((snapshot) => {
-        setEventInfo(snapshot.docs.map((doc) => ({id: doc.id, data:doc.data()})  ));
+        setEventInfo(
+          snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
+        );
       });
     setLoading(false);
   }, []);
@@ -42,7 +44,10 @@ export default function HomepageMap() {
           {eventInfo.map((event) => (
             <Marker
               key={event.id}
-              position={[event.data.coordinates["x"], event.data.coordinates["y"]]}
+              position={[
+                event.data.coordinates["x"],
+                event.data.coordinates["y"],
+              ]}
               icon={icon}
             >
               <StyledPopup>
