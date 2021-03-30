@@ -24,9 +24,9 @@ export default function EventPopup(props) {
       to={{
         pathname: "/eventinfo",
         aboutProps: {
-          title: props.event.name,
+          name: props.event.name,
           time: props.event.time,
-          ball: props.event.type,
+          type: props.event.type,
           description: props.event.description,
           attendees: props.event.attendees,
           date: props.event.date,
@@ -39,7 +39,8 @@ export default function EventPopup(props) {
         <Text strong>{props.event.name}</Text>
       </Paragraph>
       <Paragraph>
-        {props.event.date} at {props.event.time}
+        {props.event.date.split(" ").slice(1, 4).join(" ")} at {props.event.time.split(" ")[4].slice(0, -3)} <br />
+        {props.event.address}
       </Paragraph>
       <Button
         style={{

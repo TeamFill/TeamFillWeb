@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { Redirect } from "react-router";
 import firebase from "firebase";
 
 import basketball from "../assets/SportIcons/basketball.png";
@@ -14,14 +15,36 @@ import clockIcon from "../assets/clock.png";
 import pinIcon from "../assets/pin.png";
 import membersIcon from "../assets/members.png";
 
-import { Typography, Row, Col } from "antd";
+import { Typography, Row, Col, Button, Divider } from "antd";
 
 const { Title } = Typography;
 
 export default class EventInfo extends Component {
+
   state = {
     attendees : []
   }
+
+  // getAttendees = async (uid) => {
+  //   const attendees = []
+  //   const userRef = firebase.firestore().collection("user");
+  //   const snapshot = await userRef
+  //     .where("attendees", "array-contains", {
+  //       id: uid,
+  //       status: "accepted"
+  //     })
+  //     .get();
+  //   if (snapshot.empty) {
+  //     console.log("No matching documents.");
+  //     return;
+  //   }
+  //   snapshot.forEach((doc) => {
+  //     console.log(doc.id, "=>", doc.data());
+  //     events.push({admin: 0, eventid: doc.id, data: doc.data()});
+  //   });
+  //   this.setState({events: [...this.state.events, ...events]});
+
+  // }
 
   getImage = (type) => {
     switch (type) {
@@ -39,6 +62,29 @@ export default class EventInfo extends Component {
         return;
     }
   };
+
+  leaveEvent = () => {
+    const currentUser = firebase.auth().currentUser;
+    const attendees = this.props.location.aboutProps.attendees.filter((attendee) => attendee.id !== currentUser.uid)
+    console.log(attendees)
+    firebase
+    .firestore()
+    .collection("events")
+    .doc(this.props.location.aboutProps.eventid)
+    .update({
+      attendees: attendees
+    })
+    .then(() => {
+      console.log("Document successfully written!");
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+    this.props.history.push("/myevents");
+  }
+
+  
+
   render() {
     return (
       <div>
@@ -156,6 +202,11 @@ export default class EventInfo extends Component {
                     Member List
                   </h4>
                   <ul style={styles.ul}>
+                    {/* {this.props.location.aboutProps.attendees.map((attendee) => (
+
+                    ))
+
+                    } */}
                     <li style={styles.li}>Clinton P.Thomas</li>
                     <li style={styles.li}>Thomas M. Parks</li>
                     <li style={styles.li}>James F. Castillo</li>
@@ -163,6 +214,28 @@ export default class EventInfo extends Component {
                 </Col>
               </Row>
             </div>
+            
+
+            {this.props.location.aboutProps.adminStatus === 0 ? (
+              <div><Divider />
+              <Button style={{  width: "100%",
+                  height: 50,
+                  borderRadius: 15,
+                  borderColor: "#ff5252",
+                  backgroundColor: "#ff5252",
+                  }}
+                  type="primary"
+                  htmlType="submit"
+                  onClick={() => this.leaveEvent()}
+                >
+                LEAVE EVENT
+              </Button></div>
+            ) : (
+              <Divider />
+            )}
+              
+
+            
           </Col>
           <Col flex="30px" />
         </Row>

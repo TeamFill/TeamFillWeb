@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from "react-router-dom";
+import firebase from "firebase";
 import {
   Typography,
   Form,
@@ -11,15 +12,55 @@ import {
   Col,
   TimePicker,
 } from "antd";
-
+import moment from "moment";
 import Navbar from "../components/Navbar";
 import returnIcon from "../assets/return.png";
 
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
+const dateFormat = "MM/DD/YYYY";
 
 export default class EditEvent extends Component {
+
+  onFinish = (values) => {
+    console.log("Success:", values);
+
+    const reformattedDate = moment(values.date, dateFormat).toString();
+
+    const reformattedTime = moment(values.time, "HH:mm:ss").toString();
+
+    console.log(this.props.location.aboutProps.eventid)
+    const eventid = this.props.location.aboutProps.eventid;
+
+    firebase.auth().onAuthStateChanged(function (user) {
+      console.log(values);
+      if (user) {
+        firebase
+          .firestore()
+          .collection("events")
+          .doc(eventid)
+          .update({
+            name: values.name,
+            description: values.description,
+            type: values.type,
+            date: reformattedDate,
+            time: reformattedTime,
+          })
+          .then(() => {
+            console.log("Document successfully written!");
+          })
+          .catch((error) => {
+            console.error("Error writing document: ", error);
+          });
+      }
+    });
+    this.props.history.push("/myevents");
+  };
+
+  onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
 
   render() {
     return (
@@ -38,26 +79,35 @@ export default class EditEvent extends Component {
                 Edit Event
               </Title>
             <Form
+              initialValues={{
+                name: this.props.location.aboutProps.name,
+                description: this.props.location.aboutProps.description,
+                type: this.props.location.aboutProps.type,
+                date: moment(this.props.location.aboutProps.date),
+                time: moment(this.props.location.aboutProps.time),
+              }}
               name="basic"
+              onFinish={this.onFinish}
+              onFinishFailed={this.onFinishFailed}
             >
 
               <Form.Item
                 label="Event Name"
-                name="eventname"
+                name="name"
               >
                 <Input style={styles.form} />
               </Form.Item>
 
               <Form.Item
                 label="Event Description"
-                name="eventdescription"
+                name="description"
               >
                 <TextArea style={styles.form} />
               </Form.Item>
 
               <Form.Item
                 label="Event Type"
-                name="eventtype"
+                name="type"
               >
                 <Select size="large" placeholder="Event Type">
                   <Option value="basketball">Basketball</Option>
@@ -69,14 +119,14 @@ export default class EditEvent extends Component {
 
               <Form.Item
                 label="Event Date"
-                name="eventdate"
+                name="date"
               >
                 <DatePicker style={styles.form} />
               </Form.Item>
 
               <Form.Item
                 label="Event Time"
-                name="eventtime"
+                name="time"
               >
                 <TimePicker style={styles.form} />
               </Form.Item>
