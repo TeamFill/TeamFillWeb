@@ -3,7 +3,6 @@ import { AuthContext } from "../auth/Auth";
 import firebase from "firebase";
 import { Typography, Row, Col } from "antd";
 import EventItem from "../components/MyEvents/EventItem";
-import * as eventData from "../data/test-myevents-data.json";
 import Navbar from "../components/Navbar";
 
 const { Title } = Typography;
@@ -86,7 +85,7 @@ export default class MyEvent extends Component {
       return;
     }
     snapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
+      // console.log(doc.id, "=>", doc.data());
       events.push({admin: 0, eventid: doc.id, data: doc.data()});
     });
     this.setState({events: [...this.state.events, ...events]});
@@ -96,7 +95,6 @@ export default class MyEvent extends Component {
     const toShow = this.state.events.filter(
       (event) => event.admin === this.state.admin
     );
-    console.log(toShow)
     return (
       <div>
         <Row style={{ marginTop: 70, width: "100%" }}>

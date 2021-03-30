@@ -24,6 +24,8 @@ export default function EventPopup(props) {
       to={{
         pathname: "/eventinfo",
         aboutProps: {
+          eventid: props.event.eventid,
+          admin: props.event.admin,
           name: props.event.name,
           time: props.event.time,
           type: props.event.type,

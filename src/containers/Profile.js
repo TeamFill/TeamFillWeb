@@ -22,7 +22,7 @@ export default class Profile extends Component {
           .get()
           .then((doc) => {
             console.log("Document grabbed data!");
-            console.log(doc.data());
+            // console.log(doc.data());
             currentComponent.setState({
               name: doc.data().fullname,
               birthdate: doc.data().birthdate,

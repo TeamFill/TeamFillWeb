@@ -42,6 +42,7 @@ export default class EventItem extends Component {
           pathname: "/eventinfo",
           aboutProps: {
             eventid: this.props.eventid,
+            admin: this.props.admin,
             adminStatus: this.props.adminStatus,
             name: this.props.name,
             attendees: this.props.attendees,
@@ -101,7 +102,8 @@ export default class EventItem extends Component {
 
 const styles = {
   rectange: {
-    width: "100%",
+    // width: "100%",
+    width: "315px",
     height: "91px",
     background: "#FFFFFF",
     border: "1px solid #C4C4C4",
@@ -123,7 +125,8 @@ const styles = {
     display: "flex",
     // justifyContent: "center", /* align horizontal */
     alignItems: "center" /* align vertical */,
-    color: "black"
+    color: "black",
+    wordWrap: "break-word"
   },
   columnPen: {
     float: "right",

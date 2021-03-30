@@ -182,6 +182,28 @@ export default class Profile extends Component {
                   Submit
                 </Button>
               </Form.Item>
+                
+              <Divider />
+
+              <Form.Item>
+                <Button
+                  style={{
+                    width: "100%",
+                    height: 40,
+                    borderRadius: 15,
+                    borderColor: "#ff5252",
+                    backgroundColor: "white",
+                    color: "#ff5252"
+                  }}
+                  type="primary"
+                >
+                  Delete Profile
+                </Button>
+              </Form.Item>
+              <br />
+              <br />
+
+
             </Form>
           </Col>
           <Col flex="30px" />

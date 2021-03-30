@@ -20,31 +20,70 @@ import { Typography, Row, Col, Button, Divider } from "antd";
 const { Title } = Typography;
 
 export default class EventInfo extends Component {
-
-  state = {
-    attendees : []
+  constructor(props) {
+    super(props);
+    this.state = { 
+      attendees : [],
+      adminInfo: {} 
+    };
   }
 
-  // getAttendees = async (uid) => {
-  //   const attendees = []
-  //   const userRef = firebase.firestore().collection("user");
-  //   const snapshot = await userRef
-  //     .where("attendees", "array-contains", {
-  //       id: uid,
-  //       status: "accepted"
-  //     })
-  //     .get();
-  //   if (snapshot.empty) {
-  //     console.log("No matching documents.");
-  //     return;
-  //   }
-  //   snapshot.forEach((doc) => {
-  //     console.log(doc.id, "=>", doc.data());
-  //     events.push({admin: 0, eventid: doc.id, data: doc.data()});
-  //   });
-  //   this.setState({events: [...this.state.events, ...events]});
+  componentDidMount = () => {
+    this.getAdminInfo()
+    this.getAttendeesInfo()
+  }
 
-  // }
+  getAdminInfo = () =>{
+    let admin = this.props.location.aboutProps.admin
+    let currentComponent = this;
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(admin)
+          .get()
+          .then((doc) => {
+            console.log("Document grabbed data!");
+            // console.log(doc.data());
+            currentComponent.setState({
+              adminInfo : {
+                name: doc.data().fullname,
+                rep: doc.data().rep
+              }
+            });
+          })
+          .catch((error) => {
+            console.error("Error reading document: ", error);
+          });
+      }
+    });
+  }
+
+  getAttendeesInfo = () => {
+    const attendees = []
+    const currenentAttdendees = this.props.location.aboutProps.attendees
+    let currentComponent = this;
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        currenentAttdendees.map((attendee) => 
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(attendee.id)
+          .get()
+          .then((doc) => {
+            console.log("Document grabbed data!");
+            // console.log(doc.data());
+            attendees.push({id: attendee.id, status: attendee.status, data: doc.data()})
+            currentComponent.setState({ attendees: attendees });
+          })
+          .catch((error) => {
+            console.error("Error reading document: ", error);
+          })
+        )}
+    });
+  }
 
   getImage = (type) => {
     switch (type) {
@@ -66,11 +105,11 @@ export default class EventInfo extends Component {
   leaveEvent = () => {
     const currentUser = firebase.auth().currentUser;
     const attendees = this.props.location.aboutProps.attendees.filter((attendee) => attendee.id !== currentUser.uid)
-    console.log(attendees)
+    const eventid = this.props.location.aboutProps.eventid;
     firebase
     .firestore()
     .collection("events")
-    .doc(this.props.location.aboutProps.eventid)
+    .doc(eventid)
     .update({
       attendees: attendees
     })
@@ -202,14 +241,10 @@ export default class EventInfo extends Component {
                     Member List
                   </h4>
                   <ul style={styles.ul}>
-                    {/* {this.props.location.aboutProps.attendees.map((attendee) => (
-
-                    ))
-
-                    } */}
-                    <li style={styles.li}>Clinton P.Thomas</li>
-                    <li style={styles.li}>Thomas M. Parks</li>
-                    <li style={styles.li}>James F. Castillo</li>
+                    <li style={styles.li, {fontWeight: "bold"}}>{this.state.adminInfo.name + " (" + this.state.adminInfo.rep +")"}</li>
+                    {this.state.attendees.map((attendee) => (
+                      <li style={styles.li} key={attendee.id}>{attendee.data.fullname + " (" + attendee.data.rep +")"}</li>
+                    ))}
                   </ul>
                 </Col>
               </Row>
@@ -258,6 +293,8 @@ const styles = {
   title: {
     display: "flex",
     alignItems: "center" /* align vertical */,
+    width: "315px",
+    wordWrap: "break-word"
   },
   sportIcon: {
     display: "flex",
