@@ -22,19 +22,19 @@ const { Title } = Typography;
 export default class EventInfo extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      attendees : [],
-      adminInfo: {} 
+    this.state = {
+      attendees: [],
+      adminInfo: {},
     };
   }
 
   componentDidMount = () => {
-    this.getAdminInfo()
-    this.getAttendeesInfo()
-  }
+    this.getAdminInfo();
+    this.getAttendeesInfo();
+  };
 
-  getAdminInfo = () =>{
-    let admin = this.props.location.aboutProps.admin
+  getAdminInfo = () => {
+    let admin = this.props.location.aboutProps.admin;
     let currentComponent = this;
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
@@ -47,10 +47,10 @@ export default class EventInfo extends Component {
             console.log("Document grabbed data!");
             // console.log(doc.data());
             currentComponent.setState({
-              adminInfo : {
+              adminInfo: {
                 name: doc.data().fullname,
-                rep: doc.data().rep
-              }
+                rep: doc.data().rep,
+              },
             });
           })
           .catch((error) => {
@@ -58,32 +58,39 @@ export default class EventInfo extends Component {
           });
       }
     });
-  }
+  };
 
   getAttendeesInfo = () => {
-    const attendees = []
-    const currenentAttdendees = this.props.location.aboutProps.attendees
+    const attendees = [];
+    console.log("event info");
+    console.log(this.props.location.aboutProps);
+    const currenentAttdendees = this.props.location.aboutProps.attendees;
     let currentComponent = this;
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        currenentAttdendees.map((attendee) => 
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(attendee.id)
-          .get()
-          .then((doc) => {
-            console.log("Document grabbed data!");
-            // console.log(doc.data());
-            attendees.push({id: attendee.id, status: attendee.status, data: doc.data()})
-            currentComponent.setState({ attendees: attendees });
-          })
-          .catch((error) => {
-            console.error("Error reading document: ", error);
-          })
-        )}
+        currenentAttdendees.map((attendee) =>
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(attendee.id)
+            .get()
+            .then((doc) => {
+              console.log("Document grabbed data!");
+              // console.log(doc.data());
+              attendees.push({
+                id: attendee.id,
+                status: attendee.status,
+                data: doc.data(),
+              });
+              currentComponent.setState({ attendees: attendees });
+            })
+            .catch((error) => {
+              console.error("Error reading document: ", error);
+            })
+        );
+      }
     });
-  }
+  };
 
   getImage = (type) => {
     switch (type) {
@@ -104,25 +111,25 @@ export default class EventInfo extends Component {
 
   leaveEvent = () => {
     const currentUser = firebase.auth().currentUser;
-    const attendees = this.props.location.aboutProps.attendees.filter((attendee) => attendee.id !== currentUser.uid)
+    const attendees = this.props.location.aboutProps.attendees.filter(
+      (attendee) => attendee.id !== currentUser.uid
+    );
     const eventid = this.props.location.aboutProps.eventid;
     firebase
-    .firestore()
-    .collection("events")
-    .doc(eventid)
-    .update({
-      attendees: attendees
-    })
-    .then(() => {
-      console.log("Document successfully written!");
-    })
-    .catch((error) => {
-      console.error("Error writing document: ", error);
-    });
+      .firestore()
+      .collection("events")
+      .doc(eventid)
+      .update({
+        attendees: attendees,
+      })
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });
     this.props.history.push("/myevents");
-  }
-
-  
+  };
 
   render() {
     return (
@@ -185,10 +192,15 @@ export default class EventInfo extends Component {
                 </Col>
                 <Col style={{ width: "80%" }}>
                   <h4 style={{ marginLeft: "10px" }}>
-                    {this.props.location.aboutProps.date.split(' ')[0] + " at " +  this.props.location.aboutProps.time.split(" ")[4]}
+                    {this.props.location.aboutProps.date.split(" ")[0] +
+                      " at " +
+                      this.props.location.aboutProps.time.split(" ")[4]}
                   </h4>
                   <p style={{ marginLeft: "10px", marginTop: "-10px" }}>
-                    {this.props.location.aboutProps.date.split(" ").slice(1, 4).join(" ")}
+                    {this.props.location.aboutProps.date
+                      .split(" ")
+                      .slice(1, 4)
+                      .join(" ")}
                   </p>
                 </Col>
               </Row>
@@ -241,36 +253,46 @@ export default class EventInfo extends Component {
                     Member List
                   </h4>
                   <ul style={styles.ul}>
-                    <li style={styles.li, {fontWeight: "bold"}}>{this.state.adminInfo.name + " (" + this.state.adminInfo.rep +")"}</li>
+                    <li style={(styles.li, { fontWeight: "bold" })}>
+                      {this.state.adminInfo.name +
+                        " (" +
+                        this.state.adminInfo.rep +
+                        ")"}
+                    </li>
                     {this.state.attendees.map((attendee) => (
-                      <li style={styles.li} key={attendee.id}>{attendee.data.fullname + " (" + attendee.data.rep +")"}</li>
+                      <li style={styles.li} key={attendee.id}>
+                        {attendee.data.fullname +
+                          " (" +
+                          attendee.data.rep +
+                          ")"}
+                      </li>
                     ))}
                   </ul>
                 </Col>
               </Row>
             </div>
-            
 
             {this.props.location.aboutProps.adminStatus === 0 ? (
-              <div><Divider />
-              <Button style={{  width: "100%",
-                  height: 50,
-                  borderRadius: 15,
-                  borderColor: "#ff5252",
-                  backgroundColor: "#ff5252",
+              <div>
+                <Divider />
+                <Button
+                  style={{
+                    width: "100%",
+                    height: 50,
+                    borderRadius: 15,
+                    borderColor: "#ff5252",
+                    backgroundColor: "#ff5252",
                   }}
                   type="primary"
                   htmlType="submit"
                   onClick={() => this.leaveEvent()}
                 >
-                LEAVE EVENT
-              </Button></div>
+                  LEAVE EVENT
+                </Button>
+              </div>
             ) : (
               <Divider />
             )}
-              
-
-            
           </Col>
           <Col flex="30px" />
         </Row>
@@ -294,7 +316,7 @@ const styles = {
     display: "flex",
     alignItems: "center" /* align vertical */,
     width: "315px",
-    wordWrap: "break-word"
+    wordWrap: "break-word",
   },
   sportIcon: {
     display: "flex",

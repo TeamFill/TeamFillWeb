@@ -79,6 +79,7 @@ export default function CreateEvent(props) {
           y: geocodeData.results[0].geometry.location.lng,
         },
         address: values.address,
+        attendees: [],
       })
       .then(() => {
         console.log("Document successfully written!");
