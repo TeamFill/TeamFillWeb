@@ -1,7 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
-import { LocationSearchInput } from "../components/Location.js";
-import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
-import { FormComponentProps } from "antd/lib/form/Form";
+import React, { useContext } from "react";
+import { useHistory } from "react-router";
 import { AuthContext } from "../auth/Auth";
 import firebase from "firebase";
 import {
@@ -16,46 +14,16 @@ import {
   TimePicker,
 } from "antd";
 
-
 import Navbar from "../components/Navbar";
 import moment from "moment";
-
-const options = {
-  provider: "openstreetmap",
-};
-
-const dateFormat = "MM/DD/YYYY";
 
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
 export default function CreateEvent(props) {
-  ///Some Component
-
-  const [address, setAddress] = useState("");
-
-  const clearAddress = () => {
-    // Clear with this.props.form.setFieldsValue();
-  };
-
-  const handleAddressChange = (address) => {
-    setAddress(address);
-  };
-
-  const handleAddressSelect = (address, placeID) => {
-    geocodeByAddress(address)
-      .then(async (results) => {
-        // Do something with results[0]
-        return getLatLng(results[0]);
-      })
-      .then((latLng) => {
-        // Do something with latLng
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
-  };
+  const history = useHistory();
+  const { currentUser } = useContext(AuthContext);
 
   const children = ["Basketball", "Soccer", "Hockey", "Volleyball"];
   const options = [];
@@ -74,41 +42,26 @@ export default function CreateEvent(props) {
     return S4() + S4() + S4() + S4() + S4() + S4() + S4() + S4();
   };
 
-  const { currentUser } = useContext(AuthContext);
-
   const onFinish = async (values) => {
-    console.log(address);
     console.log("Success:", values);
-    const reformattedDate = moment(values.date, dateFormat).toString();
 
+    const reformattedDate = moment(values.date, "MM/DD/YYYY").toString();
     const reformattedTime = moment(values.time, "HH:mm:ss").toString();
 
-    console.log(values);
     const eventid = guidGenerator();
-    async function idExists() {
-      try {
-        return await firebase
-          .firestore()
-          .collection("events")
-          .doc(eventid)
-          .get()
-          .then((docSnapshot) => {
-            if (docSnapshot.exists) {
-              console.log("Event Exists!!");
-              eventid = guidGenerator();
-              return true;
-            } else {
-              console.log("No Event!!");
-              return false;
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      } catch (err) {
-        console.log(err);
-      }
+
+    async function getGeocodeData() {
+      const formattedAddress = values.address.split(" ").join("+");
+      const geocodeAPI = "AIzaSyBt3nOdu4Q1A_S3nu8yGHlo_a-Ye56hktA";
+      const geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${geocodeAPI}`;
+
+      let response = await fetch(geocodeURL);
+      let data = await response.json();
+      return data;
     }
+
+    let geocodeData;
+    await getGeocodeData().then((data) => (geocodeData = data));
 
     firebase
       .firestore()
@@ -121,8 +74,11 @@ export default function CreateEvent(props) {
         date: reformattedDate,
         time: reformattedTime,
         admin: currentUser.uid,
-        // coordinates: [res[0].latitude, res[0].longitude],
-        // address: values.address,
+        coordinates: {
+          x: geocodeData.results[0].geometry.location.lat,
+          y: geocodeData.results[0].geometry.location.lng,
+        },
+        address: values.address,
       })
       .then(() => {
         console.log("Document successfully written!");
@@ -130,7 +86,7 @@ export default function CreateEvent(props) {
       .catch((error) => {
         console.error("Error writing document: ", error);
       });
-    // this.props.history.push("/home");
+    history.push("/home");
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -218,8 +174,8 @@ export default function CreateEvent(props) {
               <TimePicker style={styles.form} />
             </Form.Item>
 
-            {/* <Form.Item
-              label="Event Location"
+            <Form.Item
+              label="Event Address"
               name="address"
               rules={[
                 {
@@ -229,30 +185,7 @@ export default function CreateEvent(props) {
               ]}
             >
               <Input style={styles.form} />
-            </Form.Item> */}
-
-            {/* <Form.Item
-              label="Address"
-              name="address"
-              style={{ width: "315px" }}
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the event address!",
-                },
-              ]}>
-                {getFieldDecorator("addressInput", {
-                initialValue: "",
-                rules: [{ required: false }]
-              })(
-                <LocationSearchInput
-                  address={this.state.address}
-                  clearAddress={this.clearAddress}
-                  onChange={this.handleAddressChange}
-                  onAddressSelect={this.handleAddressSelect}
-                />
-              )}
-            </Form.Item> */}
+            </Form.Item>
 
             <Form.Item>
               <Button
