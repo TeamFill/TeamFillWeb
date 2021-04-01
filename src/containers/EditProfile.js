@@ -98,26 +98,51 @@ export default class Profile extends Component {
               onFinish={this.onFinish}
               onFinishFailed={this.onFinishFailed}
             >
-              <Form.Item label="Full Name" name="fullname">
+              <Form.Item
+                label="Full Name"
+                name="fullname"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your full name!",
+                  },
+                ]}
+              >
                 <Input
                   style={styles.form}
-                  // defaultValue={this.props.location.aboutProps.name}
                 />
               </Form.Item>
 
-              <Form.Item label="Birthdate" name="birthdate">
+              <Form.Item
+                label="Birthdate"
+                name="birthdate"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your birthdate!",
+                  },
+                ]}
+              >
                 <DatePicker
-                  disabledDate={(d) => !d || d.isAfter("2002-12-31")}
+                  disabledDate={(d) => !d || d.isAfter(moment().subtract(18, 'years').calendar().split("/").join("-"))}
                   style={styles.form}
                   format={dateFormat}
                 />
               </Form.Item>
 
-              <Form.Item label="Gender" name="gender">
+              <Form.Item
+                label="Gender"
+                name="gender"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your gender!",
+                  },
+                ]}
+              >
                 <Select
                   size="large"
                   placeholder="Gender"
-                  // defaultValue={this.props.location.aboutProps.gender}
                 >
                   <Option value="male">Male</Option>
                   <Option value="female">Female</Option>
@@ -126,10 +151,18 @@ export default class Profile extends Component {
 
               <Divider />
 
-              <Form.Item label="Search Radius" name="radius">
+              <Form.Item
+                label="Search Radius (km)"
+                name="radius"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your search radius!",
+                  },
+                ]}
+              >
                 <InputNumber
                   style={styles.form}
-                  // defaultValue={this.props.location.aboutProps.radius}
                   min={1}
                   max={50}
                   formatter={(value) => `${value} km`}
@@ -141,9 +174,14 @@ export default class Profile extends Component {
                 label="Preferences"
                 name="preferences"
                 style={{ width: "315px" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your preferences!",
+                  },
+                ]}
               >
                 <Select
-                  // defaultValue={this.props.location.aboutProps.preferences}
                   style={styles.form}
                   mode="multiple"
                   allowClear

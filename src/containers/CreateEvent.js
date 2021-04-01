@@ -158,7 +158,9 @@ export default function CreateEvent(props) {
                 },
               ]}
             >
-              <DatePicker style={styles.form} />
+              <DatePicker 
+                disabledDate={(d) => !d || d.isBefore(moment())}
+                style={styles.form} />
             </Form.Item>
 
             <Form.Item

@@ -207,15 +207,41 @@ export default class EditEvent extends Component {
               onFinish={this.onFinish}
               onFinishFailed={this.onFinishFailed}
             >
-              <Form.Item label="Event Name" name="name">
+              <Form.Item 
+                label="Event Name" 
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input the event name!",
+                  },
+                ]}
+              >
                 <Input style={styles.form} />
               </Form.Item>
 
-              <Form.Item label="Event Description" name="description">
+              <Form.Item label="Event Description"
+                name="description"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input the description!",
+                  },
+                ]}
+              >
                 <TextArea style={styles.form} />
               </Form.Item>
 
-              <Form.Item label="Event Type" name="type">
+              <Form.Item
+                label="Event Type"
+                name="type"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input the event type!",
+                  },
+                ]}
+              >
                 <Select size="large" placeholder="Event Type">
                   <Option value="basketball">Basketball</Option>
                   <Option value="soccer">Soccer</Option>
@@ -224,11 +250,32 @@ export default class EditEvent extends Component {
                 </Select>
               </Form.Item>
 
-              <Form.Item label="Event Date" name="date">
-                <DatePicker style={styles.form} />
+              <Form.Item 
+                label="Event Date"
+                name="date"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input the event date!",
+                  },
+                ]}
+              >
+                <DatePicker 
+                  disabledDate={(d) => !d || d.isBefore(moment())}
+                  style={styles.form} 
+                />
               </Form.Item>
 
-              <Form.Item label="Event Time" name="time">
+              <Form.Item
+                label="Event Time"
+                name="time"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input the event time!",
+                  },
+                ]}
+              >
                 <TimePicker style={styles.form} />
               </Form.Item>
 

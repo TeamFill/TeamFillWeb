@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import firebase from "firebase";
+import { Button } from "antd";
 
 import basketball from "../../assets/SportIcons/basketball.png";
 import soccer from "../../assets/SportIcons/soccer.png";
@@ -33,6 +35,17 @@ export default class EventItem extends Component {
       default:
         return;
     }
+  };
+
+  handleClick = () => {
+    const currentUser = firebase.auth().currentUser;
+    firebase
+      .firestore()
+      .collection("events")
+      .doc(this.props.eventid)
+      .update({
+        attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "pending"})
+      })
   };
 
   render() {
@@ -72,6 +85,28 @@ export default class EventItem extends Component {
           </Col>
 
           <Col style={styles.columnPen}>
+            {(this.props.adminStatus === 2) ?
+              <Button
+                style={{
+                  width: "100%",
+                  height: 50,
+                  borderRadius: 15,
+                  borderColor: "#ff5252",
+                  backgroundColor: "#ff5252",
+                  fontSize: "small",
+                  marginRight: "10px",
+                }}
+                type="primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.handleClick();
+                }}
+              >
+                Request <br /> to Join
+              </Button>:
+              null }
+
+
             <NavLink
               to={{
                 pathname: "/editevent",
