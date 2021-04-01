@@ -78,6 +78,32 @@ export default class EditEvent extends Component {
     console.log("Failed:", errorInfo);
   };
 
+  closeEvent = () => {
+    
+
+
+
+    console.log(this.state.attendees)
+    const attendees = this.state.attendees.filter(attendee => attendee.status === "accepted")
+    attendees.map((attendee) => 
+      firebase
+      .firestore()
+      .collection("users")
+      .doc(attendee.id)
+      .update({
+        rep: 10+attendee.data.rep
+      })
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      })
+    );
+    this.deleteEvent()
+    this.props.history.push("/myevents");
+  }
+
   deleteEvent = () => {
     const eventid = this.props.location.aboutProps.eventid;
     firebase.auth().onAuthStateChanged(function (user) {
@@ -95,6 +121,7 @@ export default class EditEvent extends Component {
           });
       }
     });
+    this.props.history.push("/myevents");
   }
 
   deleteAttendee = (uid) => {
@@ -128,6 +155,10 @@ export default class EditEvent extends Component {
   }
 
   render() {
+    if (moment() > moment(this.props.location.aboutProps.date)){
+      console.log("okaty")
+    }
+    
     return (
       <div>
         <Row style={{ marginTop: 70, width: "100%" }}>
@@ -226,6 +257,25 @@ export default class EditEvent extends Component {
                   htmlType="submit"
                 >
                   Save Event
+                </Button>
+              </Form.Item>
+
+              <Divider />
+
+              <Form.Item>
+                <Button
+                  style={{
+                    width: "100%",
+                    height: 40,
+                    borderRadius: 15,
+                    borderColor: "#ff5252",
+                    backgroundColor: "white",
+                    color: "#ff5252"
+                  }}
+                  type="primary"
+                  onClick= {() => this.closeEvent()}
+                >
+                  Close Event
                 </Button>
               </Form.Item>
 
