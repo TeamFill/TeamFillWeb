@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { Icon } from "leaflet";
 import EventPopup from "../components/EventPopup";
-import * as eventData from "../data/test-event-data.json";
 import Navbar from "../components/Navbar";
+import { Button } from "antd";
+import { makeStyles } from "@material-ui/core/styles";
+import Reorder from "@material-ui/icons/Reorder";
 
 import firebase from "firebase";
 
@@ -21,9 +24,19 @@ const icon = new Icon({
   iconSize: [40, 40],
 });
 
+const useStyles = makeStyles({
+  icon: {
+    color: "#ff5252",
+    width: 40,
+    height: 40,
+  },
+});
+
 export default function HomepageMap() {
   const [eventInfo, setEventInfo] = useState([]);
   const [loading, setLoading] = useState(true);
+  const history = useHistory();
+  const classes = useStyles();
   useEffect(() => {
     firebase
       .firestore()
@@ -41,6 +54,28 @@ export default function HomepageMap() {
       <div>
         <MapContainer center={[43.2609, -79.9192]} zoom={15}>
           <TileLayer url={MapboxURL} />
+          <button
+            onClick={() => {
+              history.push("/listview");
+            }}
+            shape="round"
+            style={{
+              display: "block",
+              position: "absolute",
+              top: "1vh",
+              right: "2vw",
+              zIndex: 500,
+              width: 50,
+              height: 50,
+              borderRadius: 15,
+              borderColor: "Transparent",
+              outline: "none",
+              backgroundColor: "Transparent",
+            }}
+            type="primary"
+          >
+            <Reorder className={classes.icon} />
+          </button>
           {eventInfo.map((event) => (
             <Marker
               key={event.id}
