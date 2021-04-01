@@ -53,7 +53,7 @@ export default class Profile extends Component {
             birthdate: reformattedBirthdate,
             gender: values.gender,
             preferences: values.preferences,
-            radius: values.radius
+            radius: values.radius,
           })
           .then(() => {
             console.log("Document successfully written!");
@@ -87,44 +87,33 @@ export default class Profile extends Component {
               Edit My Profile
             </Title>
             <Form
-            initialValues={
-                {fullname: this.props.location.aboutProps.name,
+              initialValues={{
+                fullname: this.props.location.aboutProps.name,
                 birthdate: moment(this.props.location.aboutProps.birthdate),
                 gender: this.props.location.aboutProps.gender,
                 radius: this.props.location.aboutProps.radius,
-                preferences: this.props.location.aboutProps.preferences
+                preferences: this.props.location.aboutProps.preferences,
               }}
               name="basic"
               onFinish={this.onFinish}
               onFinishFailed={this.onFinishFailed}
             >
-              <Form.Item
-                label="Full Name"
-                name="fullname"
-              >
+              <Form.Item label="Full Name" name="fullname">
                 <Input
                   style={styles.form}
                   // defaultValue={this.props.location.aboutProps.name}
                 />
               </Form.Item>
 
-              <Form.Item
-                label="Birthdate"
-                name="birthdate"
-              >
+              <Form.Item label="Birthdate" name="birthdate">
                 <DatePicker
+                  disabledDate={(d) => !d || d.isAfter("2002-12-31")}
                   style={styles.form}
-                  // defaultValue={moment(
-                  //   this.props.location.aboutProps.birthdate
-                  // )}
                   format={dateFormat}
                 />
               </Form.Item>
 
-              <Form.Item
-                label="Gender"
-                name="gender"
-              >
+              <Form.Item label="Gender" name="gender">
                 <Select
                   size="large"
                   placeholder="Gender"
@@ -137,10 +126,7 @@ export default class Profile extends Component {
 
               <Divider />
 
-              <Form.Item
-                label="Search Radius"
-                name="radius"
-              >
+              <Form.Item label="Search Radius" name="radius">
                 <InputNumber
                   style={styles.form}
                   // defaultValue={this.props.location.aboutProps.radius}
@@ -182,7 +168,7 @@ export default class Profile extends Component {
                   Submit
                 </Button>
               </Form.Item>
-                
+
               <Divider />
 
               <Form.Item>
@@ -193,7 +179,7 @@ export default class Profile extends Component {
                     borderRadius: 15,
                     borderColor: "#ff5252",
                     backgroundColor: "white",
-                    color: "#ff5252"
+                    color: "#ff5252",
                   }}
                   type="primary"
                 >
@@ -202,8 +188,6 @@ export default class Profile extends Component {
               </Form.Item>
               <br />
               <br />
-
-
             </Form>
           </Col>
           <Col flex="30px" />
