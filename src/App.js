@@ -12,6 +12,7 @@ import PrivateRoute from "./auth/PrivateRoute";
 import EventInfo from "./containers/EventInfo";
 import Inbox from "./containers/Inbox";
 import Onboarding from "./containers/Onboarding";
+import ListView from "./containers/ListView";
 
 require("dotenv").config();
 
@@ -29,6 +30,7 @@ function App() {
           <PrivateRoute exact path="/create" component={CreateEvent} />
           <PrivateRoute exact path="/editevent" component={EditEvent} />
           <PrivateRoute exact path="/inbox" component={Inbox} />
+          <PrivateRoute exact path="/listview" component={ListView} />
           <PrivateRoute exact path="/" component={HomepageMap} />
           <Route exact path="/login" component={Login} />
         </div>

@@ -13,7 +13,7 @@ import { Row, Col } from "antd";
 export default class EventItem extends Component {
 
   editOption = (admin) => {
-    if (admin) {
+    if (admin === 1) {
       return <img src={editPen} alt="edit" />
     }
   }
@@ -52,7 +52,7 @@ export default class EventItem extends Component {
             type: this.props.type,
             // address: this.props.address,
             // coordinates: this.props.coordinates,
-            returnTo: "/myevents",
+            returnTo: this.props.returnTo,
           },
         }}
         exact
@@ -86,7 +86,7 @@ export default class EventItem extends Component {
                   type: this.props.type,
                   // address: this.props.address,
                   // coordinates: this.props.coordinates,
-                  returnTo: "/myevents",
+                  returnTo: this.props.returnTo,
                 },
               }}
               exact

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { Redirect } from "react-router";
 import firebase from "firebase";
 
 import basketball from "../assets/SportIcons/basketball.png";

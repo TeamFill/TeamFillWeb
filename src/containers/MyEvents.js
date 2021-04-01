@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { AuthContext } from "../auth/Auth";
 import firebase from "firebase";
 import { Typography, Row, Col } from "antd";
 import EventItem from "../components/MyEvents/EventItem";
@@ -131,6 +130,8 @@ export default class MyEvent extends Component {
                   description={event.data.description}
                   time={event.data.time}
                   type={event.data.type}
+
+                  returnTo="/myevents"
                   // address={event.data.address}
                   // coordinates={event.data.coordinates}
                 />
