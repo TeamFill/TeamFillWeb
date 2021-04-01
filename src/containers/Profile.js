@@ -54,11 +54,15 @@ export default class Profile extends Component {
                 </Form.Item>
 
                 <Form.Item label="Birthdate" name="birthdate">
-                  <Title level={4}>{this.state.birthdate.split(" ").slice(1, 4).join(" ")}</Title>
+                  <Title level={4}>
+                    {this.state.birthdate.split(" ").slice(1, 4).join(" ")}
+                  </Title>
                 </Form.Item>
 
                 <Form.Item label="Gender" name="gender">
-                  <Title level={4}>{this.state.gender}</Title>
+                  <Title level={4} style={{ textTransform: "capitalize" }}>
+                    {this.state.gender}
+                  </Title>
                 </Form.Item>
 
                 <Form.Item label="Reputation" name="reputation">
@@ -71,7 +75,11 @@ export default class Profile extends Component {
                   <Title level={4}>{this.state.radius + " km"}</Title>
                 </Form.Item>
 
-                <Form.Item label="Preferences" name="preferences" style={{ width: "315px" }}>
+                <Form.Item
+                  label="Preferences"
+                  name="preferences"
+                  style={{ width: "315px" }}
+                >
                   <Title level={4}>{this.state.preferences.join(", ")}</Title>
                 </Form.Item>
 
@@ -127,7 +135,8 @@ export default class Profile extends Component {
                       height: 50,
                       borderRadius: 15,
                       borderColor: "#ff5252",
-                      backgroundColor: "#ff5252",
+                      backgroundColor: "white",
+                      color: "#ff5252",
                     }}
                     type="primary"
                     htmlType="submit"

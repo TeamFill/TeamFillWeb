@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import firebase from "firebase";
 import {
@@ -26,25 +26,28 @@ const dateFormat = "MM/DD/YYYY";
 export default class EditEvent extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      attendees : []
+    this.state = {
+      attendees: [],
+      closeable: false,
     };
   }
 
   componentDidMount = () => {
-    this.getAttendeesInfo()
-  }
+    this.getAttendeesInfo();
+    if (moment() > moment(this.props.location.aboutProps.date)) {
+      this.setState({ closeable: true });
+    }
+    console.log(this.state.closeable);
+  };
 
   onFinish = (values) => {
     console.log("Success:", values);
 
     const reformattedDate = moment(values.date, dateFormat).toString();
     const reformattedTime = moment(values.time, "HH:mm:ss").toString();
-    this.state.attendees.map((attendee) => 
-      delete attendee.data
-    )
-    const reformattedAttendees = this.state.attendees
-    console.log(reformattedAttendees)
+    this.state.attendees.map((attendee) => delete attendee.data);
+    const reformattedAttendees = this.state.attendees;
+    console.log(reformattedAttendees);
 
     const eventid = this.props.location.aboutProps.eventid;
 
@@ -61,7 +64,7 @@ export default class EditEvent extends Component {
             type: values.type,
             date: reformattedDate,
             time: reformattedTime,
-            attendees: reformattedAttendees
+            attendees: reformattedAttendees,
           })
           .then(() => {
             console.log("Document successfully written!");
@@ -79,30 +82,45 @@ export default class EditEvent extends Component {
   };
 
   closeEvent = () => {
-    
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .update({
+            rep: firebase.firestore.FieldValue.increment(50),
+          })
+          .then(() => {
+            console.log("Document successfully written!");
+          })
+          .catch((error) => {
+            console.error("Error writing document: ", error);
+          });
+      }
+    });
 
-
-
-    console.log(this.state.attendees)
-    const attendees = this.state.attendees.filter(attendee => attendee.status === "accepted")
-    attendees.map((attendee) => 
-      firebase
-      .firestore()
-      .collection("users")
-      .doc(attendee.id)
-      .update({
-        rep: 10+attendee.data.rep
-      })
-      .then(() => {
-        console.log("Document successfully written!");
-      })
-      .catch((error) => {
-        console.error("Error writing document: ", error);
-      })
+    const attendees = this.state.attendees.filter(
+      (attendee) => attendee.status === "accepted"
     );
-    this.deleteEvent()
+    attendees.map((attendee) =>
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(attendee.id)
+        .update({
+          rep: 10 + attendee.data.rep,
+        })
+        .then(() => {
+          console.log("Document successfully written!");
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        })
+    );
+    this.deleteEvent();
     this.props.history.push("/myevents");
-  }
+  };
 
   deleteEvent = () => {
     const eventid = this.props.location.aboutProps.eventid;
@@ -122,58 +140,61 @@ export default class EditEvent extends Component {
       }
     });
     this.props.history.push("/myevents");
-  }
+  };
 
   deleteAttendee = (uid) => {
-    const attendees = this.state.attendees.filter((attendee) => attendee.id !== uid);
-    this.setState({attendees: attendees})
-  }
+    const attendees = this.state.attendees.filter(
+      (attendee) => attendee.id !== uid
+    );
+    this.setState({ attendees: attendees });
+  };
 
   getAttendeesInfo = () => {
-    const attendees = []
-    const currenentAttdendees = this.props.location.aboutProps.attendees
+    const attendees = [];
+    const currenentAttdendees = this.props.location.aboutProps.attendees;
     let currentComponent = this;
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        currenentAttdendees.map((attendee) => 
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(attendee.id)
-          .get()
-          .then((doc) => {
-            console.log("Document grabbed data!");
-            // console.log(doc.data());
-            attendees.push({id: attendee.id, status: attendee.status, data: doc.data()})
-            currentComponent.setState({ attendees: attendees });
-          })
-          .catch((error) => {
-            console.error("Error reading document: ", error);
-          })
-        )}
+        currenentAttdendees.map((attendee) =>
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(attendee.id)
+            .get()
+            .then((doc) => {
+              console.log("Document grabbed data!");
+              // console.log(doc.data());
+              attendees.push({
+                id: attendee.id,
+                status: attendee.status,
+                data: doc.data(),
+              });
+              currentComponent.setState({ attendees: attendees });
+            })
+            .catch((error) => {
+              console.error("Error reading document: ", error);
+            })
+        );
+      }
     });
-  }
+  };
 
   render() {
-    if (moment() > moment(this.props.location.aboutProps.date)){
-      console.log("okaty")
-    }
-    
     return (
       <div>
         <Row style={{ marginTop: 70, width: "100%" }}>
           <Col flex="30px" />
           <Col flex="auto">
             <Title level={2} style={styles.title}>
-                <NavLink to={this.props.location.aboutProps.returnTo} exact>
-                  <img
-                    style={{ marginRight: "10px" }}
-                    src={returnIcon}
-                    alt="return"
-                  />
-                </NavLink>
-                Edit Event
-              </Title>
+              <NavLink to={this.props.location.aboutProps.returnTo} exact>
+                <img
+                  style={{ marginRight: "10px" }}
+                  src={returnIcon}
+                  alt="return"
+                />
+              </NavLink>
+              Edit Event
+            </Title>
             <Form
               initialValues={{
                 name: this.props.location.aboutProps.name,
@@ -186,25 +207,15 @@ export default class EditEvent extends Component {
               onFinish={this.onFinish}
               onFinishFailed={this.onFinishFailed}
             >
-
-              <Form.Item
-                label="Event Name"
-                name="name"
-              >
+              <Form.Item label="Event Name" name="name">
                 <Input style={styles.form} />
               </Form.Item>
 
-              <Form.Item
-                label="Event Description"
-                name="description"
-              >
+              <Form.Item label="Event Description" name="description">
                 <TextArea style={styles.form} />
               </Form.Item>
 
-              <Form.Item
-                label="Event Type"
-                name="type"
-              >
+              <Form.Item label="Event Type" name="type">
                 <Select size="large" placeholder="Event Type">
                   <Option value="basketball">Basketball</Option>
                   <Option value="soccer">Soccer</Option>
@@ -213,25 +224,17 @@ export default class EditEvent extends Component {
                 </Select>
               </Form.Item>
 
-              <Form.Item
-                label="Event Date"
-                name="date"
-              >
+              <Form.Item label="Event Date" name="date">
                 <DatePicker style={styles.form} />
               </Form.Item>
 
-              <Form.Item
-                label="Event Time"
-                name="time"
-              >
+              <Form.Item label="Event Time" name="time">
                 <TimePicker style={styles.form} />
               </Form.Item>
-              
-              <Form.Item
-                label="Event Attendees"
-              >
-              {this.state.attendees.map((attendee) => (
-                  <Attendee 
+
+              <Form.Item label="Event Attendees">
+                {this.state.attendees.map((attendee) => (
+                  <Attendee
                     key={attendee.id}
                     id={attendee.id}
                     status={attendee.status}
@@ -239,9 +242,9 @@ export default class EditEvent extends Component {
                     rep={attendee.data.rep}
                     delBtn={this.deleteAttendee}
                   />
-              ))}
+                ))}
               </Form.Item>
-              
+
               <Divider />
 
               <Form.Item>
@@ -260,6 +263,28 @@ export default class EditEvent extends Component {
                 </Button>
               </Form.Item>
 
+              {this.state.closeable && (
+                <>
+                  <Divider />
+                  <Form.Item>
+                    <Button
+                      style={{
+                        width: "100%",
+                        height: 40,
+                        borderRadius: 15,
+                        borderColor: "#ff5252",
+                        backgroundColor: "white",
+                        color: "#ff5252",
+                      }}
+                      type="primary"
+                      onClick={() => this.closeEvent()}
+                    >
+                      Close Event
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+
               <Divider />
 
               <Form.Item>
@@ -270,29 +295,10 @@ export default class EditEvent extends Component {
                     borderRadius: 15,
                     borderColor: "#ff5252",
                     backgroundColor: "white",
-                    color: "#ff5252"
+                    color: "#ff5252",
                   }}
                   type="primary"
-                  onClick= {() => this.closeEvent()}
-                >
-                  Close Event
-                </Button>
-              </Form.Item>
-
-              <Divider />
-
-              <Form.Item>
-                <Button
-                  style={{
-                    width: "100%",
-                    height: 40,
-                    borderRadius: 15,
-                    borderColor: "#ff5252",
-                    backgroundColor: "white",
-                    color: "#ff5252"
-                  }}
-                  type="primary"
-                  onClick= {() => this.deleteEvent()}
+                  onClick={() => this.deleteEvent()}
                 >
                   Delete Event
                 </Button>
@@ -320,5 +326,5 @@ const styles = {
   title: {
     display: "flex",
     alignItems: "center" /* align vertical */,
-  }
+  },
 };
