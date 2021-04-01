@@ -52,8 +52,7 @@ export default function CreateEvent(props) {
 
     async function getGeocodeData() {
       const formattedAddress = values.address.split(" ").join("+");
-      const geocodeAPI = "AIzaSyBt3nOdu4Q1A_S3nu8yGHlo_a-Ye56hktA";
-      const geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${geocodeAPI}`;
+      const geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
       let response = await fetch(geocodeURL);
       let data = await response.json();
