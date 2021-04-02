@@ -337,7 +337,10 @@ export default class EditEvent extends Component {
                 <Input style={styles.form} />
               </Form.Item>
 
-              <Form.Item label="Accepted Attendees">
+              
+
+              <Title level={5}>Accepted Attendees</Title>
+              <div>
                 {this.state.attendees.filter((attendee) => attendee.status === "accepted")
                 .map((attendee) => (
                   <Attendee
@@ -349,9 +352,12 @@ export default class EditEvent extends Component {
                     delBtn={this.deleteAttendee}
                   />
                 ))}
-              </Form.Item>
+              </div>
 
-              <Form.Item label="Pending Attendees">
+              <Divider />
+
+              <Title level={5}>Pending Attendees</Title>
+              <div>
                 {this.state.attendees.filter((attendee) => attendee.status === "pending")
                 .map((attendee) => (
                   <Attendee
@@ -365,7 +371,7 @@ export default class EditEvent extends Component {
                     rejectBtn={this.responseAttendee}
                   />
                 ))}
-              </Form.Item>
+              </div>
 
               <Divider />
              

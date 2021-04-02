@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router";
+import { NavLink } from "react-router-dom";
 
 import person from "../../assets/person.svg";
 
 import { Row, Col, Button } from "antd";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { ExportOutlined } from "@ant-design/icons";
 
 import firebase from "firebase";
 
@@ -15,28 +15,8 @@ export default class Request extends Component {
     rep: this.props.data.userdata.rep,
   };
 
-  handleClick = (evt) => {
-    let myArray = this.props.data.eventdata.attendees;
-    let attendeeId = this.props.data.attendee;
-    let eventId = this.props.data.eventid;
-    myArray = myArray.filter(function (obj) {
-      return obj.id !== attendeeId;
-    });
-
-    if (evt == "accept") {
-      myArray.push({ id: attendeeId, status: "accepted" });
-    } else {
-      myArray.push({ id: attendeeId, status: "rejected" });
-    }
-
-    firebase.firestore().collection("events").doc(eventId).update({
-      attendees: myArray,
-    });
-
-    window.location.reload(false);
-  };
-
   render() {
+    console.log(this.props.data.eventdata)
     return (
       <Row style={styles.rectange}>
         <Col style={styles.columnIcon}>
@@ -44,25 +24,36 @@ export default class Request extends Component {
         </Col>
 
         <Col style={styles.columnMiddle}>
-          {this.state.title} <br />
-          {this.state.name + " (" + this.state.rep + ")"}
+          {this.state.name + " (" + this.state.rep + ") has requested to join " + this.state.title}
         </Col>
 
         <Col style={styles.columnPen}>
+          <NavLink
+            to={{
+              pathname: "/editevent",
+              aboutProps: {
+                eventid: this.props.data.eventid,
+                name: this.props.data.eventdata.name,
+                attendees: this.props.data.eventdata.attendees,
+                date: this.props.data.eventdata.date,
+                description: this.props.data.eventdata.description,
+                time: this.props.data.eventdata.time,
+                type: this.props.data.eventdata.type,
+                privacy: this.props.data.eventdata.privacy,
+                address: this.props.data.eventdata.address,
+                coordinates: this.props.data.eventdata.coordinates,
+                returnTo: "/inbox",
+              },
+            }}
+            exact
+          >
           <Button
-            onClick={() => this.handleClick("accept")}
             type="danger"
             shape="circle"
-            icon={<CheckOutlined />}
-            style={{ marginRight: 20 }}
+            icon={<ExportOutlined />}
+            // style={{ background: "rgb(190, 200, 200)" }}
           />
-          <Button
-            onClick={() => this.handleClick()}
-            type="secondary"
-            shape="circle"
-            icon={<CloseOutlined />}
-            style={{ background: "rgb(190, 200, 200)" }}
-          />
+          </NavLink>
         </Col>
       </Row>
     );
@@ -88,7 +79,7 @@ const styles = {
     alignItems: "center" /* align vertical */,
   },
   columnMiddle: {
-    width: "40%",
+    width: "55%",
     padding: "auto",
     display: "flex",
     // justifyContent: "center", /* align horizontal */
@@ -97,7 +88,7 @@ const styles = {
   },
   columnPen: {
     float: "right",
-    width: "35%",
+    width: "20%",
     padding: "auto",
     display: "flex",
     justifyContent: "center" /* align horizontal */,

@@ -112,10 +112,8 @@ export default class Inbox extends Component {
                 Notifications
               </a>
             </Title>
-            <Row>
               {this.state.penduserdata &&
                 this.state.penduserdata.map((data) => <Request data={data} />)}
-            </Row>
           </Col>
           <Col flex="30px" />
         </Row>
