@@ -35,7 +35,7 @@ const useStyles = makeStyles({
 export default function HomepageMap() {
   const [eventInfo, setEventInfo] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentLocation, setcurrentLocation] = useState(true);
+  const [currentLocation, setcurrentLocation] = useState([43.2609, -79.9192]);
   const [preferences, setPreferences] = useState();
   const history = useHistory();
   const classes = useStyles();
@@ -56,7 +56,15 @@ export default function HomepageMap() {
     if (typeof aboutProps !== "undefined") {
       setcurrentLocation([aboutProps.coordinates.x, aboutProps.coordinates.y]);
     } else {
-      setcurrentLocation([43.2609, -79.9192]);
+      let x;
+      let y;
+      navigator.geolocation.getCurrentPosition(function (position) {
+        console.log(position.coords);
+        x = position.coords.latitude;
+        y = position.coords.longitude;
+        setcurrentLocation([x, y]);
+      });
+      console.log("updated loc ", currentLocation);
     }
 
     const currentUser = firebase.auth().currentUser;
@@ -80,8 +88,6 @@ export default function HomepageMap() {
         obj.data.type.charAt(0).toUpperCase() + obj.data.type.slice(1);
       return preferences.includes(eventType);
     });
-
-    console.log(filteredEvents);
 
     //setEventInfo(filteredEvents);
     setLoading(false);
