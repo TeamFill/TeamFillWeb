@@ -36,136 +36,174 @@ export default function HomepageMap() {
   const [eventInfo, setEventInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentLocation, setcurrentLocation] = useState([43.2609, -79.9192]);
-  const [preferences, setPreferences] = useState();
+  const [preferences, setPreferences] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const history = useHistory();
   const classes = useStyles();
   const location = useLocation();
   const { aboutProps } = location;
 
+  const [l1, setl1] = useState(true);
+
+  const [l2, setl2] = useState(true);
+
   useLayoutEffect(() => {
-    firebase
-      .firestore()
-      .collection("events")
-      .get()
-      .then((snapshot) => {
-        setEventInfo(
-          snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
-        );
-      });
+    // firebase
+    //   .firestore()
+    //   .collection("events")
+    //   .get()
+    //   .then((snapshot) => {
+    //     setEventInfo(
+    //       snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
+    //     );
+    //     console.log(eventInfo);
+    //   });
 
-    if (typeof aboutProps !== "undefined") {
-      setcurrentLocation([aboutProps.coordinates.x, aboutProps.coordinates.y]);
-    } else {
-      let x;
-      let y;
-      navigator.geolocation.getCurrentPosition(function (position) {
-        console.log(position.coords);
-        x = position.coords.latitude;
-        y = position.coords.longitude;
-        setcurrentLocation([x, y]);
-      });
-      console.log("updated loc ", currentLocation);
-    }
+    const getEventInfo = async () => {
+      console.log("started getting event info");
+      let eventInfoRef = firebase.firestore().collection("events");
+      let snapshot = await eventInfoRef.get();
+      setEventInfo(
+        snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
+      );
+      setl1(false);
+    };
 
-    const currentUser = firebase.auth().currentUser;
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(currentUser.uid)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          setPreferences(doc.data().preferences);
-        } else {
-          console.log("No such document!");
-        }
-      });
+    getEventInfo();
+    console.log("done getting event info");
 
-    let filteredEvents = eventInfo;
-    console.log("helloooooo");
-    filteredEvents = filteredEvents.filter(function (obj) {
+    // if (typeof aboutProps !== "undefined") {
+    //   setcurrentLocation([aboutProps.coordinates.x, aboutProps.coordinates.y]);
+    // } else {
+    //   let x;
+    //   let y;
+    //   navigator.geolocation.getCurrentPosition(function (position) {
+    //     x = position.coords.latitude;
+    //     y = position.coords.longitude;
+    //     setcurrentLocation([x, y]);
+    //   });
+    // }
+
+    // const currentUser = firebase.auth().currentUser;
+    // firebase
+    //   .firestore()
+    //   .collection("users")
+    //   .doc(currentUser.uid)
+    //   .get()
+    //   .then((doc) => {
+    //     if (doc.exists) {
+    //       setPreferences(doc.data().preferences);
+    //       console.log(preferences);
+    //     } else {
+    //       console.log("No such document!");
+    //     }
+    //   });
+
+    const getUserPreferences = async () => {
+      console.log("started getting preferences");
+      const currentUser = firebase.auth().currentUser;
+      let userPreferencesRef = firebase
+        .firestore()
+        .collection("users")
+        .doc(currentUser.uid);
+      let doc = await userPreferencesRef.get();
+      setPreferences(doc.data().preferences);
+      setl2(false);
+    };
+
+    getUserPreferences();
+    console.log("done getting preferences");
+
+    console.log(preferences);
+    console.log(eventInfo);
+
+    let temp = eventInfo;
+    temp = temp.filter(function (obj) {
       let eventType =
         obj.data.type.charAt(0).toUpperCase() + obj.data.type.slice(1);
       return preferences.includes(eventType);
     });
 
-    //setEventInfo(filteredEvents);
+    console.log(temp);
+
+    setEventInfo(temp);
     setLoading(false);
+    console.log("helloo");
   }, []);
 
   const handleGPSClick = () => {
     setcurrentLocation([43.2609, -79.9192]);
-    console.log("back to curretn location");
   };
 
-  return (
-    !loading && (
-      <div>
-        <MapContainer center={currentLocation} zoom={15}>
-          <TileLayer url={MapboxURL} />
-          <button
-            onClick={() => {
-              history.push("/listview");
-            }}
-            shape="round"
-            style={{
-              display: "block",
-              position: "absolute",
-              top: "1vh",
-              right: "2vw",
-              zIndex: 500,
-              width: 50,
-              height: 50,
-              borderRadius: 15,
-              borderColor: "Transparent",
-              outline: "none",
-              backgroundColor: "Transparent",
-            }}
-            type="primary"
-          >
-            <Reorder className={classes.icon} />
-          </button>
+  console.log(eventInfo);
+  return loading && l1 && l2 ? (
+    <div>loading firebase</div>
+  ) : (
+    <div>
+      <MapContainer center={currentLocation} zoom={15}>
+        <TileLayer url={MapboxURL} />
+        <button
+          onClick={() => {
+            history.push("/listview");
+          }}
+          shape="round"
+          style={{
+            display: "block",
+            position: "absolute",
+            top: "1vh",
+            right: "2vw",
+            zIndex: 500,
+            width: 50,
+            height: 50,
+            borderRadius: 15,
+            borderColor: "Transparent",
+            outline: "none",
+            backgroundColor: "Transparent",
+          }}
+          type="primary"
+        >
+          <Reorder className={classes.icon} />
+        </button>
 
-          <button
-            onClick={() => {
-              handleGPSClick();
-              console.log(currentLocation);
-            }}
-            shape="round"
-            style={{
-              display: "block",
-              position: "absolute",
-              top: "10vh",
-              left: "0vw",
-              zIndex: 500,
-              width: 30,
-              height: 30,
-              borderRadius: 15,
-              borderColor: "Transparent",
-              outline: "none",
-              backgroundColor: "Transparent",
-            }}
-            type="primary"
+        <button
+          onClick={() => {
+            handleGPSClick();
+            console.log(currentLocation);
+          }}
+          shape="round"
+          style={{
+            display: "block",
+            position: "absolute",
+            top: "10vh",
+            left: "0vw",
+            zIndex: 500,
+            width: 30,
+            height: 30,
+            borderRadius: 15,
+            borderColor: "Transparent",
+            outline: "none",
+            backgroundColor: "Transparent",
+          }}
+          type="primary"
+        >
+          <GpsFixedIcon className={classes.icon} />
+        </button>
+        {eventInfo.map((event) => (
+          <Marker
+            key={event.id}
+            position={[
+              event.data.coordinates["x"],
+              event.data.coordinates["y"],
+            ]}
+            icon={icon}
           >
-            <GpsFixedIcon className={classes.icon} />
-          </button>
-          {eventInfo.map((event) => (
-            <Marker
-              key={event.id}
-              position={[
-                event.data.coordinates["x"],
-                event.data.coordinates["y"],
-              ]}
-              icon={icon}
-            >
-              <StyledPopup>
-                <EventPopup event={event.data} id={event.id} />
-              </StyledPopup>
-            </Marker>
-          ))}
-        </MapContainer>
-        <Navbar />
-      </div>
-    )
+            <StyledPopup>
+              <EventPopup event={event.data} id={event.id} />
+            </StyledPopup>
+          </Marker>
+        ))}
+      </MapContainer>
+      <Navbar />
+    </div>
   );
 }
