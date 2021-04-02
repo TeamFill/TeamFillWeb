@@ -47,7 +47,6 @@ export default class EventItem extends Component {
 
   checkIfInEvent = () => {
     const currentUser = firebase.auth().currentUser;
-    console.log(this.props.attendees)
     const checkAccepted = this.props.attendees.some(e => _.isEqual(e, {id: currentUser.uid, status: "accepted"}))
     const checkPending = this.props.attendees.some(e => _.isEqual(e, {id: currentUser.uid, status: "pending"}))
     if( (currentUser.uid === this.props.admin) || checkAccepted || checkPending) {
@@ -84,7 +83,7 @@ export default class EventItem extends Component {
             time: this.props.time,
             type: this.props.type,
             address: this.props.address,
-            // coordinates: this.props.coordinates,
+            coordinates: this.props.coordinates,
             returnTo: this.props.returnTo,
           },
         }}

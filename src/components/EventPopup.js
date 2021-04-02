@@ -36,7 +36,6 @@ export default function EventPopup(props) {
     }
   }
 
-
   return (
     <NavLink
       to={{

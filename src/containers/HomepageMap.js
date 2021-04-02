@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { Icon } from "leaflet";
@@ -34,8 +34,11 @@ const useStyles = makeStyles({
 export default function HomepageMap() {
   const [eventInfo, setEventInfo] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentLocation, setcurrentLocation] = useState(true);
   const history = useHistory();
   const classes = useStyles();
+  const location = useLocation();
+  const { aboutProps } = location
   useEffect(() => {
     firebase
       .firestore()
@@ -47,11 +50,17 @@ export default function HomepageMap() {
         );
       });
     setLoading(false);
+    if (typeof aboutProps !== "undefined") {
+      setcurrentLocation([aboutProps.coordinates.x, aboutProps.coordinates.y]);
+      console.log(aboutProps)
+    }else {
+      setcurrentLocation([43.2609, -79.9192]);
+    }    
   }, []);
   return (
     !loading && (
       <div>
-        <MapContainer center={[43.2609, -79.9192]} zoom={15}>
+        <MapContainer center={currentLocation} zoom={15}>
           <TileLayer url={MapboxURL} />
           <button
             onClick={() => {

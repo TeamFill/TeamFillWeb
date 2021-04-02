@@ -70,7 +70,7 @@ export default class ListView extends Component {
                   time={event.data.time}
                   type={event.data.type}
                   address={event.data.address}
-                  // coordinates={event.data.coordinates}
+                  coordinates={event.data.coordinates}
 
                   returnTo="/listview"
                 />

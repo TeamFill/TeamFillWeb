@@ -62,7 +62,6 @@ export default class EventInfo extends Component {
   getAttendeesInfo = () => {
     const attendees = [];
     console.log("event info");
-    console.log(this.props.location.aboutProps);
     const currenentAttdendees = this.props.location.aboutProps.attendees;
     let currentComponent = this;
     firebase.auth().onAuthStateChanged(function (user) {
@@ -206,6 +205,15 @@ export default class EventInfo extends Component {
 
               <Row>
                 <Col style={{ width: "20%" }}>
+                <NavLink
+                  to={{
+                    pathname: "/home",
+                    aboutProps: {
+                      coordinates: this.props.location.aboutProps.coordinates
+                    },
+                  }}
+                  exact
+                >
                   <img
                     style={{
                       width: "25px",
@@ -216,6 +224,7 @@ export default class EventInfo extends Component {
                     src={pinIcon}
                     alt="pin"
                   />
+                </NavLink>
                 </Col>
                 <Col style={{ width: "80%" }}>
                   <h4 style={{ marginLeft: "10px" }}>{this.props.location.aboutProps.address.split(", ")[0]}</h4>
