@@ -258,14 +258,14 @@ export default class EventInfo extends Component {
                       {this.state.adminInfo.name +
                         " (" +
                         this.state.adminInfo.rep +
-                        ")"}
+                        ") |ADMIN|"}
                     </li>
                     {this.state.attendees.map((attendee) => (
                       <li style={styles.li} key={attendee.id}>
                         {attendee.data.fullname +
                           " (" +
                           attendee.data.rep +
-                          ")"}
+                          ") " + attendee.status}
                       </li>
                     ))}
                   </ul>
