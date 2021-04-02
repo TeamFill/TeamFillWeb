@@ -12,6 +12,7 @@ import {
   Row,
   Col,
   TimePicker,
+  Switch
 } from "antd";
 
 import Navbar from "../components/Navbar";
@@ -188,6 +189,19 @@ export default function CreateEvent(props) {
               ]}
             >
               <Input style={styles.form} />
+            </Form.Item>
+
+            <Form.Item
+              label="Private Event"
+              name="privacy"
+              rules={[
+                {
+                  required: true,
+                  message: "Please set event privacy!",
+                },
+              ]}
+            >
+              <Switch type="danger"/>
             </Form.Item>
 
             <Form.Item>
