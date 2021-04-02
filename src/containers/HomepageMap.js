@@ -67,29 +67,6 @@ export default function HomepageMap() {
       console.log("updated loc ", currentLocation);
     }
 
-    const currentUser = firebase.auth().currentUser;
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(currentUser.uid)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          setPreferences(doc.data().preferences);
-        } else {
-          console.log("No such document!");
-        }
-      });
-
-    let filteredEvents = eventInfo;
-    console.log("helloooooo");
-    filteredEvents = filteredEvents.filter(function (obj) {
-      let eventType =
-        obj.data.type.charAt(0).toUpperCase() + obj.data.type.slice(1);
-      return preferences.includes(eventType);
-    });
-
-    //setEventInfo(filteredEvents);
     setLoading(false);
   }, []);
 
