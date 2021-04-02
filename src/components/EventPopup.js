@@ -60,6 +60,8 @@ export default function EventPopup(props) {
           attendees: props.event.attendees,
           date: props.event.date,
           privacy: props.event.privacy,
+          address: props.event.address,
+          coordinates: props.event.coordinates,
           returnTo: "/home",
         },
       }}
