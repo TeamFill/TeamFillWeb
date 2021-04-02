@@ -25,6 +25,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import SendIcon from '@material-ui/icons/Send';
 import Input from '@material-ui/core/Input';
+import fb from "../firebase";
 
 const { Title } = Typography;
 
@@ -77,6 +78,10 @@ const Chat = (props) => {
 
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+
+  const loadMessages = () => {
+    
+  };
 
   const messsagesSent = messages.map(function(messsage, i){
     return (
