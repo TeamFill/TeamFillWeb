@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 import person from "../../assets/person.svg";
 
@@ -24,13 +24,28 @@ export default class Attendee extends Component {
           </Col>
 
           <Col style={styles.columnPen}>
-            <Button 
+            {(this.props.status === "accepted" ) ?<Button 
               type="secondary" 
               shape="circle" 
               icon={<DeleteOutlined />} 
               style={{background: "rgb(190, 200, 200)"}}
               onClick={() => this.props.delBtn(this.props.id)}
+            />: <>
+            <Button
+              onClick={() => this.props.acceptBtn(this.props.id, "accepted")}
+              type="danger"
+              shape="circle"
+              icon={<CheckOutlined />}
+              style={{ marginRight: 20 }}
             />
+            <Button
+              onClick={() => this.props.rejectBtn(this.props.id, "rejected")}
+              type="secondary"
+              shape="circle"
+              icon={<CloseOutlined />}
+              style={{ background: "rgb(190, 200, 200)" }}
+            />
+          </>}
           </Col>
         </Row>
     );

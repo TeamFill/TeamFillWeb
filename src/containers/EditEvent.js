@@ -47,7 +47,7 @@ export default class EditEvent extends Component {
     const reformattedTime = moment(values.time, "HH:mm:ss").toString();
     this.state.attendees.map((attendee) => delete attendee.data);
     const reformattedAttendees = this.state.attendees;
-    console.log(reformattedAttendees);
+    // console.log(reformattedAttendees);
 
 
     const getGeocodeData = async () => {
@@ -168,6 +168,27 @@ export default class EditEvent extends Component {
     this.setState({ attendees: attendees });
   };
 
+  responseAttendee = (uid, choice) => {
+    const attendees = this.state.attendees;
+    if (choice === "accepted") {
+      for (let i = 0; i < attendees.length; i++){
+        if(attendees[i].id === uid){
+          console.log(attendees[i])
+          attendees[i].status = "accepted"
+          console.log(attendees[i])
+        }
+      }
+    } else if (choice === "rejected") {
+      for (let i = 0; i < attendees.length; i++){
+        if(attendees[i].id === uid){
+          attendees[i].status = "rejected"
+        }
+      }
+    }
+    // console.log(attendees)
+    this.setState({ attendees: attendees });
+  }
+
   getAttendeesInfo = () => {
     const attendees = [];
     const currenentAttdendees = this.props.location.aboutProps.attendees;
@@ -227,6 +248,9 @@ export default class EditEvent extends Component {
               onFinish={this.onFinish}
               onFinishFailed={this.onFinishFailed}
             >
+              
+              <Title level={5} type="danger">You must save to register changes</Title>
+
               <Form.Item 
                 label="Event Name" 
                 name="name"
@@ -312,8 +336,9 @@ export default class EditEvent extends Component {
                 <Input style={styles.form} />
               </Form.Item>
 
-              <Form.Item label="Event Attendees">
-                {this.state.attendees.map((attendee) => (
+              <Form.Item label="Accepted Attendees">
+                {this.state.attendees.filter((attendee) => attendee.status === "accepted")
+                .map((attendee) => (
                   <Attendee
                     key={attendee.id}
                     id={attendee.id}
@@ -325,8 +350,24 @@ export default class EditEvent extends Component {
                 ))}
               </Form.Item>
 
-              <Divider />
+              <Form.Item label="Pending Attendees">
+                {this.state.attendees.filter((attendee) => attendee.status === "pending")
+                .map((attendee) => (
+                  <Attendee
+                    key={attendee.id}
+                    id={attendee.id}
+                    status={attendee.status}
+                    name={attendee.data.fullname}
+                    rep={attendee.data.rep}
+                    delBtn={this.deleteAttendee}
+                    acceptBtn={this.responseAttendee}
+                    rejectBtn={this.responseAttendee}
+                  />
+                ))}
+              </Form.Item>
 
+              <Divider />
+             
               <Form.Item>
                 <Button
                   style={{
