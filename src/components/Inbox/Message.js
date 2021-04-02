@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import person from "../../assets/person.svg";
-
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Row, Col } from "antd";
 
 export default class Request extends Component {
@@ -13,7 +13,7 @@ export default class Request extends Component {
 
   render() {
     return (
-
+      <Link to="/chat">
         <Row style={styles.rectange}>
           <Col style={styles.columnIcon}>
             <img
@@ -38,6 +38,7 @@ export default class Request extends Component {
             </Row>
           </Col>
         </Row>
+      </Link>
     );
   }
 }
