@@ -37,13 +37,13 @@ export default class Inbox extends Component {
       this.setState({ inbox: 0 });
       this.setState({ attendingStyle: styles.Clicked });
       this.setState({ createdStyle: styles.unClicked });
-      console.log("Attending");
+      console.log("Messages");
     } else {
       //notifications
       this.setState({ inbox: 1 });
       this.setState({ attendingStyle: styles.unClicked });
       this.setState({ createdStyle: styles.Clicked });
-      console.log("Created");
+      console.log("Notifications");
     }
   };
 
@@ -112,8 +112,10 @@ export default class Inbox extends Component {
                 Notifications
               </a>
             </Title>
-              {this.state.penduserdata &&
+
+              {this.state.penduserdata && this.state.inbox === 1 &&
                 this.state.penduserdata.map((data) => <Request data={data} />)}
+
           </Col>
           <Col flex="30px" />
         </Row>
