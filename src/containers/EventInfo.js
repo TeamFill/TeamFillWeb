@@ -15,6 +15,7 @@ import pinIcon from "../assets/pin.png";
 import membersIcon from "../assets/members.png";
 
 import { Typography, Row, Col, Button, Divider } from "antd";
+import { SecurityScanOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -260,7 +261,7 @@ export default class EventInfo extends Component {
                 </Col>
                 <Col style={{ width: "80%" }}>
                   <h4 style={{ marginLeft: "10px", fontWeight: "bold" }}>
-                    Member List
+                    {(this.props.location.aboutProps.privacy)? "Private Event": "Public Event"}
                   </h4>
                   <ul style={styles.ul}>
                     <li style={(styles.li, { fontWeight: "bold" })}>

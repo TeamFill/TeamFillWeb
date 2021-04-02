@@ -26,10 +26,9 @@ export default function CreateEvent(props) {
   const history = useHistory();
   const { currentUser } = useContext(AuthContext);
 
-  const [privacy, setPrivacy] = useState();
+  const [privacy, setPrivacy] = useState(true);
 
   const onSwitchChange = (checked) => {
-    console.log(checked);
     setPrivacy(checked);
   };
 
@@ -102,6 +101,7 @@ export default function CreateEvent(props) {
     console.log("Failed:", errorInfo);
   };
 
+  console.log(privacy);
   return (
     <div>
       <Row style={{ marginTop: 40, width: "100%" }}>
@@ -200,7 +200,7 @@ export default function CreateEvent(props) {
             </Form.Item>
 
             <Form.Item label="Private Event" name="privacy">
-              Off <Switch onChange={onSwitchChange} /> On
+              Off <Switch onChange={onSwitchChange}  defaultChecked /> On
             </Form.Item>
 
             <Form.Item>

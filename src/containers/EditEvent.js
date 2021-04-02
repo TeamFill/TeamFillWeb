@@ -12,6 +12,7 @@ import {
   Col,
   TimePicker,
   Divider,
+  Switch
 } from "antd";
 import moment from "moment";
 import Navbar from "../components/Navbar";
@@ -29,15 +30,21 @@ export default class EditEvent extends Component {
     this.state = {
       attendees: [],
       closeable: false,
+      privacy: this.props.location.aboutProps.privacy
     };
   }
+
+  onSwitchChange = (checked) => {
+    this.setState({privacy: checked})
+    console.log(checked)
+  };
 
   componentDidMount = () => {
     this.getAttendeesInfo();
     if (moment() > moment(this.props.location.aboutProps.date)) {
       this.setState({ closeable: true });
     }
-    console.log(this.state.closeable);
+    console.log("Closable: ", this.state.closeable);
   };
 
   onFinish = async (values) => {
@@ -64,7 +71,7 @@ export default class EditEvent extends Component {
 
 
     const eventid = this.props.location.aboutProps.eventid;
-
+    const tmpPrivacy = this.state.privacy;
     firebase.auth().onAuthStateChanged(function (user) {
       console.log(values);
       if (user) {
@@ -84,6 +91,7 @@ export default class EditEvent extends Component {
               y: geocodeData.results[0].geometry.location.lng,
             },
             address: values.address,
+            privacy: tmpPrivacy
           })
           .then(() => {
             console.log("Document successfully written!");
@@ -220,6 +228,7 @@ export default class EditEvent extends Component {
   };
 
   render() {
+    console.log("privacy: ", this.state.privacy)
     return (
       <div>
         <Row style={{ marginTop: 70, width: "100%" }}>
@@ -337,6 +346,9 @@ export default class EditEvent extends Component {
                 <Input style={styles.form} />
               </Form.Item>
 
+              <Form.Item label="Private Event" name="privacy">
+              Off <Switch onChange={this.onSwitchChange}  defaultChecked={this.props.location.aboutProps.privacy} /> On
+              </Form.Item>
               
 
               <Title level={5}>Accepted Attendees</Title>
