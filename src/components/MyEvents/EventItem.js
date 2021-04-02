@@ -11,22 +11,22 @@ import volleyball from "../../assets/SportIcons/volleyball.png";
 import editPen from "../../assets/editPen.png";
 
 import { Row, Col } from "antd";
-const _ = require('lodash');
+const _ = require("lodash");
 
 export default class EventItem extends Component {
-  state= {
-    inEvent: false
-  }
+  state = {
+    inEvent: false,
+  };
 
   componentDidMount = () => {
-    this.checkIfInEvent()
-  }
+    this.checkIfInEvent();
+  };
 
   editOption = (admin) => {
     if (admin === 1) {
-      return <img src={editPen} alt="edit" />
+      return <img src={editPen} alt="edit" />;
     }
-  }
+  };
 
   getImage = (type) => {
     switch (type) {
@@ -47,40 +47,50 @@ export default class EventItem extends Component {
 
   checkIfInEvent = () => {
     const currentUser = firebase.auth().currentUser;
-    const checkAccepted = this.props.attendees.some(e => _.isEqual(e, {id: currentUser.uid, status: "accepted"}))
-    const checkPending = this.props.attendees.some(e => _.isEqual(e, {id: currentUser.uid, status: "pending"}))
-    if( (currentUser.uid === this.props.admin) || checkAccepted || checkPending) {
-      this.setState({inEvent: true});
-    }else {
-      this.setState({inEvent: false});
+    const checkAccepted = this.props.attendees.some((e) =>
+      _.isEqual(e, { id: currentUser.uid, status: "accepted" })
+    );
+    const checkPending = this.props.attendees.some((e) =>
+      _.isEqual(e, { id: currentUser.uid, status: "pending" })
+    );
+    if (currentUser.uid === this.props.admin || checkAccepted || checkPending) {
+      this.setState({ inEvent: true });
+    } else {
+      this.setState({ inEvent: false });
     }
-  }
+  };
 
   handleClick = () => {
     const currentUser = firebase.auth().currentUser;
-    if (this.props.privacy === "private"){
+    if (this.props.privacy === true) {
       firebase
-      .firestore()
-      .collection("events")
-      .doc(this.props.eventid)
-      .update({
-        attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "pending"})
-      })
-    } else if (this.props.privacy === 'public'){
+        .firestore()
+        .collection("events")
+        .doc(this.props.eventid)
+        .update({
+          attendees: firebase.firestore.FieldValue.arrayUnion({
+            id: currentUser.uid,
+            status: "pending",
+          }),
+        });
+    } else if (this.props.privacy === false) {
       firebase
-      .firestore()
-      .collection("events")
-      .doc(this.props.eventid)
-      .update({
-        attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "accepted"})
-      })
+        .firestore()
+        .collection("events")
+        .doc(this.props.eventid)
+        .update({
+          attendees: firebase.firestore.FieldValue.arrayUnion({
+            id: currentUser.uid,
+            status: "accepted",
+          }),
+        });
     }
-
   };
 
   render() {
     return (
-      <NavLink style={styles.rectange}
+      <NavLink
+        style={styles.rectange}
         to={{
           pathname: "/eventinfo",
           aboutProps: {
@@ -101,7 +111,7 @@ export default class EventItem extends Component {
         }}
         exact
       >
-        <Row style={{marginTop:20}}>
+        <Row style={{ marginTop: 20 }}>
           <Col style={styles.columnIcon}>
             <img
               style={{ width: "30px", height: "30px" }}
@@ -112,11 +122,13 @@ export default class EventItem extends Component {
 
           <Col style={styles.columnMiddle}>
             {this.props.name} <br />
-            {this.props.date.split(" ").slice(1, 4).join(" ") + ' ' + this.props.time.split(" ")[4].slice(0, -3)}
+            {this.props.date.split(" ").slice(1, 4).join(" ") +
+              " " +
+              this.props.time.split(" ")[4].slice(0, -3)}
           </Col>
 
           <Col style={styles.columnPen}>
-            {(this.props.adminStatus === 2) && !this.state.inEvent ?
+            {this.props.adminStatus === 2 && !this.state.inEvent ? (
               <Button
                 style={{
                   width: "100%",
@@ -134,9 +146,8 @@ export default class EventItem extends Component {
                 }}
               >
                 Request <br /> to Join
-              </Button>:
-              null }
-
+              </Button>
+            ) : null}
 
             <NavLink
               to={{
@@ -193,7 +204,7 @@ const styles = {
     // justifyContent: "center", /* align horizontal */
     alignItems: "center" /* align vertical */,
     color: "black",
-    wordWrap: "break-word"
+    wordWrap: "break-word",
   },
   columnPen: {
     float: "right",
