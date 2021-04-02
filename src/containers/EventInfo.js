@@ -193,7 +193,7 @@ export default class EventInfo extends Component {
                   <h4 style={{ marginLeft: "10px" }}>
                     {this.props.location.aboutProps.date.split(" ")[0] +
                       " at " +
-                      this.props.location.aboutProps.time.split(" ")[4]}
+                      this.props.location.aboutProps.time.split(" ")[4].slice(0, -3)}
                   </h4>
                   <p style={{ marginLeft: "10px", marginTop: "-10px" }}>
                     {this.props.location.aboutProps.date
@@ -218,9 +218,11 @@ export default class EventInfo extends Component {
                   />
                 </Col>
                 <Col style={{ width: "80%" }}>
-                  <h4 style={{ marginLeft: "10px" }}>1280 Main St W</h4>
+                  <h4 style={{ marginLeft: "10px" }}>{this.props.location.aboutProps.address.split(", ")[0]}</h4>
                   <p style={{ marginLeft: "10px", marginTop: "-10px" }}>
-                    Jan 27th, 2021
+                  {this.props.location.aboutProps.address.split(", ")[1] 
+                  + ", " +
+                  this.props.location.aboutProps.address.split(", ")[2]}
                   </p>
                   <p
                     style={{

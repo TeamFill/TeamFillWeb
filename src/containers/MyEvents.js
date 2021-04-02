@@ -132,7 +132,7 @@ export default class MyEvent extends Component {
                   type={event.data.type}
 
                   returnTo="/myevents"
-                  // address={event.data.address}
+                  address={event.data.address}
                   // coordinates={event.data.coordinates}
                 />
               </Row>
