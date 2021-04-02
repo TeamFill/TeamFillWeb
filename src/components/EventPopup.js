@@ -3,48 +3,62 @@ import { Typography, Button } from "antd";
 import { NavLink } from "react-router-dom";
 import firebase from "firebase";
 import { AuthContext } from "../auth/Auth";
-const _ = require('lodash');
+const _ = require("lodash");
 const { Text, Paragraph } = Typography;
 
 export default function EventPopup(props) {
-  const [ inEvents, setInEvents ] = useState()
+  const [inEvents, setInEvents] = useState();
   const { currentUser } = useContext(AuthContext);
-  
+
   useEffect(() => {
-    checkIfInEvent()
-  }, [])
+    checkIfInEvent();
+  }, []);
 
   const handleClick = () => {
-    if (props.event.privacy === "private"){
+    if (props.event.privacy === true) {
       firebase
-      .firestore()
-      .collection("events")
-      .doc(props.id)
-      .update({
-        attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "pending"})
-      })
-    } else if (props.event.privacy === 'public'){
+        .firestore()
+        .collection("events")
+        .doc(props.id)
+        .update({
+          attendees: firebase.firestore.FieldValue.arrayUnion({
+            id: currentUser.uid,
+            status: "pending",
+          }),
+        });
+    } else if (props.event.privacy === false) {
       firebase
-      .firestore()
-      .collection("events")
-      .doc(props.id)
-      .update({
-        attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "accepted"})
-      })
+        .firestore()
+        .collection("events")
+        .doc(props.id)
+        .update({
+          attendees: firebase.firestore.FieldValue.arrayUnion({
+            id: currentUser.uid,
+            status: "accepted",
+          }),
+        });
     }
   };
 
   const checkIfInEvent = () => {
     const currentUser = firebase.auth().currentUser;
-    console.log(props.event.attendees)
-    const checkAccepted = props.event.attendees.some(e => _.isEqual(e, {id: currentUser.uid, status: "accepted"}))
-    const checkPending = props.event.attendees.some(e => _.isEqual(e, {id: currentUser.uid, status: "pending"}))
-    if( (currentUser.uid === props.event.admin) || checkAccepted || checkPending) {
+    console.log(props.event.attendees);
+    const checkAccepted = props.event.attendees.some((e) =>
+      _.isEqual(e, { id: currentUser.uid, status: "accepted" })
+    );
+    const checkPending = props.event.attendees.some((e) =>
+      _.isEqual(e, { id: currentUser.uid, status: "pending" })
+    );
+    if (
+      currentUser.uid === props.event.admin ||
+      checkAccepted ||
+      checkPending
+    ) {
       setInEvents(true);
-    }else {
+    } else {
       setInEvents(false);
     }
-  }
+  };
 
   return (
     <NavLink
@@ -71,25 +85,28 @@ export default function EventPopup(props) {
         <Text strong>{props.event.name}</Text>
       </Paragraph>
       <Paragraph>
-        {props.event.date.split(" ").slice(1, 4).join(" ")} at {props.event.time.split(" ")[4].slice(0, -3)} <br />
+        {props.event.date.split(" ").slice(1, 4).join(" ")} at{" "}
+        {props.event.time.split(" ")[4].slice(0, -3)} <br />
         {props.event.address}
       </Paragraph>
-      {!inEvents ? <Button
-        style={{
-          width: "100%",
-          height: 30,
-          borderRadius: 15,
-          borderColor: "#ff5252",
-          backgroundColor: "#ff5252",
-        }}
-        type="primary"
-        onClick={(e) => {
-          e.preventDefault();
-          handleClick();
-        }}
-      >
-        Request to Join
-      </Button>: null}
+      {!inEvents ? (
+        <Button
+          style={{
+            width: "100%",
+            height: 30,
+            borderRadius: 15,
+            borderColor: "#ff5252",
+            backgroundColor: "#ff5252",
+          }}
+          type="primary"
+          onClick={(e) => {
+            e.preventDefault();
+            handleClick();
+          }}
+        >
+          Request to Join
+        </Button>
+      ) : null}
     </NavLink>
   );
 }

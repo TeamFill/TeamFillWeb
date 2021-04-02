@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
@@ -7,7 +7,7 @@ import EventPopup from "../components/EventPopup";
 import Navbar from "../components/Navbar";
 import { makeStyles } from "@material-ui/core/styles";
 import Reorder from "@material-ui/icons/Reorder";
-import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import GpsFixedIcon from "@material-ui/icons/GpsFixed";
 
 import firebase from "firebase";
 
@@ -36,11 +36,13 @@ export default function HomepageMap() {
   const [eventInfo, setEventInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentLocation, setcurrentLocation] = useState(true);
+  const [preferences, setPreferences] = useState();
   const history = useHistory();
   const classes = useStyles();
   const location = useLocation();
   const { aboutProps } = location;
-  useEffect(() => {
+
+  useLayoutEffect(() => {
     firebase
       .firestore()
       .collection("events")
@@ -50,18 +52,45 @@ export default function HomepageMap() {
           snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
         );
       });
-    setLoading(false);
+
     if (typeof aboutProps !== "undefined") {
       setcurrentLocation([aboutProps.coordinates.x, aboutProps.coordinates.y]);
-    }else {
+    } else {
       setcurrentLocation([43.2609, -79.9192]);
-    }    
+    }
+
+    const currentUser = firebase.auth().currentUser;
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(currentUser.uid)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setPreferences(doc.data().preferences);
+        } else {
+          console.log("No such document!");
+        }
+      });
+
+    let filteredEvents = eventInfo;
+    console.log("helloooooo");
+    filteredEvents = filteredEvents.filter(function (obj) {
+      let eventType =
+        obj.data.type.charAt(0).toUpperCase() + obj.data.type.slice(1);
+      return preferences.includes(eventType);
+    });
+
+    console.log(filteredEvents);
+
+    //setEventInfo(filteredEvents);
+    setLoading(false);
   }, []);
 
   const handleGPSClick = () => {
     setcurrentLocation([43.2609, -79.9192]);
-    console.log("back to curretn location")
-  }
+    console.log("back to curretn location");
+  };
 
   return (
     !loading && (
@@ -94,7 +123,7 @@ export default function HomepageMap() {
           <button
             onClick={() => {
               handleGPSClick();
-              console.log(currentLocation)
+              console.log(currentLocation);
             }}
             shape="round"
             style={{

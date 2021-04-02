@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router";
 import { AuthContext } from "../auth/Auth";
 import firebase from "firebase";
@@ -12,7 +12,7 @@ import {
   Row,
   Col,
   TimePicker,
-  Switch
+  Switch,
 } from "antd";
 
 import Navbar from "../components/Navbar";
@@ -25,6 +25,13 @@ const { TextArea } = Input;
 export default function CreateEvent(props) {
   const history = useHistory();
   const { currentUser } = useContext(AuthContext);
+
+  const [privacy, setPrivacy] = useState();
+
+  const onSwitchChange = (checked) => {
+    console.log(checked);
+    setPrivacy(checked);
+  };
 
   const children = ["Basketball", "Soccer", "Hockey", "Volleyball"];
   const options = [];
@@ -80,7 +87,7 @@ export default function CreateEvent(props) {
         },
         address: values.address,
         attendees: [],
-        privacy: "private"
+        privacy: privacy,
       })
       .then(() => {
         console.log("Document successfully written!");
@@ -160,9 +167,10 @@ export default function CreateEvent(props) {
                 },
               ]}
             >
-              <DatePicker 
+              <DatePicker
                 disabledDate={(d) => !d || d.isBefore(moment())}
-                style={styles.form} />
+                style={styles.form}
+              />
             </Form.Item>
 
             <Form.Item
@@ -191,17 +199,8 @@ export default function CreateEvent(props) {
               <Input style={styles.form} />
             </Form.Item>
 
-            <Form.Item
-              label="Private Event"
-              name="privacy"
-              rules={[
-                {
-                  required: true,
-                  message: "Please set event privacy!",
-                },
-              ]}
-            >
-              <Switch type="danger"/>
+            <Form.Item label="Private Event" name="privacy">
+              Off <Switch onChange={onSwitchChange} /> On
             </Form.Item>
 
             <Form.Item>
