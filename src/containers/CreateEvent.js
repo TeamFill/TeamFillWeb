@@ -79,6 +79,7 @@ export default function CreateEvent(props) {
         },
         address: values.address,
         attendees: [],
+        privacy: "private"
       })
       .then(() => {
         console.log("Document successfully written!");

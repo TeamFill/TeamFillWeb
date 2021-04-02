@@ -242,7 +242,8 @@ export default class EditEvent extends Component {
                 type: this.props.location.aboutProps.type,
                 date: moment(this.props.location.aboutProps.date),
                 time: moment(this.props.location.aboutProps.time),
-                address: this.props.location.aboutProps.address
+                address: this.props.location.aboutProps.address,
+                // privacy: this.props.location.aboutProps.privacy
               }}
               name="basic"
               onFinish={this.onFinish}

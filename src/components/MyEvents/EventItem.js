@@ -58,13 +58,24 @@ export default class EventItem extends Component {
 
   handleClick = () => {
     const currentUser = firebase.auth().currentUser;
-    firebase
+    if (this.props.privacy === "private"){
+      firebase
       .firestore()
       .collection("events")
       .doc(this.props.eventid)
       .update({
         attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "pending"})
       })
+    } else if (this.props.privacy === 'public'){
+      firebase
+      .firestore()
+      .collection("events")
+      .doc(this.props.eventid)
+      .update({
+        attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "accepted"})
+      })
+    }
+
   };
 
   render() {
@@ -82,6 +93,7 @@ export default class EventItem extends Component {
             description: this.props.description,
             time: this.props.time,
             type: this.props.type,
+            privacy: this.props.privacy,
             address: this.props.address,
             coordinates: this.props.coordinates,
             returnTo: this.props.returnTo,
@@ -138,6 +150,7 @@ export default class EventItem extends Component {
                   description: this.props.description,
                   time: this.props.time,
                   type: this.props.type,
+                  privacy: this.props.privacy,
                   address: this.props.address,
                   coordinates: this.props.coordinates,
                   returnTo: this.props.returnTo,

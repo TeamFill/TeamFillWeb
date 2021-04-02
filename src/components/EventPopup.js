@@ -15,13 +15,23 @@ export default function EventPopup(props) {
   }, [])
 
   const handleClick = () => {
-    firebase
+    if (props.event.privacy === "private"){
+      firebase
       .firestore()
       .collection("events")
       .doc(props.id)
       .update({
         attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "pending"})
       })
+    } else if (props.event.privacy === 'public'){
+      firebase
+      .firestore()
+      .collection("events")
+      .doc(props.id)
+      .update({
+        attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "accepted"})
+      })
+    }
   };
 
   const checkIfInEvent = () => {
@@ -49,6 +59,7 @@ export default function EventPopup(props) {
           description: props.event.description,
           attendees: props.event.attendees,
           date: props.event.date,
+          privacy: props.event.privacy,
           returnTo: "/home",
         },
       }}

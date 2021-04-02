@@ -130,6 +130,7 @@ export default class MyEvent extends Component {
                   description={event.data.description}
                   time={event.data.time}
                   type={event.data.type}
+                  privacy={event.data.privacy}
 
                   returnTo="/myevents"
                   address={event.data.address}

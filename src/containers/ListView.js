@@ -71,6 +71,7 @@ export default class ListView extends Component {
                   type={event.data.type}
                   address={event.data.address}
                   coordinates={event.data.coordinates}
+                  privacy={event.data.privacy}
 
                   returnTo="/listview"
                 />
