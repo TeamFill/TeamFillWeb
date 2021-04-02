@@ -57,7 +57,7 @@ export default class ListView extends Component {
               List View
             </Title>
             {toShow.map((event) => (
-              <Row>
+              <Row key={event.eventid}>
                 <EventItem
                   key={event.eventid}
                   eventid={event.eventid}

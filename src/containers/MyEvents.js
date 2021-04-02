@@ -117,7 +117,7 @@ export default class MyEvent extends Component {
               </a>
             </Title>
             {toShow.map((event) => (
-              <Row>
+              <Row key={event.eventid}>
                 <EventItem
                   key={event.eventid}
                   eventid={event.eventid}

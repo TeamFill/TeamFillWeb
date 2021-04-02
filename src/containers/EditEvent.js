@@ -40,7 +40,7 @@ export default class EditEvent extends Component {
     console.log(this.state.closeable);
   };
 
-  onFinish = (values) => {
+  onFinish = async (values) => {
     console.log("Success:", values);
 
     const reformattedDate = moment(values.date, dateFormat).toString();
@@ -48,6 +48,20 @@ export default class EditEvent extends Component {
     this.state.attendees.map((attendee) => delete attendee.data);
     const reformattedAttendees = this.state.attendees;
     console.log(reformattedAttendees);
+
+
+    const getGeocodeData = async () => {
+      const formattedAddress = values.address.split(" ").join("+");
+      const geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
+  
+      let response = await fetch(geocodeURL);
+      let data = await response.json();
+      return data;
+    }
+
+    let geocodeData;
+    await getGeocodeData().then((data) => (geocodeData = data));
+
 
     const eventid = this.props.location.aboutProps.eventid;
 
@@ -65,6 +79,11 @@ export default class EditEvent extends Component {
             date: reformattedDate,
             time: reformattedTime,
             attendees: reformattedAttendees,
+            coordinates: {
+              x: geocodeData.results[0].geometry.location.lat,
+              y: geocodeData.results[0].geometry.location.lng,
+            },
+            address: values.address,
           })
           .then(() => {
             console.log("Document successfully written!");
@@ -202,6 +221,7 @@ export default class EditEvent extends Component {
                 type: this.props.location.aboutProps.type,
                 date: moment(this.props.location.aboutProps.date),
                 time: moment(this.props.location.aboutProps.time),
+                address: this.props.location.aboutProps.address
               }}
               name="basic"
               onFinish={this.onFinish}
@@ -277,6 +297,19 @@ export default class EditEvent extends Component {
                 ]}
               >
                 <TimePicker style={styles.form} />
+              </Form.Item>
+
+              <Form.Item
+                label="Event Address"
+                name="address"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input the event address!",
+                  },
+                ]}
+              >
+                <Input style={styles.form} />
               </Form.Item>
 
               <Form.Item label="Event Attendees">

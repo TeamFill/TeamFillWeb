@@ -7,6 +7,7 @@ import EventPopup from "../components/EventPopup";
 import Navbar from "../components/Navbar";
 import { makeStyles } from "@material-ui/core/styles";
 import Reorder from "@material-ui/icons/Reorder";
+import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 
 import firebase from "firebase";
 
@@ -38,7 +39,7 @@ export default function HomepageMap() {
   const history = useHistory();
   const classes = useStyles();
   const location = useLocation();
-  const { aboutProps } = location
+  const { aboutProps } = location;
   useEffect(() => {
     firebase
       .firestore()
@@ -52,11 +53,16 @@ export default function HomepageMap() {
     setLoading(false);
     if (typeof aboutProps !== "undefined") {
       setcurrentLocation([aboutProps.coordinates.x, aboutProps.coordinates.y]);
-      console.log(aboutProps)
     }else {
       setcurrentLocation([43.2609, -79.9192]);
     }    
   }, []);
+
+  const handleGPSClick = () => {
+    setcurrentLocation([43.2609, -79.9192]);
+    console.log("back to curretn location")
+  }
+
   return (
     !loading && (
       <div>
@@ -83,6 +89,30 @@ export default function HomepageMap() {
             type="primary"
           >
             <Reorder className={classes.icon} />
+          </button>
+
+          <button
+            onClick={() => {
+              handleGPSClick();
+              console.log(currentLocation)
+            }}
+            shape="round"
+            style={{
+              display: "block",
+              position: "absolute",
+              top: "10vh",
+              left: "0vw",
+              zIndex: 500,
+              width: 30,
+              height: 30,
+              borderRadius: 15,
+              borderColor: "Transparent",
+              outline: "none",
+              backgroundColor: "Transparent",
+            }}
+            type="primary"
+          >
+            <GpsFixedIcon className={classes.icon} />
           </button>
           {eventInfo.map((event) => (
             <Marker

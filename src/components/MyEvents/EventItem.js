@@ -138,8 +138,8 @@ export default class EventItem extends Component {
                   description: this.props.description,
                   time: this.props.time,
                   type: this.props.type,
-                  // address: this.props.address,
-                  // coordinates: this.props.coordinates,
+                  address: this.props.address,
+                  coordinates: this.props.coordinates,
                   returnTo: this.props.returnTo,
                 },
               }}
