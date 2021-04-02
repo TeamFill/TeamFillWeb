@@ -4,18 +4,10 @@ import Navbar from "../components/Navbar";
 import firebase from "firebase";
 import EventItem from "../components/MyEvents/EventItem";
 
-import basketball from "../assets/SportIcons/basketball.png";
-import soccer from "../assets/SportIcons/soccer.png";
-import football from "../assets/SportIcons/football.png";
-import hockey from "../assets/SportIcons/hockey.png";
-import volleyball from "../assets/SportIcons/volleyball.png";
 import returnIcon from "../assets/return.png";
-import infoIcon from "../assets/info.png";
-import clockIcon from "../assets/clock.png";
-import pinIcon from "../assets/pin.png";
-import membersIcon from "../assets/members.png";
 
-import { Typography, Row, Col, Button, Divider } from "antd";
+
+import { Typography, Row, Col } from "antd";
 
 const { Title } = Typography;
 

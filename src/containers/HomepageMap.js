@@ -5,7 +5,6 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { Icon } from "leaflet";
 import EventPopup from "../components/EventPopup";
 import Navbar from "../components/Navbar";
-import { Button } from "antd";
 import { makeStyles } from "@material-ui/core/styles";
 import Reorder from "@material-ui/icons/Reorder";
 

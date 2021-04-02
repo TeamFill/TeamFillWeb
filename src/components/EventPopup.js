@@ -1,14 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Typography, Button } from "antd";
 import { NavLink } from "react-router-dom";
 import firebase from "firebase";
 import { AuthContext } from "../auth/Auth";
-
+const _ = require('lodash');
 const { Text, Paragraph } = Typography;
 
 export default function EventPopup(props) {
-
+  const [ inEvents, setInEvents ] = useState()
   const { currentUser } = useContext(AuthContext);
+  
+  useEffect(() => {
+    checkIfInEvent()
+  }, [])
+
   const handleClick = () => {
     firebase
       .firestore()
@@ -18,6 +23,19 @@ export default function EventPopup(props) {
         attendees: firebase.firestore.FieldValue.arrayUnion({id: currentUser.uid, status: "pending"})
       })
   };
+
+  const checkIfInEvent = () => {
+    const currentUser = firebase.auth().currentUser;
+    console.log(props.event.attendees)
+    const checkAccepted = props.event.attendees.some(e => _.isEqual(e, {id: currentUser.uid, status: "accepted"}))
+    const checkPending = props.event.attendees.some(e => _.isEqual(e, {id: currentUser.uid, status: "pending"}))
+    if( (currentUser.uid === props.event.admin) || checkAccepted || checkPending) {
+      setInEvents(true);
+    }else {
+      setInEvents(false);
+    }
+  }
+
 
   return (
     <NavLink
@@ -44,7 +62,7 @@ export default function EventPopup(props) {
         {props.event.date.split(" ").slice(1, 4).join(" ")} at {props.event.time.split(" ")[4].slice(0, -3)} <br />
         {props.event.address}
       </Paragraph>
-      <Button
+      {!inEvents ? <Button
         style={{
           width: "100%",
           height: 30,
@@ -59,7 +77,7 @@ export default function EventPopup(props) {
         }}
       >
         Request to Join
-      </Button>
+      </Button>: null}
     </NavLink>
   );
 }

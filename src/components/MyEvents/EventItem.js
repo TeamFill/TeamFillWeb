@@ -11,8 +11,16 @@ import volleyball from "../../assets/SportIcons/volleyball.png";
 import editPen from "../../assets/editPen.png";
 
 import { Row, Col } from "antd";
+const _ = require('lodash');
 
 export default class EventItem extends Component {
+  state= {
+    inEvent: false
+  }
+
+  componentDidMount = () => {
+    this.checkIfInEvent()
+  }
 
   editOption = (admin) => {
     if (admin === 1) {
@@ -36,6 +44,18 @@ export default class EventItem extends Component {
         return;
     }
   };
+
+  checkIfInEvent = () => {
+    const currentUser = firebase.auth().currentUser;
+    console.log(this.props.attendees)
+    const checkAccepted = this.props.attendees.some(e => _.isEqual(e, {id: currentUser.uid, status: "accepted"}))
+    const checkPending = this.props.attendees.some(e => _.isEqual(e, {id: currentUser.uid, status: "pending"}))
+    if( (currentUser.uid === this.props.admin) || checkAccepted || checkPending) {
+      this.setState({inEvent: true});
+    }else {
+      this.setState({inEvent: false});
+    }
+  }
 
   handleClick = () => {
     const currentUser = firebase.auth().currentUser;
@@ -85,7 +105,7 @@ export default class EventItem extends Component {
           </Col>
 
           <Col style={styles.columnPen}>
-            {(this.props.adminStatus === 2) ?
+            {(this.props.adminStatus === 2) && !this.state.inEvent ?
               <Button
                 style={{
                   width: "100%",
