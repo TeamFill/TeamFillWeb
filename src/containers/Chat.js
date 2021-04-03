@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '8px',
     marginRight: 'auto',
     maxWidth: 'calc(100% - 4rem)',
-    backgroundColor: red[300],
+    backgroundColor: "#aaaaaa",
     border: '1px solid transparent',
     borderRadius: '2rem',
     width: 'fit-content'
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '1rem',
     marginLeft: 'auto',
     maxWidth: 'calc(100% - 4rem)',
-    backgroundColor: red[100],
+    backgroundColor: "#ff5252",
     border: '1px solid transparent',
     borderRadius: '2rem',
     width: 'fit-content'
@@ -225,25 +225,25 @@ const Chat = (props) => {
   }
 
   const BackButton = withRouter(({ history }) => (
-    <IconButton edge="start" className={classes.menuButton} color="inherit"  onClick={() => { history.push('/inbox') }}>
+    <IconButton edge="start" className={classes.menuButton} color="#ff5252"  onClick={() => { history.push('/inbox') }}>
         <ArrowBackIcon />
     </IconButton>
   ));
 
     return (
       <React.Fragment>
-
             <AppBar position="fixed">
-                <Toolbar>
+                <Toolbar style={{background:"white"}}>
                   <BackButton></BackButton>
                     <Avatar className={classes.avatar}>
                       <GroupAddIcon/>
                     </Avatar>
-                    <Typography variant="h6" className={classes.title}>
+                    <Typography variant="h6" className={classes.title} style={{
+                      color: "black"}}>
                       {groupData.groupName}
                     </Typography>
                     <IconButton color="inherit" onClick={() => setDrawer(true)}>
-                      <InfoIcon/>
+                      <InfoIcon style={{color: "#ff5252"}}/>
                     </IconButton>
                 </Toolbar>
             </AppBar>
