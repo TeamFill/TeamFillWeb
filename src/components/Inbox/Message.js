@@ -1,76 +1,120 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 
 import person from "../../assets/person.svg";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, useHistory } from "react-router-dom";
 import { Row, Col } from "antd";
+import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
+import {withRouter} from 'react-router-dom';
+import Chat from "../../containers/Chat";
+import fb from "../../firebase";
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 
-export default class Request extends Component {
-    state= {
-        title: "Event 1",
-        msg: "Hey Hey Hey",
-        time: "9:41 AM"
-    }
-
-  render() {
-    return (
-      <Link to="/chat">
-        <Row style={styles.rectange}>
-          <Col style={styles.columnIcon}>
-            <img
-              src={person}
-              alt="person"
-            />
-          </Col>
-
-          <Col style={styles.columnMiddle}>
-            <Row style={{position: "absolute", top: 0, height: "100%"}}>
-              Test
-              <Col style={styles.topLeft}>
-                {this.state.title}
-              </Col>
-              <Col style={styles.topRight}>
-                {this.state.time}
-              </Col>
-            </Row>
-
-            <Row style={{position: "absolute", bottom: 0, height: "100%"}}>
-              {this.state.msg}
-            </Row>
-          </Col>
-        </Row>
-      </Link>
-    );
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    backgroundColor: theme.palette.background.paper,
+  },
+  inline: {
+    display: 'inline',
+  },
+  text: {
+    whiteSpace: 'nowrap', 
+    overflow: 'hidden', 
+    textOverflow: 'ellipsis', 
+    userSelect: 'none'
   }
+}));
+
+const Request = () => {
+
+  const history = useHistory();
+
+  const db = fb.firestore();
+
+  const classes = useStyles();
+
+  const groupID = "esngIrriE8hiJJAlTcOE";
+  const userID = "test"
+
+  const [groups, setGroups] = useState([]);
+
+  // Get the groups that the user is a part of where userID is in memberIDs array
+  const getGroups = () => {
+    let local = [];
+    db.collection('groups').where('memberIDs', 'array-contains', userID).get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const docData = doc.data();
+            local.push(docData);
+        });
+        setGroups(local);
+    })
+  }
+
+  useEffect(() => {
+    getGroups();
+  }, []);
+  
+  const ChatItem = () => (
+    <ListItem alignItems="flex-start" onClick={() => history.push('/chat/' + groupID)}>
+      <ListItemAvatar>
+        <Avatar alt="Lebron James" src="/static/images/avatar/1.jpg" />
+      </ListItemAvatar>
+      <ListItemText
+        primary={
+          <div className={classes.text}>
+            {"Lebron James"}
+          </div>
+        }
+        secondary={
+          <div className={classes.text}>
+            {"I'll be in your neighborhood doing errands this summer if you're down."}
+          </div>
+        }
+      />
+    </ListItem>
+  );
+
+  const GroupItem = groups.map(function(group, i) {
+    console.log(group)
+    return (
+      <ListItem key={i} alignItems="flex-start" onClick={() => history.push('/chat/' + groupID)}>
+        <ListItemAvatar>
+        <Avatar>
+          <GroupAddIcon/>
+        </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={
+            <div className={classes.text}>
+              {group.groupName}
+            </div>
+          }
+          secondary={
+            <div className={classes.text}>
+              {group.newestMessage}
+            </div>
+          }
+        />
+      </ListItem>
+    )
+  });
+
+  return (
+
+    <List className={classes.root}>
+      {GroupItem}
+      <ChatItem></ChatItem>
+    </List>
+  )
+
 }
 
-const styles = {
-  rectange: {
-    width: "315px",
-    height: "91px",
-    background: "#FFFFFF",
-    borderTop: "1px solid #C4C4C4",
-    boxSizing: "border-box",
-    marginTop: 5,
-    marginBottom: -10
-  },
-  columnIcon: {
-    float: "left",
-    width: "25%",
-    padding: "auto",
-    display: "flex",
-    justifyContent: "center" /* align horizontal */,
-    alignItems: "center" /* align vertical */,
-  },
-  columnMiddle: {
-    position: "relative",
-    width: "75%",
-    height: "100%",
-    // minHeight: "90px",
-    // padding: "auto",
-    // display: "flex",
-    // justifyContent: "center", /* align horizontal */
-    // alignItems: "center" /* align vertical */,
-    // color: "black",
-    // background: "yellow"
-  }
-};
+export default Request;

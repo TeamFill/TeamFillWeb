@@ -46,29 +46,12 @@ export default class Inbox extends Component {
     // const toShow = this.state.events.filter(event => event.admin === this.state.admin);
     return (
       <div>
-        <Row style={{ marginTop: 70, width: "100%" }}>
-          <Col flex="30px" />
-          <Col flex="auto">
-            <Title level={2}>
-              <a style={this.state.attendingStyle} onClick={e => this.handleadmin(e, 'msg')}> Messages</a> | 
-              <a style={this.state.createdStyle} onClick={e => this.handleadmin(e,'')}> Notifications</a>
-            </Title>
-            <Row>
-              <Message />
-            </Row>
-            <Row>
-              <Request />
-            </Row>
-            <Row>
-              <Request />
-            </Row>
-            <Row>
-              <Request />
-            </Row>
-          </Col>         
-          <Col flex="30px" />
-        </Row>
-        <Navbar />
+        <Title level={2} style={{textAlign: 'center', marginTop: '2rem'}}>
+          <a style={this.state.attendingStyle} onClick={e => this.handleadmin(e, 'msg')}> Messages</a> | 
+          <a style={this.state.createdStyle} onClick={e => this.handleadmin(e,'')}> Notifications</a>
+        </Title>
+        <Message/>
+        <Navbar/>
       </div>
     );
   }

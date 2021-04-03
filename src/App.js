@@ -32,7 +32,7 @@ function App() {
           <Route exact path="/editevent" component={EditEvent} />
           <Route exact path="/inbox" component={Inbox} />
           {/* Ninos Yomo */}
-          <Route exact path="/chat" component={Chat} />
+          <Route path="/chat/:groupID" component={Chat} />
         </div>
       </Router>
     </AuthProvider>
