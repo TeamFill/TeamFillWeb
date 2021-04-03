@@ -144,6 +144,9 @@ const Chat = (props) => {
   // When the groupID (hard coded in the url rn) is loaded, get its data (messages) 
   useEffect(async () => {
     loadGroupData();
+  }, [groupID]);
+
+  useEffect(async () => {
     loadMessages();
   }, [groupID, timer]);
 
