@@ -200,8 +200,13 @@ export default function CreateEvent(props) {
             </Form.Item>
 
             <Form.Item label="Private Event" name="privacy">
-              Off <Switch onChange={onSwitchChange}  defaultChecked /> On
+              Off <Switch 
+                onChange={onSwitchChange}  
+                defaultChecked 
+                style={privacy ? { background: "#ff5252"} : {background : "#aaaaaa"}}
+                /> On
             </Form.Item>
+            <br />
 
             <Form.Item>
               <Button

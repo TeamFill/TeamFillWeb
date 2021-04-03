@@ -14,7 +14,7 @@ import {
 } from "antd";
 import firebase from "firebase";
 import Navbar from "../components/Navbar";
-import returnIcon from "../assets/return.png";
+import returnIcon from "../assets/return.svg";
 import moment from "moment";
 const dateFormat = "MM/DD/YYYY";
 
@@ -190,6 +190,7 @@ export default class Profile extends Component {
                   {this.SportOpt()}
                 </Select>
               </Form.Item>
+              <br />
 
               <Form.Item>
                 <Button
@@ -213,7 +214,7 @@ export default class Profile extends Component {
                 <Button
                   style={{
                     width: "100%",
-                    height: 40,
+                    height: 50,
                     borderRadius: 15,
                     borderColor: "#ff5252",
                     backgroundColor: "white",

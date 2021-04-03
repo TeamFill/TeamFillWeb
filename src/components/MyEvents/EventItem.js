@@ -3,12 +3,12 @@ import { NavLink } from "react-router-dom";
 import firebase from "firebase";
 import { Button } from "antd";
 
-import basketball from "../../assets/SportIcons/basketball.png";
-import soccer from "../../assets/SportIcons/soccer.png";
-import football from "../../assets/SportIcons/football.png";
-import hockey from "../../assets/SportIcons/hockey.png";
-import volleyball from "../../assets/SportIcons/volleyball.png";
-import editPen from "../../assets/editPen.png";
+import basketball from "../../assets/SportIcons/basketball.svg";
+import soccer from "../../assets/SportIcons/soccer.svg";
+import football from "../../assets/SportIcons/football.svg";
+import hockey from "../../assets/SportIcons/hockey.svg";
+import volleyball from "../../assets/SportIcons/volleyball.svg";
+import editPen from "../../assets/editPen.svg";
 
 import { Row, Col } from "antd";
 const _ = require("lodash");
@@ -114,7 +114,10 @@ export default class EventItem extends Component {
         <Row style={{ marginTop: 20 }}>
           <Col style={styles.columnIcon}>
             <img
-              style={{ width: "30px", height: "30px" }}
+              style={{
+                color: "#ff5252",
+                width: "30px", 
+                height: "30px" }}
               src={this.getImage(this.props.type)}
               alt="sportIcon"
             />
@@ -137,7 +140,7 @@ export default class EventItem extends Component {
                   borderColor: "#ff5252",
                   backgroundColor: "#ff5252",
                   fontSize: "small",
-                  marginRight: "10px",
+                  marginRight: "30px",
                 }}
                 type="primary"
                 onClick={(e) => {

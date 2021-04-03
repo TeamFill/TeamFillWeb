@@ -48,42 +48,28 @@ export default class Profile extends Component {
             <Col flex="30px" />
             <Col flex="auto">
               <Title level={2}>My Profile</Title>
-              <Form name="basic">
-                <Form.Item label="Full Name" name="fullname">
-                  <Title level={4}>{this.state.name}</Title>
-                </Form.Item>
 
-                <Form.Item label="Birthdate" name="birthdate">
-                  <Title level={4}>
-                    {this.state.birthdate.split(" ").slice(1, 4).join(" ")}
-                  </Title>
-                </Form.Item>
+                <Title level={4}>Full Name</Title>
+                  <p style={{marginBottom: "20px"}}>{this.state.name}</p>
 
-                <Form.Item label="Gender" name="gender">
-                  <Title level={4} style={{ textTransform: "capitalize" }}>
-                    {this.state.gender}
-                  </Title>
-                </Form.Item>
-
-                <Form.Item label="Reputation" name="reputation">
-                  <Title level={4}>{this.state.rep}</Title>
-                </Form.Item>
-
+                <Title level={4}>Birthdate</Title>
+                  <p style={{marginBottom: "20px"}}>{this.state.birthdate.split(" ").slice(1, 4).join(" ")}</p>
+                
+                <Title level={4}>Gender</Title>
+                  <p style={{ textTransform: "capitalize", marginBottom: "20px" }}>{this.state.gender}</p>
+                
+                <Title level={4}>Reputation</Title>
+                  <p style={{marginBottom: "20px"}}>{this.state.rep}</p>
+                
                 <Divider />
 
-                <Form.Item label="Search Radius" name="radius">
-                  <Title level={4}>{this.state.radius + " km"}</Title>
-                </Form.Item>
+                <Title level={4}>Search Radius</Title>
+                  <p style={{marginBottom: "20px"}}>{this.state.radius + " km"}</p>
+                
+                <Title level={4}>Preferences</Title>
+                  <p style={{marginBottom: "20px", width: "315px"}}>{this.state.preferences.join(", ")}</p>
 
-                <Form.Item
-                  label="Preferences"
-                  name="preferences"
-                  style={{ width: "315px" }}
-                >
-                  <Title level={4}>{this.state.preferences.join(", ")}</Title>
-                </Form.Item>
-
-                <Form.Item>
+                <Divider />
                   <NavLink
                     to={{
                       pathname: "/editprofile",
@@ -112,11 +98,10 @@ export default class Profile extends Component {
                       Edit Profile
                     </Button>
                   </NavLink>
-                </Form.Item>
 
-                <Divider />
+                <br />
+                <br />
 
-                <Form.Item>
                   <Button
                     onClick={() => {
                       firebase
@@ -143,11 +128,9 @@ export default class Profile extends Component {
                   >
                     Sign Out
                   </Button>
-                </Form.Item>
 
                 <Divider />
                 <Divider />
-              </Form>
             </Col>
             <Col flex="30px" />
           </Row>

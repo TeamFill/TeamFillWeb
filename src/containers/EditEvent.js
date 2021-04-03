@@ -16,7 +16,7 @@ import {
 } from "antd";
 import moment from "moment";
 import Navbar from "../components/Navbar";
-import returnIcon from "../assets/return.png";
+import returnIcon from "../assets/return.svg";
 import Attendee from "../components/MyEvents/Attendee";
 
 const { Title } = Typography;
@@ -346,7 +346,11 @@ export default class EditEvent extends Component {
               </Form.Item>
 
               <Form.Item label="Private Event" name="privacy">
-              Off <Switch onChange={this.onSwitchChange}  defaultChecked={this.props.location.aboutProps.privacy} /> On
+              Off <Switch 
+                    onChange={this.onSwitchChange}  
+                    defaultChecked={this.props.location.aboutProps.privacy} 
+                    style={this.state.privacy ? { background: "#ff5252"} : {background : "#aaaaaa"}}
+                    /> On
               </Form.Item>
               
 

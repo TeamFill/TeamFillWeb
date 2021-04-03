@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import firebase from "firebase";
 import EventItem from "../components/MyEvents/EventItem";
 
-import returnIcon from "../assets/return.png";
+import returnIcon from "../assets/return.svg";
 
 
 import { Typography, Row, Col } from "antd";

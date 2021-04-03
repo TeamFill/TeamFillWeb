@@ -3,19 +3,18 @@ import { NavLink } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import firebase from "firebase";
 
-import basketball from "../assets/SportIcons/basketball.png";
-import soccer from "../assets/SportIcons/soccer.png";
-import football from "../assets/SportIcons/football.png";
-import hockey from "../assets/SportIcons/hockey.png";
-import volleyball from "../assets/SportIcons/volleyball.png";
-import returnIcon from "../assets/return.png";
-import infoIcon from "../assets/info.png";
-import clockIcon from "../assets/clock.png";
-import pinIcon from "../assets/pin.png";
-import membersIcon from "../assets/members.png";
+import basketball from "../assets/SportIcons/basketball.svg";
+import soccer from "../assets/SportIcons/soccer.svg";
+import football from "../assets/SportIcons/football.svg";
+import hockey from "../assets/SportIcons/hockey.svg";
+import volleyball from "../assets/SportIcons/volleyball.svg";
+import returnIcon from "../assets/return.svg";
 
 import { Typography, Row, Col, Button, Divider } from "antd";
-import { SecurityScanOutlined } from "@ant-design/icons";
+import PeopleIcon from "@material-ui/icons/People";
+import InfoIcon from "@material-ui/icons/Info";
+import RoomIcon from "@material-ui/icons/Room";
+import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
 
 const { Title } = Typography;
 
@@ -157,15 +156,14 @@ export default class EventInfo extends Component {
               </div>
               <Row>
                 <Col style={{ width: "20%" }}>
-                  <img
+                  <InfoIcon
                     style={{
                       width: "30px",
                       height: "30px",
                       marginLeft: "20px",
                       marginTop: "10px",
+                      color: "#ff5252"
                     }}
-                    src={infoIcon}
-                    alt="info"
                   />
                 </Col>
                 <Col style={{ width: "80%" }}>
@@ -178,15 +176,14 @@ export default class EventInfo extends Component {
 
               <Row>
                 <Col style={{ width: "20%" }}>
-                  <img
+                  <QueryBuilderIcon
                     style={{
                       width: "30px",
                       height: "30px",
                       marginLeft: "20px",
                       marginTop: "5px",
+                      color: "#ff5252"
                     }}
-                    src={clockIcon}
-                    alt="clock"
                   />
                 </Col>
                 <Col style={{ width: "80%" }}>
@@ -215,15 +212,14 @@ export default class EventInfo extends Component {
                   }}
                   exact
                 >
-                  <img
+                  <RoomIcon
                     style={{
-                      width: "25px",
-                      height: "33.33px",
+                      width: "30px",
+                      height: "30px",
                       marginLeft: "20px",
                       marginTop: "10px",
+                      color: "#ff5252"
                     }}
-                    src={pinIcon}
-                    alt="pin"
                   />
                 </NavLink>
                 </Col>
@@ -248,15 +244,14 @@ export default class EventInfo extends Component {
 
               <Row>
                 <Col style={{ width: "20%" }}>
-                  <img
+                  <PeopleIcon
                     style={{
-                      width: "35.71px",
-                      height: "25px",
+                      width: "30px",
+                      height: "30px",
                       marginLeft: "20px",
                       marginTop: "10px",
+                      color: "#ff5252"
                     }}
-                    src={membersIcon}
-                    alt="members"
                   />
                 </Col>
                 <Col style={{ width: "80%" }}>
