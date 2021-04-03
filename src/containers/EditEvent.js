@@ -55,8 +55,10 @@ export default class EditEvent extends Component {
     this.state.attendees.map((attendee) => delete attendee.data);
     const reformattedAttendees = this.state.attendees;
 
-    const msgAttendees = reformattedAttendees.map((attendee) => attendee.id);
-    // console.log(reformattedAttendees);
+
+    const msgAttendees = reformattedAttendees.filter((attendee) => attendee.status === "accepted").map((attendee) => attendee.id);
+    console.log(msgAttendees);
+    
 
     const getGeocodeData = async () => {
       const formattedAddress = values.address.split(" ").join("+");
@@ -75,6 +77,8 @@ export default class EditEvent extends Component {
     firebase.auth().onAuthStateChanged(function (user) {
       console.log(values);
       if (user) {
+        msgAttendees.push(user.uid);
+        console.log(msgAttendees)
         firebase
           .firestore()
           .collection("events")
@@ -105,7 +109,7 @@ export default class EditEvent extends Component {
           .collection("groups")
           .doc(eventid)
           .update({
-            memberIDs : [user].push(msgAttendees)
+            memberIDs : msgAttendees
           })
           .then(() => {
             console.log("Document successfully written!");
