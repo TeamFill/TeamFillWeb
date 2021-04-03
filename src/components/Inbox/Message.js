@@ -61,29 +61,8 @@ const Request = () => {
   useEffect(() => {
     getGroups();
   }, []);
-  
-  const ChatItem = () => (
-    <ListItem alignItems="flex-start" onClick={() => history.push('/chat/' + groupID)}>
-      <ListItemAvatar>
-        <Avatar alt="Lebron James" src="/static/images/avatar/1.jpg" />
-      </ListItemAvatar>
-      <ListItemText
-        primary={
-          <div className={classes.text}>
-            {"Lebron James"}
-          </div>
-        }
-        secondary={
-          <div className={classes.text}>
-            {"I'll be in your neighborhood doing errands this summer if you're down."}
-          </div>
-        }
-      />
-    </ListItem>
-  );
 
   const GroupItem = groups.map(function(group, i) {
-    console.log(group)
     return (
       <ListItem key={i} alignItems="flex-start" onClick={() => history.push('/chat/' + groupID)}>
         <ListItemAvatar>
@@ -111,7 +90,6 @@ const Request = () => {
 
     <List className={classes.root}>
       {GroupItem}
-      <ChatItem></ChatItem>
     </List>
   )
 
