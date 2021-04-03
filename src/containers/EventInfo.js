@@ -237,10 +237,11 @@ export default class EventInfo extends Component {
                       fontStyle: "italic",
                     }}
                   >
-                    10 km away
+                    {/* 10 km away */}
                   </p>
                 </Col>
               </Row>
+              <br />
 
               <Row>
                 <Col style={{ width: "20%" }}>
@@ -255,15 +256,16 @@ export default class EventInfo extends Component {
                   />
                 </Col>
                 <Col style={{ width: "80%" }}>
-                  <h4 style={{ marginLeft: "10px", fontWeight: "bold" }}>
+                  <h4 style={{ marginLeft: "10px", fontStyle: "italic" }}>
                     {(this.props.location.aboutProps.privacy)? "Private Event": "Public Event"}
                   </h4>
                   <ul style={styles.ul}>
-                    <li style={(styles.li, { fontWeight: "bold" })}>
-                      {this.state.adminInfo.name +
-                        " (" +
+                    <li style={(styles.li)}>
+                      {this.state.adminInfo.name + " (" +
                         this.state.adminInfo.rep +
-                        ") |ADMIN|"}
+                        ")" }
+                      <span style={(styles.li, { fontWeight: "bold" })}> {"|ADMIN|"} </span>
+                        
                     </li>
                     {this.state.attendees.map((attendee) => (
                       <li style={styles.li} key={attendee.id}>

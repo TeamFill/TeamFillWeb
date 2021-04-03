@@ -6,8 +6,6 @@ import person from "../../assets/person.svg";
 import { Row, Col, Button } from "antd";
 import { ExportOutlined } from "@ant-design/icons";
 
-import firebase from "firebase";
-
 export default class Request extends Component {
   state = {
     title: this.props.data.eventdata.name,

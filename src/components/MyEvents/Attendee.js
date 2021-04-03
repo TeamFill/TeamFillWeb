@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
 import { DeleteOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 import person from "../../assets/person.svg";
