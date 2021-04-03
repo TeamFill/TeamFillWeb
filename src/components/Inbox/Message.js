@@ -66,8 +66,8 @@ const Request = (props) => {
     return (
       <ListItem key={i} alignItems="flex-start" onClick={() => history.push('/chat/' + groupID)}>
         <ListItemAvatar>
-        <Avatar>
-          <GroupAddIcon/>
+        <Avatar style={{background: "#ff5252"}} >
+          <GroupAddIcon />
         </Avatar>
         </ListItemAvatar>
         <ListItemText
