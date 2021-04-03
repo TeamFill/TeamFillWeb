@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import { useHistory } from "react-router";
+import { AuthContext } from "../auth/Auth";
+import firebase from "firebase";
 import {
   Typography,
   Form,
@@ -9,15 +12,26 @@ import {
   Row,
   Col,
   TimePicker,
+  Switch,
 } from "antd";
 
 import Navbar from "../components/Navbar";
+import moment from "moment";
 
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
-export default function CreateEvent() {
+export default function CreateEvent(props) {
+  const history = useHistory();
+  const { currentUser } = useContext(AuthContext);
+
+  const [privacy, setPrivacy] = useState(true);
+
+  const onSwitchChange = (checked) => {
+    setPrivacy(checked);
+  };
+
   const children = ["Basketball", "Soccer", "Hockey", "Volleyball"];
   const options = [];
   for (let i = 0; i < children.length; i++) {
@@ -28,14 +42,66 @@ export default function CreateEvent() {
     );
   }
 
-  const onFinish = (values) => {
+  const guidGenerator = () => {
+    var S4 = function () {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    return S4() + S4() + S4() + S4() + S4() + S4() + S4() + S4();
+  };
+
+  const onFinish = async (values) => {
     console.log("Success:", values);
+
+    const reformattedDate = moment(values.date, "MM/DD/YYYY").toString();
+    const reformattedTime = moment(values.time, "HH:mm:ss").toString();
+
+    const eventid = guidGenerator();
+
+    async function getGeocodeData() {
+      const formattedAddress = values.address.split(" ").join("+");
+      const geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
+
+      let response = await fetch(geocodeURL);
+      let data = await response.json();
+      return data;
+    }
+
+    let geocodeData;
+    await getGeocodeData().then((data) => (geocodeData = data));
+
+    firebase
+      .firestore()
+      .collection("events")
+      .doc(eventid)
+      .set({
+        name: values.name,
+        description: values.description,
+        type: values.type,
+        date: reformattedDate,
+        time: reformattedTime,
+        admin: currentUser.uid,
+        coordinates: {
+          x: geocodeData.results[0].geometry.location.lat,
+          y: geocodeData.results[0].geometry.location.lng,
+        },
+        address: values.address,
+        attendees: [],
+        privacy: privacy,
+      })
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });
+    history.push("/home");
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
+  console.log(privacy);
   return (
     <div>
       <Row style={{ marginTop: 40, width: "100%" }}>
@@ -49,7 +115,7 @@ export default function CreateEvent() {
           >
             <Form.Item
               label="Event Name"
-              name="eventname"
+              name="name"
               rules={[
                 {
                   required: true,
@@ -62,7 +128,7 @@ export default function CreateEvent() {
 
             <Form.Item
               label="Event Description"
-              name="eventdescription"
+              name="description"
               rules={[
                 {
                   required: true,
@@ -75,7 +141,7 @@ export default function CreateEvent() {
 
             <Form.Item
               label="Event Type"
-              name="eventtype"
+              name="type"
               rules={[
                 {
                   required: true,
@@ -93,7 +159,7 @@ export default function CreateEvent() {
 
             <Form.Item
               label="Event Date"
-              name="eventdate"
+              name="date"
               rules={[
                 {
                   required: true,
@@ -101,12 +167,15 @@ export default function CreateEvent() {
                 },
               ]}
             >
-              <DatePicker style={styles.form} />
+              <DatePicker
+                disabledDate={(d) => !d || d.isBefore(moment())}
+                style={styles.form}
+              />
             </Form.Item>
 
             <Form.Item
               label="Event Time"
-              name="eventtime"
+              name="time"
               rules={[
                 {
                   required: true,
@@ -116,6 +185,28 @@ export default function CreateEvent() {
             >
               <TimePicker style={styles.form} />
             </Form.Item>
+
+            <Form.Item
+              label="Event Address"
+              name="address"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the event address!",
+                },
+              ]}
+            >
+              <Input style={styles.form} />
+            </Form.Item>
+
+            <Form.Item label="Private Event" name="privacy">
+              Off <Switch 
+                onChange={onSwitchChange}  
+                defaultChecked 
+                style={privacy ? { background: "#ff5252"} : {background : "#aaaaaa"}}
+                /> On
+            </Form.Item>
+            <br />
 
             <Form.Item>
               <Button
@@ -136,6 +227,9 @@ export default function CreateEvent() {
         </Col>
         <Col flex="30px" />
       </Row>
+      <br />
+      <br />
+      <br />
       <Navbar />
     </div>
   );

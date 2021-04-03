@@ -1,25 +1,97 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import firebase from "firebase";
 
-import basketball from "../assets/SportIcons/basketball.png";
-import soccer from "../assets/SportIcons/soccer.png";
-import football from "../assets/SportIcons/football.png";
-import hockey from "../assets/SportIcons/hockey.png";
-import volleyball from "../assets/SportIcons/volleyball.png";
-import returnIcon from "../assets/return.png";
-import infoIcon from "../assets/info.png";
-import clockIcon from "../assets/clock.png";
-import pinIcon from "../assets/pin.png";
-import membersIcon from "../assets/members.png";
+import basketball from "../assets/SportIcons/basketball.svg";
+import soccer from "../assets/SportIcons/soccer.svg";
+import football from "../assets/SportIcons/football.svg";
+import hockey from "../assets/SportIcons/hockey.svg";
+import volleyball from "../assets/SportIcons/volleyball.svg";
+import returnIcon from "../assets/return.svg";
 
-import { Typography, Row, Col } from "antd";
+import { Typography, Row, Col, Button, Divider } from "antd";
+import PeopleIcon from "@material-ui/icons/People";
+import InfoIcon from "@material-ui/icons/Info";
+import RoomIcon from "@material-ui/icons/Room";
+import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
 
 const { Title } = Typography;
 
 export default class EventInfo extends Component {
-  getImage = (sport) => {
-    switch (sport) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      attendees: [],
+      adminInfo: {},
+    };
+  }
+
+  componentDidMount = () => {
+    this.getAdminInfo();
+    this.getAttendeesInfo();
+  };
+
+  getAdminInfo = () => {
+    let admin = this.props.location.aboutProps.admin;
+    let currentComponent = this;
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(admin)
+          .get()
+          .then((doc) => {
+            console.log("Document grabbed data!");
+            // console.log(doc.data());
+            currentComponent.setState({
+              adminInfo: {
+                name: doc.data().fullname,
+                rep: doc.data().rep,
+              },
+            });
+          })
+          .catch((error) => {
+            console.error("Error reading document: ", error);
+          });
+      }
+    });
+  };
+
+  getAttendeesInfo = () => {
+    const attendees = [];
+    console.log("event info");
+    const currenentAttdendees = this.props.location.aboutProps.attendees;
+    let currentComponent = this;
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        currenentAttdendees.map((attendee) =>
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(attendee.id)
+            .get()
+            .then((doc) => {
+              console.log("Document grabbed data!");
+              // console.log(doc.data());
+              attendees.push({
+                id: attendee.id,
+                status: attendee.status,
+                data: doc.data(),
+              });
+              currentComponent.setState({ attendees: attendees });
+            })
+            .catch((error) => {
+              console.error("Error reading document: ", error);
+            })
+        );
+      }
+    });
+  };
+
+  getImage = (type) => {
+    switch (type) {
       case "basketball":
         return basketball;
       case "soccer":
@@ -34,6 +106,29 @@ export default class EventInfo extends Component {
         return;
     }
   };
+
+  leaveEvent = () => {
+    const currentUser = firebase.auth().currentUser;
+    const attendees = this.props.location.aboutProps.attendees.filter(
+      (attendee) => attendee.id !== currentUser.uid
+    );
+    const eventid = this.props.location.aboutProps.eventid;
+    firebase
+      .firestore()
+      .collection("events")
+      .doc(eventid)
+      .update({
+        attendees: attendees,
+      })
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });
+    this.props.history.push("/myevents");
+  };
+
   render() {
     return (
       <div>
@@ -48,78 +143,92 @@ export default class EventInfo extends Component {
                   alt="return"
                 />
               </NavLink>
-              {this.props.location.aboutProps.title}
+              {this.props.location.aboutProps.name}
             </Title>
 
             <div style={styles.rectange}>
               <div style={styles.sportIcon}>
                 <img
                   style={{ width: "70px", height: "70px" }}
-                  src={this.getImage(this.props.location.aboutProps.ball)}
+                  src={this.getImage(this.props.location.aboutProps.type)}
                   alt="sportIcon"
                 />
               </div>
               <Row>
                 <Col style={{ width: "20%" }}>
-                  <img
+                  <InfoIcon
                     style={{
                       width: "30px",
                       height: "30px",
                       marginLeft: "20px",
                       marginTop: "10px",
+                      color: "#ff5252"
                     }}
-                    src={infoIcon}
-                    alt="info"
                   />
                 </Col>
                 <Col style={{ width: "80%" }}>
                   <h4 style={{ marginLeft: "10px" }}>Description</h4>
                   <p style={styles.text}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+                    {this.props.location.aboutProps.description}
                   </p>
                 </Col>
               </Row>
 
               <Row>
                 <Col style={{ width: "20%" }}>
-                  <img
+                  <QueryBuilderIcon
                     style={{
                       width: "30px",
                       height: "30px",
                       marginLeft: "20px",
                       marginTop: "5px",
+                      color: "#ff5252"
                     }}
-                    src={clockIcon}
-                    alt="clock"
                   />
                 </Col>
                 <Col style={{ width: "80%" }}>
-                  <h4 style={{ marginLeft: "10px" }}>Saturday at 9:41 AM</h4>
+                  <h4 style={{ marginLeft: "10px" }}>
+                    {this.props.location.aboutProps.date.split(" ")[0] +
+                      " at " +
+                      this.props.location.aboutProps.time.split(" ")[4].slice(0, -3)}
+                  </h4>
                   <p style={{ marginLeft: "10px", marginTop: "-10px" }}>
-                    Jan 27th, 2021
+                    {this.props.location.aboutProps.date
+                      .split(" ")
+                      .slice(1, 4)
+                      .join(" ")}
                   </p>
                 </Col>
               </Row>
 
               <Row>
                 <Col style={{ width: "20%" }}>
-                  <img
+                <NavLink
+                  to={{
+                    pathname: "/home",
+                    aboutProps: {
+                      coordinates: this.props.location.aboutProps.coordinates
+                    },
+                  }}
+                  exact
+                >
+                  <RoomIcon
                     style={{
-                      width: "25px",
-                      height: "33.33px",
+                      width: "30px",
+                      height: "30px",
                       marginLeft: "20px",
                       marginTop: "10px",
+                      color: "#ff5252"
                     }}
-                    src={pinIcon}
-                    alt="pin"
                   />
+                </NavLink>
                 </Col>
                 <Col style={{ width: "80%" }}>
-                  <h4 style={{ marginLeft: "10px" }}>1280 Main St W</h4>
+                  <h4 style={{ marginLeft: "10px" }}>{this.props.location.aboutProps.address.split(", ")[0]}</h4>
                   <p style={{ marginLeft: "10px", marginTop: "-10px" }}>
-                    Jan 27th, 2021
+                  {this.props.location.aboutProps.address.split(", ")[1] 
+                  + ", " +
+                  this.props.location.aboutProps.address.split(", ")[2]}
                   </p>
                   <p
                     style={{
@@ -128,36 +237,70 @@ export default class EventInfo extends Component {
                       fontStyle: "italic",
                     }}
                   >
-                    10 km away
+                    {/* 10 km away */}
                   </p>
                 </Col>
               </Row>
+              <br />
 
               <Row>
                 <Col style={{ width: "20%" }}>
-                  <img
+                  <PeopleIcon
                     style={{
-                      width: "35.71px",
-                      height: "25px",
+                      width: "30px",
+                      height: "30px",
                       marginLeft: "20px",
                       marginTop: "10px",
+                      color: "#ff5252"
                     }}
-                    src={membersIcon}
-                    alt="members"
                   />
                 </Col>
                 <Col style={{ width: "80%" }}>
-                  <h4 style={{ marginLeft: "10px", fontWeight: "bold" }}>
-                    Member List
+                  <h4 style={{ marginLeft: "10px", fontStyle: "italic" }}>
+                    {(this.props.location.aboutProps.privacy)? "Private Event": "Public Event"}
                   </h4>
                   <ul style={styles.ul}>
-                    <li style={styles.li}>Clinton P.Thomas</li>
-                    <li style={styles.li}>Thomas M. Parks</li>
-                    <li style={styles.li}>James F. Castillo</li>
+                    <li style={(styles.li)}>
+                      {this.state.adminInfo.name + " (" +
+                        this.state.adminInfo.rep +
+                        ")" }
+                      <span style={(styles.li, { fontWeight: "bold" })}> {"|ADMIN|"} </span>
+                        
+                    </li>
+                    {this.state.attendees.map((attendee) => (
+                      <li style={styles.li} key={attendee.id}>
+                        {attendee.data.fullname +
+                          " (" +
+                          attendee.data.rep +
+                          ") " + attendee.status}
+                      </li>
+                    ))}
                   </ul>
                 </Col>
               </Row>
             </div>
+
+            {this.props.location.aboutProps.adminStatus === 0 ? (
+              <div>
+                <Divider />
+                <Button
+                  style={{
+                    width: "100%",
+                    height: 50,
+                    borderRadius: 15,
+                    borderColor: "#ff5252",
+                    backgroundColor: "#ff5252",
+                  }}
+                  type="primary"
+                  htmlType="submit"
+                  onClick={() => this.leaveEvent()}
+                >
+                  LEAVE EVENT
+                </Button>
+              </div>
+            ) : (
+              <Divider />
+            )}
           </Col>
           <Col flex="30px" />
         </Row>
@@ -180,6 +323,8 @@ const styles = {
   title: {
     display: "flex",
     alignItems: "center" /* align vertical */,
+    width: "315px",
+    wordWrap: "break-word",
   },
   sportIcon: {
     display: "flex",

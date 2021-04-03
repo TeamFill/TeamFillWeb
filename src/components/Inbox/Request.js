@@ -1,38 +1,59 @@
 import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
 
 import person from "../../assets/person.svg";
 
 import { Row, Col, Button } from "antd";
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { ExportOutlined } from "@ant-design/icons";
 
 export default class Request extends Component {
-    state= {
-        title: "Approval Request",
-        name: "Pranav P.",
-        rep: 50
-    }
+  state = {
+    title: this.props.data.eventdata.name,
+    name: this.props.data.userdata.fullname,
+    rep: this.props.data.userdata.rep,
+  };
 
   render() {
+    console.log(this.props.data.eventdata)
     return (
+      <Row style={styles.rectange}>
+        <Col style={styles.columnIcon}>
+          <img src={person} alt="person" />
+        </Col>
 
-        <Row style={styles.rectange}>
-          <Col style={styles.columnIcon}>
-            <img
-              src={person}
-              alt="person"
-            />
-          </Col>
+        <Col style={styles.columnMiddle}>
+          {this.state.name + " (" + this.state.rep + ") has requested to join " + this.state.title}
+        </Col>
 
-          <Col style={styles.columnMiddle}>
-            {this.state.title} <br />
-            {this.state.name + " (" + this.state.rep + ")"}
-          </Col>
-
-          <Col style={styles.columnPen}>
-            <Button type="danger" shape="circle" icon={<CheckOutlined />} style={{marginRight: 20}}/>
-            <Button type="secondary" shape="circle" icon={<CloseOutlined />} style={{background: "rgb(190, 200, 200)"}}/>
-          </Col>
-        </Row>
+        <Col style={styles.columnPen}>
+          <NavLink
+            to={{
+              pathname: "/editevent",
+              aboutProps: {
+                eventid: this.props.data.eventid,
+                name: this.props.data.eventdata.name,
+                attendees: this.props.data.eventdata.attendees,
+                date: this.props.data.eventdata.date,
+                description: this.props.data.eventdata.description,
+                time: this.props.data.eventdata.time,
+                type: this.props.data.eventdata.type,
+                privacy: this.props.data.eventdata.privacy,
+                address: this.props.data.eventdata.address,
+                coordinates: this.props.data.eventdata.coordinates,
+                returnTo: "/inbox",
+              },
+            }}
+            exact
+          >
+          <Button
+            type="danger"
+            shape="circle"
+            icon={<ExportOutlined />}
+            // style={{ background: "rgb(190, 200, 200)" }}
+          />
+          </NavLink>
+        </Col>
+      </Row>
     );
   }
 }
@@ -45,7 +66,7 @@ const styles = {
     borderTop: "1px solid #C4C4C4",
     boxSizing: "border-box",
     marginTop: 5,
-    marginBottom: -10
+    marginBottom: -10,
   },
   columnIcon: {
     float: "left",
@@ -56,16 +77,16 @@ const styles = {
     alignItems: "center" /* align vertical */,
   },
   columnMiddle: {
-    width: "40%",
+    width: "55%",
     padding: "auto",
     display: "flex",
     // justifyContent: "center", /* align horizontal */
     alignItems: "center" /* align vertical */,
-    color: "black"
+    color: "black",
   },
   columnPen: {
     float: "right",
-    width: "35%",
+    width: "20%",
     padding: "auto",
     display: "flex",
     justifyContent: "center" /* align horizontal */,

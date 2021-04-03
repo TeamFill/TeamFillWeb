@@ -1,25 +1,35 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import firebase from "firebase";
+import { Button } from "antd";
 
-import basketball from "../../assets/SportIcons/basketball.png";
-import soccer from "../../assets/SportIcons/soccer.png";
-import football from "../../assets/SportIcons/football.png";
-import hockey from "../../assets/SportIcons/hockey.png";
-import volleyball from "../../assets/SportIcons/volleyball.png";
-import editPen from "../../assets/editPen.png";
+import basketball from "../../assets/SportIcons/basketball.svg";
+import soccer from "../../assets/SportIcons/soccer.svg";
+import football from "../../assets/SportIcons/football.svg";
+import hockey from "../../assets/SportIcons/hockey.svg";
+import volleyball from "../../assets/SportIcons/volleyball.svg";
+import editPen from "../../assets/editPen.svg";
 
 import { Row, Col } from "antd";
+const _ = require("lodash");
 
 export default class EventItem extends Component {
+  state = {
+    inEvent: false,
+  };
+
+  componentDidMount = () => {
+    this.checkIfInEvent();
+  };
 
   editOption = (admin) => {
-    if (admin) {
-      return <img src={editPen} alt="edit" />
+    if (admin === 1) {
+      return <img src={editPen} alt="edit" />;
     }
-  }
+  };
 
-  getImage = (sport) => {
-    switch (sport) {
+  getImage = (type) => {
+    switch (type) {
       case "basketball":
         return basketball;
       case "soccer":
@@ -35,48 +45,134 @@ export default class EventItem extends Component {
     }
   };
 
+  checkIfInEvent = () => {
+    const currentUser = firebase.auth().currentUser;
+    const checkAccepted = this.props.attendees.some((e) =>
+      _.isEqual(e, { id: currentUser.uid, status: "accepted" })
+    );
+    const checkPending = this.props.attendees.some((e) =>
+      _.isEqual(e, { id: currentUser.uid, status: "pending" })
+    );
+    if (currentUser.uid === this.props.admin || checkAccepted || checkPending) {
+      this.setState({ inEvent: true });
+    } else {
+      this.setState({ inEvent: false });
+    }
+  };
+
+  handleClick = () => {
+    const currentUser = firebase.auth().currentUser;
+    if (this.props.privacy === true) {
+      firebase
+        .firestore()
+        .collection("events")
+        .doc(this.props.eventid)
+        .update({
+          attendees: firebase.firestore.FieldValue.arrayUnion({
+            id: currentUser.uid,
+            status: "pending",
+          }),
+        });
+    } else if (this.props.privacy === false) {
+      firebase
+        .firestore()
+        .collection("events")
+        .doc(this.props.eventid)
+        .update({
+          attendees: firebase.firestore.FieldValue.arrayUnion({
+            id: currentUser.uid,
+            status: "accepted",
+          }),
+        });
+    }
+  };
+
   render() {
     return (
-      <NavLink style={styles.rectange}
+      <NavLink
+        style={styles.rectange}
         to={{
           pathname: "/eventinfo",
           aboutProps: {
-            title: this.props.event,
+            eventid: this.props.eventid,
+            admin: this.props.admin,
+            adminStatus: this.props.adminStatus,
+            name: this.props.name,
+            attendees: this.props.attendees,
+            date: this.props.date,
+            description: this.props.description,
             time: this.props.time,
-            ball: this.props.sport,
-            returnTo: "/myevents",
+            type: this.props.type,
+            privacy: this.props.privacy,
+            address: this.props.address,
+            coordinates: this.props.coordinates,
+            returnTo: this.props.returnTo,
           },
         }}
         exact
       >
-        <Row style={{marginTop:20}}>
+        <Row style={{ marginTop: 20 }}>
           <Col style={styles.columnIcon}>
             <img
-              style={{ width: "30px", height: "30px" }}
-              src={this.getImage(this.props.sport)}
+              style={{
+                color: "#ff5252",
+                width: "30px", 
+                height: "30px" }}
+              src={this.getImage(this.props.type)}
               alt="sportIcon"
             />
           </Col>
 
           <Col style={styles.columnMiddle}>
-            {this.props.event} <br />
-            {this.props.time}
+            {this.props.name} <br />
+            {this.props.date.split(" ").slice(1, 4).join(" ") +
+              " " +
+              this.props.time.split(" ")[4].slice(0, -3)}
           </Col>
 
           <Col style={styles.columnPen}>
+            {this.props.adminStatus === 2 && !this.state.inEvent ? (
+              <Button
+                style={{
+                  width: "100%",
+                  height: 50,
+                  borderRadius: 15,
+                  borderColor: "#ff5252",
+                  backgroundColor: "#ff5252",
+                  fontSize: "small",
+                  marginRight: "30px",
+                }}
+                type="primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.handleClick();
+                }}
+              >
+                Request <br /> to Join
+              </Button>
+            ) : null}
+
             <NavLink
               to={{
                 pathname: "/editevent",
                 aboutProps: {
-                  title: this.props.event,
+                  eventid: this.props.eventid,
+                  adminStatus: this.props.adminStatus,
+                  name: this.props.name,
+                  attendees: this.props.attendees,
+                  date: this.props.date,
+                  description: this.props.description,
                   time: this.props.time,
-                  ball: this.props.sport,
-                  returnTo: "/myevents",
+                  type: this.props.type,
+                  privacy: this.props.privacy,
+                  address: this.props.address,
+                  coordinates: this.props.coordinates,
+                  returnTo: this.props.returnTo,
                 },
               }}
               exact
             >
-              {this.editOption(this.props.admin)}
+              {this.editOption(this.props.adminStatus)}
             </NavLink>
           </Col>
         </Row>
@@ -87,7 +183,8 @@ export default class EventItem extends Component {
 
 const styles = {
   rectange: {
-    width: "100%",
+    // width: "100%",
+    width: "315px",
     height: "91px",
     background: "#FFFFFF",
     border: "1px solid #C4C4C4",
@@ -109,7 +206,8 @@ const styles = {
     display: "flex",
     // justifyContent: "center", /* align horizontal */
     alignItems: "center" /* align vertical */,
-    color: "black"
+    color: "black",
+    wordWrap: "break-word",
   },
   columnPen: {
     float: "right",

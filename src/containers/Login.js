@@ -30,7 +30,37 @@ const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
 
   if (currentUser) {
-    return <Redirect to="/" />;
+    async function getOnboarding() {
+      try {
+        return await fb
+          .firestore()
+          .collection("users")
+          .doc(currentUser.uid)
+          .get()
+          .then((docSnapshot) => {
+            if (docSnapshot.exists) {
+              console.log("User Exists!!")
+              console.log(docSnapshot)
+              return false; //go to home
+            } else {
+              console.log("No user!!");
+              return true; //go to onboarding
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    console.log(getOnboarding());
+    if (getOnboarding()) {
+      return <Redirect to="/onboarding" />;
+      // return <Redirect to="/profile" />;
+    } else {
+      return <Redirect to="/home" />;
+    }
   }
 
   return (

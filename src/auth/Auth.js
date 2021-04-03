@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import fb from "../firebase";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export const AuthContext = React.createContext();
 
@@ -15,7 +16,17 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   if (pending) {
-    return <>Loading...</>;
+    return (
+      <CircularProgress
+        style={{
+          color: "#ff5252",
+          margin: 0,
+          position: "absolute",
+          top: "48%",
+          left: "45%",
+        }}
+      />
+    );
   }
 
   return (

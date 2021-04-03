@@ -1,117 +1,98 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import {
-  Typography,
-  Form,
-  Button,
-  Divider,
-  Row,
-  Col,
-} from "antd";
+import { Typography, Button, Divider, Row, Col } from "antd";
 import Navbar from "../components/Navbar";
+import firebase from "firebase";
 
 const { Title } = Typography;
-
 export default class Profile extends Component {
-  state= {
-    name: "Lebron James",
-    birthdate: "30/12/1984",
-    gender: "male",
-    rep: 50,
-    radius: 30,
-    preferences: ["Basketball", "Soccer"]
+  constructor(props) {
+    super(props);
+    this.state = { loading: true };
+  }
+
+  componentDidMount() {
+    let currentComponent = this;
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then((doc) => {
+            console.log("Document grabbed data!");
+            // console.log(doc.data());
+            currentComponent.setState({
+              name: doc.data().fullname,
+              birthdate: doc.data().birthdate,
+              gender: doc.data().gender,
+              rep: doc.data().rep,
+              radius: doc.data().radius,
+              preferences: doc.data().preferences,
+              loading: false,
+            });
+          })
+          .catch((error) => {
+            console.error("Error reading document: ", error);
+          });
+      }
+    });
   }
 
   render() {
     return (
-      <div>
-        <Row style={{ marginTop: 40, width: "100%", height: "100%" }}>
-          <Col flex="30px" />
-          <Col flex="auto">
-            <Title level={2}>My Profile</Title>
-            <Form
-              name="basic"
-            >
-              <Form.Item
-                label="Full Name"
-                name="fullname"
-              >
-                <Title level={4}>{this.state.name}</Title>
-              </Form.Item>
+      !this.state.loading && (
+        <div>
+          <Row style={{ marginTop: 40, width: "100%", height: "100%" }}>
+            <Col flex="30px" />
+            <Col flex="auto">
+              <Title level={2}>My Profile</Title>
 
-              <Form.Item
-                label="Birthdate"
-                name="birthdate"
-              >
-                <Title level={4}>{this.state.birthdate}</Title>
-              </Form.Item>
+              <Title level={4}>Full Name</Title>
+              <p style={{ marginBottom: "20px" }}>{this.state.name}</p>
 
-              <Form.Item
-                label="Gender"
-                name="gender"
-              >
-                <Title level={4}>{this.state.gender}</Title>
-              </Form.Item>
+              <Title level={4}>Birthdate</Title>
+              <p style={{ marginBottom: "20px" }}>
+                {this.state.birthdate.split(" ").slice(1, 4).join(" ")}
+              </p>
 
-              <Form.Item
-                label="Reputation"
-                name="reputation"
-              >
-                <Title level={4}>{this.state.rep}</Title>
-              </Form.Item>
+              <Title level={4}>Gender</Title>
+              <p style={{ textTransform: "capitalize", marginBottom: "20px" }}>
+                {this.state.gender}
+              </p>
+
+              <Title level={4}>Reputation</Title>
+              <p style={{ marginBottom: "20px" }}>{this.state.rep}</p>
 
               <Divider />
 
-              <Form.Item
-                label="Search Radius"
-                name="radius"
-              >
-                <Title level={4}>{this.state.radius + " km"}</Title>
-              </Form.Item>
+              <Title level={4}>Search Radius</Title>
+              <p style={{ marginBottom: "20px" }}>
+                {this.state.radius + " km"}
+              </p>
 
-              <Form.Item
-                label="Preferences"
-                name="preferences"
-              >
-                <Title level={4}>{this.state.preferences.join(", ")}</Title>
-              </Form.Item>
-
-              <Form.Item>
-                <NavLink
-                  to={{
-                    pathname: "/editprofile",
-                    aboutProps: {
-                      name: this.state.name,
-                      birthdate: this.state.birthdate,
-                      gender: this.state.gender,
-                      radius: this.state.radius,
-                      preferences: this.state.preferences,
-                      returnTo: "/profile",
-                    },
-                  }}
-                  exact
-                >
-                  <Button
-                    style={{
-                      width: "100%",
-                      height: 50,
-                      borderRadius: 15,
-                      borderColor: "#ff5252",
-                      backgroundColor: "#ff5252",
-                    }}
-                    type="primary"
-                    htmlType="submit"
-                  >
-                    Edit Profile
-                  </Button>
-                </NavLink>
-              </Form.Item>
+              <Title level={4}>Preferences</Title>
+              <p style={{ marginBottom: "20px", width: "315px" }}>
+                {this.state.preferences.join(", ")}
+              </p>
 
               <Divider />
-
-              <Form.Item>
+              <NavLink
+                to={{
+                  pathname: "/editprofile",
+                  aboutProps: {
+                    name: this.state.name,
+                    birthdate: this.state.birthdate,
+                    gender: this.state.gender,
+                    radius: this.state.radius,
+                    preferences: this.state.preferences,
+                    returnTo: "/profile",
+                  },
+                }}
+                exact
+              >
                 <Button
-                  shape="round"
                   style={{
                     width: "100%",
                     height: 50,
@@ -122,18 +103,48 @@ export default class Profile extends Component {
                   type="primary"
                   htmlType="submit"
                 >
-                  Sign Out
+                  Edit Profile
                 </Button>
-              </Form.Item>
+              </NavLink>
+
+              <br />
+              <br />
+
+              <Button
+                onClick={() => {
+                  firebase
+                    .auth()
+                    .signOut()
+                    .then(() => {
+                      console.log("logged out");
+                    })
+                    .catch((error) => {
+                      // An error happened.
+                    });
+                }}
+                shape="round"
+                style={{
+                  width: "100%",
+                  height: 50,
+                  borderRadius: 15,
+                  borderColor: "#ff5252",
+                  backgroundColor: "white",
+                  color: "#ff5252",
+                }}
+                type="primary"
+                htmlType="submit"
+              >
+                Sign Out
+              </Button>
 
               <Divider />
               <Divider />
-            </Form>
-          </Col>
-          <Col flex="30px" />
-        </Row>
-        <Navbar />
-      </div>
+            </Col>
+            <Col flex="30px" />
+          </Row>
+          <Navbar />
+        </div>
+      )
     );
   }
 }
