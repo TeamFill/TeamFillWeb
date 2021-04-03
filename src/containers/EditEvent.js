@@ -54,6 +54,8 @@ export default class EditEvent extends Component {
     const reformattedTime = moment(values.time, "HH:mm:ss").toString();
     this.state.attendees.map((attendee) => delete attendee.data);
     const reformattedAttendees = this.state.attendees;
+
+    const msgAttendees = reformattedAttendees.map((attendee) => attendee.id);
     // console.log(reformattedAttendees);
 
     const getGeocodeData = async () => {
@@ -90,6 +92,20 @@ export default class EditEvent extends Component {
             },
             address: values.address,
             privacy: tmpPrivacy,
+          })
+          .then(() => {
+            console.log("Document successfully written!");
+          })
+          .catch((error) => {
+            console.error("Error writing document: ", error);
+          });
+
+          firebase
+          .firestore()
+          .collection("groups")
+          .doc(eventid)
+          .update({
+            memberIDs : [user].push(msgAttendees)
           })
           .then(() => {
             console.log("Document successfully written!");
@@ -164,6 +180,23 @@ export default class EditEvent extends Component {
           });
       }
     });
+
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        firebase
+          .firestore()
+          .collection("groups")
+          .doc(eventid)
+          .delete()
+          .then(() => {
+            console.log("Document successfully deleted!");
+          })
+          .catch((error) => {
+            console.error("Error writing document: ", error);
+          });
+      }
+    });
+
     this.props.history.push("/myevents");
   };
 

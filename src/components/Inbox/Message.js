@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Request = () => {
+const Request = (props) => {
 
   const history = useHistory();
 
@@ -40,8 +40,8 @@ const Request = () => {
 
   const classes = useStyles();
 
-  const groupID = "esngIrriE8hiJJAlTcOE";
-  const userID = "test"
+  const groupID = props.msgID;
+  const userID = fb.auth().currentUser.uid;
 
   const [groups, setGroups] = useState([]);
 

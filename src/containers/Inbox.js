@@ -22,6 +22,7 @@ export default class Inbox extends Component {
     inbox: 0,
     events: [],
     penduserdata: [],
+    messages:  [],
     attendingStyle: styles.Clicked,
     createdStyle: styles.unClicked,
   };
@@ -29,6 +30,7 @@ export default class Inbox extends Component {
   componentDidMount() {
     const currentUser = firebase.auth().currentUser;
     this.getPendingReq(currentUser.uid);
+    this.getMyMessages(currentUser.uid);
   }
 
   handleadmin = (e, inbox) => {
@@ -87,9 +89,23 @@ export default class Inbox extends Component {
     this.setState({ penduserdata: penduserdata });
   };
 
+  getMyMessages = async (uid)=>{
+    let messages = [];
+    const groupsRef = firebase.firestore().collection("groups");
+    const snapshot = await groupsRef.where("memberIDs", "array-contains", uid).get();
+    if (snapshot.empty) {
+      console.log("No matching documents.");
+      return;
+    }
+    snapshot.forEach((doc) => {
+      messages.push({ id: doc.id, data: doc.data() });
+      console.log(doc.id, "=>", doc.data());
+    });
+    this.setState({messages: messages})
+  };
+
   render() {
     console.log(this.state.penduserdata);
-    // const toShow = this.state.events.filter(event => event.admin === this.state.admin);
     return (
       <div>
         <Row style={{ marginTop: 70, width: "100%" }}>
@@ -113,10 +129,14 @@ export default class Inbox extends Component {
               </a>
             </Title>
 
-            {this.state.penduserdata &&
-              this.state.inbox === 1 &&
-              this.state.penduserdata.map((data) => <Request data={data} />)}
-            <Message/>  
+            {this.state.inbox === 1? 
+              this.state.penduserdata && this.state.penduserdata.map((data) => <Request data={data} />)
+            :
+              this.state.messages.map((message) => <Message 
+                key={message.id}
+                msgID={message.id}/>)
+            }
+            
           </Col>
           <Col flex="30px" />
         </Row>

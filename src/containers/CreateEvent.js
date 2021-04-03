@@ -94,6 +94,25 @@ export default function CreateEvent(props) {
       .catch((error) => {
         console.error("Error writing document: ", error);
       });
+
+
+      firebase
+      .firestore()
+      .collection("groups")
+      .doc(eventid)
+      .set({
+        groupID: eventid,
+        groupName: values.name,
+        memberIDs: [currentUser.uid],
+        newestMessage: ""
+      })
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });
+
     history.push("/home");
   };
 

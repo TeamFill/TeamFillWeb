@@ -86,7 +86,7 @@ const Chat = (props) => {
   const db = fb.firestore();
 
   let {groupID} = useParams();
-  let userID = 'test';
+  const userID = fb.auth().currentUser.uid;
 
   const classes = useStyles();
   const [groupData, setGroupData] = useState({});
@@ -158,10 +158,10 @@ const Chat = (props) => {
       <React.Fragment key={i}>
         <ListItem alignItems="flex-start">
           <ListItemAvatar>
-            <Avatar alt={member.name}/>
+            <Avatar alt={member.fullname}/>
           </ListItemAvatar>
           <ListItemText
-            primary={member.name}
+            primary={member.fullname}
             secondary={
               <React.Fragment>
                 <Typography
@@ -206,7 +206,7 @@ const Chat = (props) => {
       date: new Date(),
       senderID: userID,
       message: message,
-      senderName: user.name
+      senderName: user.fullname
     }
     db.collection('groups').doc(groupID).collection('messages').add(messageObj)
     .then(() => {
