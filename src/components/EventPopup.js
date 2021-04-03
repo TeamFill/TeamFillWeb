@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Typography, Button } from "antd";
+import { Typography, Button, message } from "antd";
 import { NavLink } from "react-router-dom";
 import firebase from "firebase";
 import { AuthContext } from "../auth/Auth";
@@ -38,6 +38,7 @@ export default function EventPopup(props) {
           }),
         });
     }
+    message.success("Requested to join")
   };
 
   const checkIfInEvent = () => {

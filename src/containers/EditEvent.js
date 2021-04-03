@@ -13,6 +13,7 @@ import {
   TimePicker,
   Divider,
   Switch,
+  message
 } from "antd";
 import moment from "moment";
 import Navbar from "../components/Navbar";
@@ -209,6 +210,7 @@ export default class EditEvent extends Component {
       (attendee) => attendee.id !== uid
     );
     this.setState({ attendees: attendees });
+    message.warning("Please Save Event")
   };
 
   responseAttendee = (uid, choice) => {
@@ -230,6 +232,7 @@ export default class EditEvent extends Component {
     }
     // console.log(attendees)
     this.setState({ attendees: attendees });
+    message.warning("Please Save Event")
   };
 
   getAttendeesInfo = () => {

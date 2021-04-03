@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import firebase from "firebase";
-import { Button } from "antd";
+import { Button, message } from "antd";
 
 import basketball from "../../assets/SportIcons/basketball.svg";
 import soccer from "../../assets/SportIcons/soccer.svg";
@@ -85,6 +85,7 @@ export default class EventItem extends Component {
           }),
         });
     }
+    message.success("Requested to join")
   };
 
   render() {
