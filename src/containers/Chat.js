@@ -94,6 +94,7 @@ const Chat = (props) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [drawer, setDrawer] = useState(false);
+  const [timer, setTimer] = useState(0);
 
   const handleKeyPress = (event) => {
     if(event.key === 'Enter'){
@@ -144,14 +145,21 @@ const Chat = (props) => {
   useEffect(async () => {
     loadGroupData();
     loadMessages();
-  }, [groupID]);
+  }, [groupID, timer]);
 
   // When group data loaded, get member details
   useEffect(() => {
     if (Object.keys(groupData).length !== 0) {
       getGroupMembers();
     }
-  }, [groupData]);
+  }, [groupData, timer]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer(timer + 1)
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [timer]);
 
   const groupMembersList = groupMembers.map(function(member, i) {
     return (
@@ -253,11 +261,17 @@ const Chat = (props) => {
                     {messsagesSent}
                 </List>
             </Container>
+            <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
             <div style={{position: 'fixed', bottom: '0', width: '100%'}}>
               <TextField multiline rowsMax={3} 
               placeholder="Message..." variant="filled" 
               onKeyPress={handleKeyPress}
-              style={{width: '100%', overflow: 'hidden', marginBottom: '56px', marginTop: '8px'}}
+              style={{width: '100%', overflow: 'hidden', marginBottom: '56px', marginTop: '80px'}}
                 InputProps={{
                 endAdornment: (
                   <SendIcon onClick={() => sendMessage()}/>
