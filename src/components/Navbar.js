@@ -34,46 +34,19 @@ export default function Navbar() {
   };
 
   return (
-    <BottomNavigation
-      value={value}
-      onChange={handleChange}
-      className={classes.root}
-    >
-      <BottomNavigationAction
-        value="/myevents"
-        icon={<ListAltIcon className={classes.icon} />}
-        component={Link}
-        to="/myevents"
-        label="."
-      />
-      <BottomNavigationAction
-        value="/create"
-        icon={<AddBoxIcon className={classes.icon} />}
-        component={Link}
-        to="/create"
-        label="."
-      />
-      <BottomNavigationAction
-        value="/home"
-        icon={<MapIcon className={classes.icon} />}
-        component={Link}
-        to="/home"
-        label="."
-      />
-      <BottomNavigationAction
-        value="/inbox"
-        icon={<InboxIcon className={classes.icon} />}
-        component={Link}
-        to="/inbox"
-        label="."
-      />
-      <BottomNavigationAction
-        value="/profile"
-        icon={<AccountBoxIcon className={classes.icon} />}
-        component={Link}
-        to="/profile"
-        label="."
-      />
-    </BottomNavigation>
+    <React.Fragment>
+      <BottomNavigation
+        value={value}
+        onChange={handleChange}
+        className={classes.root}
+      >
+        <BottomNavigationAction value="/myevents" icon={<ListAltIcon className={classes.icon} />} component={Link} to="/myevents" label="."/>
+        <BottomNavigationAction value="/create" icon={<AddBoxIcon className={classes.icon} />} component={Link} to="/create" label="."/>
+        <BottomNavigationAction value="/home" icon={<MapIcon className={classes.icon} />} component={Link} to="/home" label="."/>
+        <BottomNavigationAction value="/inbox" icon={<InboxIcon className={classes.icon} />} component={Link} to="/inbox" label="."/>
+        <BottomNavigationAction value="/profile" icon={<AccountBoxIcon className={classes.icon} />} component={Link} to="/profile" label="."/>
+      </BottomNavigation>
+    </React.Fragment>
+    
   );
 }

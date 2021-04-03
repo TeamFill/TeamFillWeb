@@ -12,6 +12,7 @@ import PrivateRoute from "./auth/PrivateRoute";
 import EventInfo from "./containers/EventInfo";
 import Inbox from "./containers/Inbox";
 import Onboarding from "./containers/Onboarding";
+import Chat from './containers/Chat';
 import ListView from "./containers/ListView";
 
 require("dotenv").config();
@@ -32,6 +33,8 @@ function App() {
           <PrivateRoute exact path="/inbox" component={Inbox} />
           <PrivateRoute exact path="/listview" component={ListView} />
           <PrivateRoute exact path="/" component={HomepageMap} />
+          {/* Ninos Yomo */}
+          <PrivateRoute path="/chat/:groupID" component={Chat} />
           <Route exact path="/login" component={Login} />
         </div>
       </Router>

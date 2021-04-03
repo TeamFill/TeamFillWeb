@@ -115,6 +115,7 @@ export default class Inbox extends Component {
             {this.state.penduserdata &&
               this.state.inbox === 1 &&
               this.state.penduserdata.map((data) => <Request data={data} />)}
+            <Message/>  
           </Col>
           <Col flex="30px" />
         </Row>
