@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
@@ -36,7 +36,7 @@ export default function HomepageMap() {
   const [eventInfo, setEventInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentLocation, setcurrentLocation] = useState([43.2609, -79.9192]);
-  const [preferences, setPreferences] = useState();
+  // const [preferences, setPreferences] = useState();
   const history = useHistory();
   const classes = useStyles();
   const location = useLocation();

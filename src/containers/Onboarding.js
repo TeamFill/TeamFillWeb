@@ -104,9 +104,18 @@ export default class Onboarding extends Component {
                   },
                 ]}
               >
-                <DatePicker 
-                  disabledDate={(d) => !d || d.isAfter(moment().subtract(18, 'years').calendar().split("/").join("-"))}
-                  style={styles.form} 
+                <DatePicker
+                  disabledDate={(d) =>
+                    !d ||
+                    d.isAfter(
+                      moment()
+                        .subtract(18, "years")
+                        .calendar()
+                        .split("/")
+                        .join("-")
+                    )
+                  }
+                  style={styles.form}
                 />
               </Form.Item>
 

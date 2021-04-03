@@ -12,7 +12,7 @@ import {
   Col,
   TimePicker,
   Divider,
-  Switch
+  Switch,
 } from "antd";
 import moment from "moment";
 import Navbar from "../components/Navbar";
@@ -30,13 +30,13 @@ export default class EditEvent extends Component {
     this.state = {
       attendees: [],
       closeable: false,
-      privacy: this.props.location.aboutProps.privacy
+      privacy: this.props.location.aboutProps.privacy,
     };
   }
 
   onSwitchChange = (checked) => {
-    this.setState({privacy: checked})
-    console.log(checked)
+    this.setState({ privacy: checked });
+    console.log(checked);
   };
 
   componentDidMount = () => {
@@ -56,19 +56,17 @@ export default class EditEvent extends Component {
     const reformattedAttendees = this.state.attendees;
     // console.log(reformattedAttendees);
 
-
     const getGeocodeData = async () => {
       const formattedAddress = values.address.split(" ").join("+");
       const geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
-  
+
       let response = await fetch(geocodeURL);
       let data = await response.json();
       return data;
-    }
+    };
 
     let geocodeData;
     await getGeocodeData().then((data) => (geocodeData = data));
-
 
     const eventid = this.props.location.aboutProps.eventid;
     const tmpPrivacy = this.state.privacy;
@@ -91,7 +89,7 @@ export default class EditEvent extends Component {
               y: geocodeData.results[0].geometry.location.lng,
             },
             address: values.address,
-            privacy: tmpPrivacy
+            privacy: tmpPrivacy,
           })
           .then(() => {
             console.log("Document successfully written!");
@@ -179,23 +177,23 @@ export default class EditEvent extends Component {
   responseAttendee = (uid, choice) => {
     const attendees = this.state.attendees;
     if (choice === "accepted") {
-      for (let i = 0; i < attendees.length; i++){
-        if(attendees[i].id === uid){
-          console.log(attendees[i])
-          attendees[i].status = "accepted"
-          console.log(attendees[i])
+      for (let i = 0; i < attendees.length; i++) {
+        if (attendees[i].id === uid) {
+          console.log(attendees[i]);
+          attendees[i].status = "accepted";
+          console.log(attendees[i]);
         }
       }
     } else if (choice === "rejected") {
-      for (let i = 0; i < attendees.length; i++){
-        if(attendees[i].id === uid){
-          attendees[i].status = "rejected"
+      for (let i = 0; i < attendees.length; i++) {
+        if (attendees[i].id === uid) {
+          attendees[i].status = "rejected";
         }
       }
     }
     // console.log(attendees)
     this.setState({ attendees: attendees });
-  }
+  };
 
   getAttendeesInfo = () => {
     const attendees = [];
@@ -228,7 +226,7 @@ export default class EditEvent extends Component {
   };
 
   render() {
-    console.log("privacy: ", this.state.privacy)
+    console.log("privacy: ", this.state.privacy);
     return (
       <div>
         <Row style={{ marginTop: 70, width: "100%" }}>
@@ -257,11 +255,12 @@ export default class EditEvent extends Component {
               onFinish={this.onFinish}
               onFinishFailed={this.onFinishFailed}
             >
-              
-              <Title level={5} type="danger">You must save to register changes</Title>
+              <Title level={5} type="danger">
+                You must save to register changes
+              </Title>
 
-              <Form.Item 
-                label="Event Name" 
+              <Form.Item
+                label="Event Name"
                 name="name"
                 rules={[
                   {
@@ -273,7 +272,8 @@ export default class EditEvent extends Component {
                 <Input style={styles.form} />
               </Form.Item>
 
-              <Form.Item label="Event Description"
+              <Form.Item
+                label="Event Description"
                 name="description"
                 rules={[
                   {
@@ -303,7 +303,7 @@ export default class EditEvent extends Component {
                 </Select>
               </Form.Item>
 
-              <Form.Item 
+              <Form.Item
                 label="Event Date"
                 name="date"
                 rules={[
@@ -313,9 +313,9 @@ export default class EditEvent extends Component {
                   },
                 ]}
               >
-                <DatePicker 
+                <DatePicker
                   disabledDate={(d) => !d || d.isBefore(moment())}
-                  style={styles.form} 
+                  style={styles.form}
                 />
               </Form.Item>
 
@@ -346,50 +346,57 @@ export default class EditEvent extends Component {
               </Form.Item>
 
               <Form.Item label="Private Event" name="privacy">
-              Off <Switch 
-                    onChange={this.onSwitchChange}  
-                    defaultChecked={this.props.location.aboutProps.privacy} 
-                    style={this.state.privacy ? { background: "#ff5252"} : {background : "#aaaaaa"}}
-                    /> On
+                Off{" "}
+                <Switch
+                  onChange={this.onSwitchChange}
+                  defaultChecked={this.props.location.aboutProps.privacy}
+                  style={
+                    this.state.privacy
+                      ? { background: "#ff5252" }
+                      : { background: "#aaaaaa" }
+                  }
+                />{" "}
+                On
               </Form.Item>
-              
 
               <Title level={5}>Accepted Attendees</Title>
               <div>
-                {this.state.attendees.filter((attendee) => attendee.status === "accepted")
-                .map((attendee) => (
-                  <Attendee
-                    key={attendee.id}
-                    id={attendee.id}
-                    status={attendee.status}
-                    name={attendee.data.fullname}
-                    rep={attendee.data.rep}
-                    delBtn={this.deleteAttendee}
-                  />
-                ))}
+                {this.state.attendees
+                  .filter((attendee) => attendee.status === "accepted")
+                  .map((attendee) => (
+                    <Attendee
+                      key={attendee.id}
+                      id={attendee.id}
+                      status={attendee.status}
+                      name={attendee.data.fullname}
+                      rep={attendee.data.rep}
+                      delBtn={this.deleteAttendee}
+                    />
+                  ))}
               </div>
 
               <Divider />
 
               <Title level={5}>Pending Attendees</Title>
               <div>
-                {this.state.attendees.filter((attendee) => attendee.status === "pending")
-                .map((attendee) => (
-                  <Attendee
-                    key={attendee.id}
-                    id={attendee.id}
-                    status={attendee.status}
-                    name={attendee.data.fullname}
-                    rep={attendee.data.rep}
-                    delBtn={this.deleteAttendee}
-                    acceptBtn={this.responseAttendee}
-                    rejectBtn={this.responseAttendee}
-                  />
-                ))}
+                {this.state.attendees
+                  .filter((attendee) => attendee.status === "pending")
+                  .map((attendee) => (
+                    <Attendee
+                      key={attendee.id}
+                      id={attendee.id}
+                      status={attendee.status}
+                      name={attendee.data.fullname}
+                      rep={attendee.data.rep}
+                      delBtn={this.deleteAttendee}
+                      acceptBtn={this.responseAttendee}
+                      rejectBtn={this.responseAttendee}
+                    />
+                  ))}
               </div>
 
               <Divider />
-             
+
               <Form.Item>
                 <Button
                   style={{
@@ -413,7 +420,7 @@ export default class EditEvent extends Component {
                     <Button
                       style={{
                         width: "100%",
-                        height: 40,
+                        height: 50,
                         borderRadius: 15,
                         borderColor: "#ff5252",
                         backgroundColor: "white",
@@ -434,7 +441,7 @@ export default class EditEvent extends Component {
                 <Button
                   style={{
                     width: "100%",
-                    height: 40,
+                    height: 50,
                     borderRadius: 15,
                     borderColor: "#ff5252",
                     backgroundColor: "white",

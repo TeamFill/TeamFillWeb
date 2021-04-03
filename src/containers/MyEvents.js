@@ -28,7 +28,7 @@ export default class MyEvent extends Component {
     const currentUser = firebase.auth().currentUser;
     this.getEventsCreated(currentUser.uid);
     this.getEventsAttending(currentUser.uid);
-  }
+  };
 
   returnAsAdmin = () => {
     if (this.props.location.hasOwnProperty("aboutProps")) {
@@ -65,9 +65,9 @@ export default class MyEvent extends Component {
 
     snapshot.forEach((doc) => {
       // console.log(doc.id, "=>", doc.data());
-      events.push({admin: 1, eventid: doc.id, data: doc.data()});
+      events.push({ admin: 1, eventid: doc.id, data: doc.data() });
     });
-    this.setState({events: [...this.state.events, ...events]});
+    this.setState({ events: [...this.state.events, ...events] });
   };
 
   getEventsAttending = async (uid) => {
@@ -76,7 +76,7 @@ export default class MyEvent extends Component {
     const snapshot = await eventsRef
       .where("attendees", "array-contains", {
         id: uid,
-        status: "accepted"
+        status: "accepted",
       })
       .get();
     if (snapshot.empty) {
@@ -85,9 +85,9 @@ export default class MyEvent extends Component {
     }
     snapshot.forEach((doc) => {
       // console.log(doc.id, "=>", doc.data());
-      events.push({admin: 0, eventid: doc.id, data: doc.data()});
+      events.push({ admin: 0, eventid: doc.id, data: doc.data() });
     });
-    this.setState({events: [...this.state.events, ...events]});
+    this.setState({ events: [...this.state.events, ...events] });
   };
 
   render() {
@@ -100,21 +100,21 @@ export default class MyEvent extends Component {
           <Col flex="30px" />
           <Col flex="auto">
             <Title level={2}>
-              <a
+              <span
                 style={this.state.attendingStyle}
                 onClick={(e) => this.handleadmin(e, 0)}
               >
                 {" "}
                 Attending
-              </a>{" "}
+              </span>{" "}
               <span style={{ fontWeight: 100 }}>|</span>
-              <a
+              <span
                 style={this.state.createdStyle}
                 onClick={(e) => this.handleadmin(e, "")}
               >
                 {" "}
                 Created
-              </a>
+              </span>
             </Title>
             {toShow.map((event) => (
               <Row key={event.eventid}>
@@ -122,7 +122,6 @@ export default class MyEvent extends Component {
                   key={event.eventid}
                   eventid={event.eventid}
                   adminStatus={event.admin}
-
                   name={event.data.name}
                   admin={event.data.admin}
                   attendees={event.data.attendees}
@@ -131,7 +130,6 @@ export default class MyEvent extends Component {
                   time={event.data.time}
                   type={event.data.type}
                   privacy={event.data.privacy}
-
                   returnTo="/myevents"
                   address={event.data.address}
                   coordinates={event.data.coordinates}

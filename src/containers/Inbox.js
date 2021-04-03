@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Typography, Row, Col } from "antd";
 import firebase from "firebase";
-import Message from "../components/Inbox/Message.js";
 import Request from "../components/Inbox/Request.js";
 import Navbar from "../components/Navbar";
 
@@ -113,9 +112,9 @@ export default class Inbox extends Component {
               </a>
             </Title>
 
-              {this.state.penduserdata && this.state.inbox === 1 &&
-                this.state.penduserdata.map((data) => <Request data={data} />)}
-
+            {this.state.penduserdata &&
+              this.state.inbox === 1 &&
+              this.state.penduserdata.map((data) => <Request data={data} />)}
           </Col>
           <Col flex="30px" />
         </Row>
