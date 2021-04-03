@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Typography, Row, Col } from "antd";
 import firebase from "firebase";
 import Request from "../components/Inbox/Request.js";
+import Message from "../components/Inbox/Message.js";
 import Navbar from "../components/Navbar";
 
 const { Title } = Typography;
