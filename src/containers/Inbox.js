@@ -132,9 +132,11 @@ export default class Inbox extends Component {
             {this.state.inbox === 1? 
               this.state.penduserdata && this.state.penduserdata.map((data) => <Request data={data} />)
             :
-              this.state.messages.map((message) => <Message 
+              this.state.messages.map((message) => 
+              <Message 
                 key={message.id}
-                msgID={message.id}/>)
+                msgID={message.id}
+                msgData={message.data}/>)
             }
             
           </Col>

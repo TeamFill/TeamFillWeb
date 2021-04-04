@@ -62,9 +62,37 @@ const Request = (props) => {
     getGroups();
   }, []);
 
-  const GroupItem = groups.map(function(group, i) {
-    return (
-      <ListItem key={i} alignItems="flex-start" onClick={() => history.push('/chat/' + groupID)}>
+  // const GroupItem = groups.map(function(group, i) {
+  //   return (
+  //     <ListItem key={i} alignItems="flex-start" onClick={() => history.push('/chat/' + groupID)}>
+  //       <ListItemAvatar>
+  //       <Avatar style={{background: "#ff5252"}} >
+  //         <GroupAddIcon />
+  //       </Avatar>
+  //       </ListItemAvatar>
+  //       <ListItemText
+  //         primary={
+  //           <div className={classes.text}>
+  //             {group.groupName}
+  //           </div>
+  //         }
+  //         secondary={
+  //           <div className={classes.text}>
+  //             {group.newestMessage}
+  //           </div>
+  //         }
+  //       />
+  //     </ListItem>
+  //   )
+  // });
+
+  return (
+
+    // <List className={classes.root}>
+    //   {GroupItem}
+    // </List>
+
+    <ListItem key={groupID} alignItems="flex-start" onClick={() => history.push('/chat/' + groupID)}>
         <ListItemAvatar>
         <Avatar style={{background: "#ff5252"}} >
           <GroupAddIcon />
@@ -73,24 +101,16 @@ const Request = (props) => {
         <ListItemText
           primary={
             <div className={classes.text}>
-              {group.groupName}
+              {props.msgData.groupName}
             </div>
           }
           secondary={
             <div className={classes.text}>
-              {group.newestMessage}
+              {props.msgData.newestMessage}
             </div>
           }
         />
       </ListItem>
-    )
-  });
-
-  return (
-
-    <List className={classes.root}>
-      {GroupItem}
-    </List>
   )
 
 }
