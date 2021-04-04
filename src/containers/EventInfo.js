@@ -279,7 +279,7 @@ export default class EventInfo extends Component {
                 </Col>
               </Row>
             </div>
-
+                          
             {this.props.location.aboutProps.adminStatus === 0 ? (
               <div>
                 <Divider />
@@ -301,6 +301,12 @@ export default class EventInfo extends Component {
             ) : (
               <Divider />
             )}
+
+          <br/>
+          <br/>
+          <br/>
+          <br/>
+
           </Col>
           <Col flex="30px" />
         </Row>
